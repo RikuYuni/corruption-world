@@ -1,4 +1,3 @@
-# corruption-world
 # Corruption · 世界观入口
 
 这是一个关于灵魂、执念、封印物与日常异常的中世纪风格世界观。
