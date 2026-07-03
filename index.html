@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corruption · 语言选择</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #16100a;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Noto Serif SC', serif;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(200,129,58,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse 70% 80% at 50% 50%, #201808 0%, #16100a 70%);
+  pointer-events: none;
+}
+.container {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 420px;
+  padding: 40px 24px;
+}
+.logo {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 52px;
+  color: #ede3c4;
+  letter-spacing: 4px;
+  display: block;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 24px rgba(200,129,58,0.25);
+}
+.sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: #9a8868;
+  letter-spacing: 6px;
+  margin-bottom: 48px;
+}
+.rule {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #b8a870, transparent);
+  margin: 0 auto 40px;
+  opacity: 0.5;
+}
+.lang-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.lang-link {
+  display: block;
+  padding: 18px 20px;
+  border: 1px solid rgba(180,140,60,0.3);
+  color: #ede3c4;
+  text-decoration: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  letter-spacing: 4px;
+  transition: all 0.3s ease;
+  background: rgba(255,255,255,0.02);
+}
+.lang-link:hover {
+  border-color: rgba(200,129,58,0.6);
+  background: rgba(200,129,58,0.08);
+  box-shadow: 0 0 30px rgba(200,129,58,0.06);
+}
+.lang-link small {
+  display: block;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #6e5e40;
+  margin-top: 4px;
+  font-style: normal;
+}
+.footer {
+  margin-top: 48px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #4a3e28;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <span class="logo">Corruption</span>
+  <div class="sub">选 择 语 言</div>
+  <div class="rule"></div>
+  <div class="lang-grid">
+    <a class="lang-link" href="./zh/index.html">
+      中文
+      <small>Chinese · 目前所有内容已完成</small>
+    </a>
+    <a class="lang-link" href="./en/index.html" style="opacity:0.5;cursor:default;pointer-events:none;">
+      English
+      <small>English · 正在制作中，敬请期待</small>
+    </a>
+  </div>
+  <div class="footer">— 持续修订中 —</div>
+</div>
+</body>
+</html>
