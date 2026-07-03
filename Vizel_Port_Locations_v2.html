@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>维泽尔港 · 地点系统设定</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root {
+  --bg:       #faf9f6;
+  --surface:  #f3f1ea;
+  --surface2: #eceae1;
+  --border:   #ddd9cc;
+  --border-s: #ccc8bb;
+
+  --ink-0: #0f0e0b;
+  --ink-1: #2a2820;
+  --ink-2: #4a4840;
+  --ink-3: #787060;
+  --ink-4: #aaa090;
+  --ink-5: #ccc5b0;
+
+  /* District colors */
+  --high:    #5c3c00;   /* 上城 — amber */
+  --high-bg: rgba(92,60,0,0.055);
+  --high-pale: #f5e8c0;
+  --high-mid: #9a6800;
+
+  --low:     #5a3010;   /* 下城 — warm brown */
+  --low-bg:  rgba(90,48,16,0.055);
+  --low-pale: #f2dfc0;
+  --low-mid:  #8a5020;
+
+  --old:     #2e3a50;   /* 旧城区 — cool slate */
+  --old-bg:  rgba(46,58,80,0.055);
+  --old-pale: #c8d4e8;
+  --old-mid:  #4a6080;
+
+  --dock:    #103848;   /* 码头区 — deep teal */
+  --dock-bg: rgba(16,56,72,0.055);
+  --dock-pale: #b8d8e8;
+  --dock-mid:  #207898;
+
+  --out:     #1e3820;   /* 郊区 — forest */
+  --out-bg:  rgba(30,56,32,0.055);
+  --out-pale: #c0d8c0;
+  --out-mid:  #3a6840;
+
+  --night:   #3a1850;   /* 夜市/特殊 — violet */
+  --night-bg:rgba(58,24,80,0.055);
+  --night-pale:#d0b8e8;
+  --night-mid: #6a3898;
+
+  --divine:  #6a4800;   /* 神域 — gold */
+  --divine-bg: rgba(106,72,0,0.055);
+
+  --yuli:    #1e3850;   /* 羽砾 — deep blue */
+  --yuli-bg: rgba(30,56,80,0.055);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #d8d4cc;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--ink-1);
+  line-height: 1.7;
+}
+
+.shell {
+  max-width: 980px;
+  margin: 0 auto;
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--border), 0 4px 40px rgba(0,0,0,0.18);
+}
+
+/* ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ */
+.topnav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--ink-0);
+  display: flex; overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 2px solid var(--high);
+}
+.topnav::-webkit-scrollbar { display: none; }
+
+.tn-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px; letter-spacing: 2px;
+  color: var(--ink-4); padding: 0 20px;
+  display: flex; align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  white-space: nowrap; flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.tn-item {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  padding: 13px 15px; text-decoration: none;
+  white-space: nowrap; display: flex;
+  align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s, color 0.15s;
+  text-transform: uppercase;
+}
+.tn-item:hover { background: rgba(255,255,255,0.06); }
+
+.tn-high  { color: #d4a840; } .tn-high:hover  { color: #f0c860; }
+.tn-low   { color: #c08060; } .tn-low:hover   { color: #e0a080; }
+.tn-old   { color: #88a0c0; } .tn-old:hover   { color: #a8c0e0; }
+.tn-dock  { color: #60b0c8; } .tn-dock:hover  { color: #80d0e8; }
+.tn-out   { color: #80b880; } .tn-out:hover   { color: #a0d8a0; }
+.tn-night { color: #b890d8; } .tn-night:hover { color: #d0b0f0; }
+
+/* ══════════════════════════════════════
+   MASTHEAD
+══════════════════════════════════════ */
+.masthead {
+  padding: 68px 80px 56px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.mh-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 4px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 12px;
+}
+.mh-kicker::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.mh-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 58px; line-height: 1; color: var(--ink-0);
+  letter-spacing: -1px; margin-bottom: 6px;
+}
+.mh-title-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 20px;
+  color: var(--ink-3); margin-bottom: 32px;
+}
+.mh-summary {
+  font-family: 'Lora', serif;
+  font-size: 14.5px; color: var(--ink-2);
+  line-height: 1.9; max-width: 580px;
+  margin-bottom: 36px;
+}
+/* District pills */
+.district-pills {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.d-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border: 1px solid; cursor: default;
+}
+.dp-high   { color: var(--high);   border-color: var(--high-pale);   background: var(--high-bg); }
+.dp-low    { color: var(--low);    border-color: var(--low-pale);    background: var(--low-bg); }
+.dp-old    { color: var(--old);    border-color: var(--old-pale);    background: var(--old-bg); }
+.dp-dock   { color: var(--dock);   border-color: var(--dock-pale);   background: var(--dock-bg); }
+.dp-out    { color: var(--out);    border-color: var(--out-pale);    background: var(--out-bg); }
+.dp-night  { color: var(--night);  border-color: var(--night-pale);  background: var(--night-bg); }
+
+/* ══════════════════════════════════════
+   TOC
+══════════════════════════════════════ */
+.toc-wrap {
+  padding: 40px 80px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.toc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.toc-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+}
+.toc-district {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.toc-dist-head {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 6px;
+}
+.tdc-stripe {
+  width: 10px; height: 10px;
+  flex-shrink: 0; margin-bottom: -1px;
+}
+.tdc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink-0);
+}
+.tdc-en {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1px;
+  color: var(--ink-4); text-transform: uppercase;
+}
+.toc-locs {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding-left: 20px;
+}
+.toc-loc {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px; color: var(--ink-3);
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════
+   DISTRICT CHAPTER
+══════════════════════════════════════ */
+.district {
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+}
+.district:nth-child(even) { background: var(--surface); }
+
+/* District banner */
+.dist-banner {
+  padding: 36px 80px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between;
+  align-items: flex-end;
+  position: sticky;
+  top: 44px;
+  z-index: 100;
+}
+.db-high  { background: var(--high-bg);  border-left: 5px solid var(--high); }
+.db-low   { background: var(--low-bg);   border-left: 5px solid var(--low); }
+.db-old   { background: var(--old-bg);   border-left: 5px solid var(--old); }
+.db-dock  { background: var(--dock-bg);  border-left: 5px solid var(--dock); }
+.db-out   { background: var(--out-bg);   border-left: 5px solid var(--out); }
+
+.dist-banner-l { }
+.dist-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.db-high .dist-num  { color: var(--high-mid); }
+.db-low .dist-num   { color: var(--low-mid); }
+.db-old .dist-num   { color: var(--old-mid); }
+.db-dock .dist-num  { color: var(--dock-mid); }
+.db-out .dist-num   { color: var(--out-mid); }
+
+.dist-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px; color: var(--ink-0);
+  letter-spacing: -0.5px; line-height: 1.1;
+}
+.dist-name-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 14px;
+  color: var(--ink-3); margin-top: 2px;
+}
+.dist-tagline {
+  font-family: 'Lora', serif;
+  font-style: italic; font-size: 13px;
+  color: var(--ink-3); max-width: 340px;
+  text-align: right; line-height: 1.6;
+}
+
+/* District body */
+.dist-body {
+  padding: 0 80px 48px;
+}
+
+/* Entry note (e.g. entry method) */
+.dist-entry-note {
+  margin: 24px 0 0;
+  padding: 12px 18px;
+  background: var(--surface2);
+  border-left: 3px solid var(--border-s);
+  font-size: 13px; color: var(--ink-2);
+  line-height: 1.8;
+  font-family: 'Noto Serif SC', serif;
+}
+.dist-entry-note strong { color: var(--ink-0); }
+
+/* ══════════════════════════════════════
+   LOCATION ENTRY
+══════════════════════════════════════ */
+.location {
+  margin-top: 40px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+
+.loc-header {
+  margin-bottom: 22px;
+}
+.loc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px; color: var(--ink-0);
+  letter-spacing: -0.3px; margin-bottom: 3px;
+}
+.loc-name-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* Two-column: buildings left, tags right */
+.loc-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Buildings section */
+.bld-section {
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.bld-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  background: var(--ink-0); color: white;
+}
+.bld-list {
+  list-style: none;
+  padding: 12px 16px;
+  background: var(--bg);
+}
+.bld-list li {
+  font-size: 13px; color: var(--ink-1);
+  line-height: 1.8; padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.bld-list li:last-child { border-bottom: none; }
+.bld-list li::before {
+  content: '–';
+  color: var(--ink-5); flex-shrink: 0;
+  font-size: 12px; margin-top: 2px;
+}
+
+/* Narrative tags section */
+.tag-section { }
+.tag-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 10px;
+}
+
+.tag-item {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px; color: var(--ink-1);
+  line-height: 1.85;
+  padding: 10px 16px 10px 14px;
+  border-left: 3px solid var(--border);
+  margin-bottom: 8px;
+  background: var(--surface);
+  position: relative;
+}
+/* Color the border by district */
+.tag-high  .tag-item { border-left-color: var(--high); }
+.tag-low   .tag-item { border-left-color: var(--low); }
+.tag-old   .tag-item { border-left-color: var(--old); }
+.tag-dock  .tag-item { border-left-color: var(--dock); }
+.tag-out   .tag-item { border-left-color: var(--out); }
+.tag-night .tag-item { border-left-color: var(--night); }
+
+/* Full-width tags (when no building column) */
+.loc-tags-only .tag-item {
+  font-size: 13.5px;
+}
+
+/* ══════════════════════════════════════
+   SPECIAL CALLOUT BOXES
+══════════════════════════════════════ */
+/* Divine trace */
+.divine-box {
+  margin-top: 16px;
+  border: 1px solid rgba(106,72,0,0.25);
+  border-top: 3px solid var(--divine);
+  overflow: hidden;
+}
+.divine-head {
+  background: var(--divine);
+  color: #fff8e0;
+  padding: 9px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+  display: flex; justify-content: space-between;
+}
+.divine-body {
+  padding: 14px 18px;
+  background: var(--divine-bg);
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 13px; color: var(--ink-1); line-height: 1.85;
+}
+
+/* Night market callout */
+.night-box {
+  margin-top: 16px;
+  border: 1px solid rgba(58,24,80,0.25);
+  border-top: 3px solid var(--night);
+  overflow: hidden;
+}
+.night-head {
+  background: var(--night);
+  color: #f0e0ff;
+  padding: 9px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+.night-body {
+  padding: 14px 18px;
+  background: var(--night-bg);
+}
+.night-body p {
+  font-size: 13px; color: var(--ink-1);
+  line-height: 1.85; margin-bottom: 10px;
+}
+.night-body p:last-child { margin-bottom: 0; }
+.night-body strong { color: var(--ink-0); }
+
+/* Yu Li workshop */
+.yuli-box {
+  margin-top: 16px;
+  border: 1px solid rgba(30,56,80,0.25);
+  border-top: 3px solid var(--yuli);
+  overflow: hidden;
+}
+.yuli-head {
+  background: var(--yuli);
+  color: #d8e8f8;
+  padding: 9px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.yh-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+}
+.yh-sub {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 12px;
+  color: rgba(216,232,248,0.6);
+}
+.yuli-body {
+  padding: 16px 18px;
+  background: var(--yuli-bg);
+}
+.yuli-level {
+  display: flex; gap: 12px;
+  margin: 10px 0; align-items: flex-start;
+}
+.yl-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: white;
+  background: var(--yuli); padding: 3px 10px;
+  flex-shrink: 0; margin-top: 2px;
+}
+.yl-text {
+  font-size: 13px; color: var(--ink-1); line-height: 1.8; flex: 1;
+}
+
+/* Other views box */
+.ov-box {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.ov-head {
+  background: var(--surface2); padding: 9px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.ov-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ink-3);
+  border: 1px solid var(--border); padding: 2px 8px;
+}
+.ov-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink-0);
+}
+.ov-body {
+  padding: 14px 18px;
+  font-size: 13px; color: var(--ink-2); line-height: 1.8;
+}
+
+/* ══════════════════════════════════════
+   TABLES
+══════════════════════════════════════ */
+.ref-table {
+  width: 100%; border-collapse: collapse;
+  margin: 18px 0; font-size: 13px;
+}
+.ref-table thead th {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase; font-weight: 500;
+  padding: 10px 14px; text-align: left;
+  background: var(--ink-0); color: white;
+}
+.ref-table thead th.th-high  { background: var(--high); }
+.ref-table thead th.th-night { background: var(--night); }
+.ref-table thead th.th-divine{ background: var(--divine); }
+
+.ref-table tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.8; color: var(--ink-1);
+}
+.ref-table tbody tr:hover td { background: var(--surface); }
+.ref-table .key {
+  font-family: 'DM Serif Display', serif;
+  font-size: 14.5px; color: var(--ink-0);
+}
+.ref-table .mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--ink-3);
+}
+.ref-table .atm {
+  font-family: 'Lora', serif;
+  font-style: italic; font-size: 13px; color: var(--ink-2);
+}
+
+/* Risk badges */
+.risk {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 3px 9px;
+  border: 1px solid; display: inline-block;
+}
+.r-low  { color: #2e6020; border-color: #a0c890; }
+.r-mid  { color: #7a5010; border-color: #e0c070; }
+.r-high { color: #7a1818; border-color: #e09090; }
+
+/* ══════════════════════════════════════
+   SPECIAL SECTIONS
+══════════════════════════════════════ */
+.special-section {
+  padding: 52px 80px 60px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.sp-head {
+  display: flex; justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px; padding-bottom: 16px;
+  border-bottom: 2px solid var(--ink-0);
+}
+.sp-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px; color: var(--ink-0);
+  letter-spacing: -0.3px;
+}
+.sp-sub {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 13px;
+  color: var(--ink-3); margin-top: 3px;
+}
+.sp-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 5px 14px;
+  color: white; align-self: flex-start;
+}
+
+/* Sub-head within sections */
+.sub-head {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--ink-0);
+  margin: 32px 0 14px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+.sub-head::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ══════════════════════════════════════
+   CLOSING
+══════════════════════════════════════ */
+.closing {
+  background: var(--ink-0); padding: 52px 80px;
+  border-top: 3px solid var(--high);
+}
+.cl-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 4px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.quick-ref-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0 24px;
+}
+.qr-row {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.qr-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.qr-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 13.5px; color: var(--ink-4);
+}
+.qr-dots { flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.07); margin: 0 6px 3px; }
+.qr-atm {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 11.5px; color: var(--ink-5); white-space: nowrap;
+}
+
+/* ══════════════════════════════════════
+   HR & UTILS
+══════════════════════════════════════ */
+.hr { height: 1px; background: var(--border); margin: 28px 0; }
+.body-text {
+  font-size: 14px; color: var(--ink-1);
+  line-height: 2.0; margin-bottom: 16px;
+}
+.body-text strong { color: var(--ink-0); }
+
+/* ══════════════════════════════════════
+   CONNECT NOTE — 区域连接段落
+══════════════════════════════════════ */
+.connect-note {
+  margin: 28px 0 0;
+  padding: 0;
+  position: relative;
+}
+.connect-note-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.connect-note-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--ink-4);
+  white-space: nowrap;
+}
+.connect-note-rule {
+  flex: 1; height: 1px; background: var(--border);
+}
+.connect-note-zones {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  white-space: nowrap; padding: 3px 12px;
+  border: 1px solid var(--border);
+  color: var(--ink-3);
+}
+.connect-note-body {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13.5px; color: var(--ink-2);
+  line-height: 2.0;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-left: 3px solid var(--border-s);
+}
+.cn-high  .connect-note-body { border-left-color: var(--high); }
+.cn-low   .connect-note-body { border-left-color: var(--low); }
+.cn-old   .connect-note-body { border-left-color: var(--old); }
+.cn-dock  .connect-note-body { border-left-color: var(--dock); }
+.cn-out   .connect-note-body { border-left-color: var(--out); }
+.cn-high  .connect-note-zones { color: var(--high-mid); border-color: var(--high-pale); background: var(--high-bg); }
+.cn-low   .connect-note-zones { color: var(--low-mid);  border-color: var(--low-pale);  background: var(--low-bg); }
+.cn-old   .connect-note-zones { color: var(--old-mid);  border-color: var(--old-pale);  background: var(--old-bg); }
+.cn-dock  .connect-note-zones { color: var(--dock-mid); border-color: var(--dock-pale); background: var(--dock-bg); }
+.cn-out   .connect-note-zones { color: var(--out-mid);  border-color: var(--out-pale);  background: var(--out-bg); }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .masthead, .toc-wrap, .dist-body, .special-section, .closing { padding-left: 28px; padding-right: 28px; }
+  .dist-banner { padding-left: 28px; padding-right: 28px; top: 38px; position: static; }
+  .loc-cols { grid-template-columns: 1fr; }
+  .toc-grid, .quick-ref-grid { grid-template-columns: 1fr; }
+  .dist-tagline { display: none; }
+  .mh-title { font-size: 40px; }
+  .dist-name { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── NAV ── -->
+<nav class="topnav">
+  <div class="tn-brand">维泽尔港 · 系统设定</div>
+  <a class="tn-item tn-high"  href="#high">上城</a>
+  <a class="tn-item tn-low"   href="#low">下城</a>
+  <a class="tn-item tn-old"   href="#old">旧城区</a>
+  <a class="tn-item tn-dock"  href="#dock">码头区</a>
+  <a class="tn-item tn-out"   href="#out">郊区</a>
+  <a class="tn-item tn-night" href="#special">特殊地点</a>
+  <a class="tn-item tn-night" href="#quickref">快速参考</a>
+</nav>
+
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <div class="mh-kicker">地点系统设定 · 维泽尔港及周边</div>
+  <div class="mh-title">维泽尔港</div>
+  <div class="mh-title-en">Vizel Port — Location Reference</div>
+  <div class="mh-summary">
+    中型港口城市，有城墙，但城墙已有两处塌陷（旧城区段和北郊段），无人修缮。
+    城市分为四个主要片区：上城、下城、旧城区、码头区。
+    周边有北、东、南、西四个方向的郊区和自然地貌。<br><br>
+    本文件以作者视角直接陈述各地点的物理构成与叙事特征，
+    不经过世界内任何机构或立场的滤镜。
+  </div>
+  <div class="district-pills">
+    <span class="d-pill dp-high">上城 · 教会中心</span>
+    <span class="d-pill dp-low">下城 · 商业民生</span>
+    <span class="d-pill dp-old">旧城区 · 半废弃</span>
+    <span class="d-pill dp-dock">码头区 · 港口贸易</span>
+    <span class="d-pill dp-out">郊区 · 自然地貌</span>
+    <span class="d-pill dp-night">夜市 · 特殊地点</span>
+  </div>
+</div>
+
+
+<!-- ── TOC ── -->
+<div class="toc-wrap">
+  <div class="toc-label">目录</div>
+  <div class="toc-grid">
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--high);"></div>
+        <div class="tdc-name">上城</div>
+        <div class="tdc-en">High Ward</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">圣薇茵广场</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">枢密院街</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--low);"></div>
+        <div class="tdc-name">下城</div>
+        <div class="tdc-en">Low Ward</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">铜壶集市</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">龙骨巷</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">枯井（夜市入口）</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--old);"></div>
+        <div class="tdc-name">旧城区</div>
+        <div class="tdc-en">Old Ward</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">灰钟楼</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">静石街</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">羽砾工坊</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--dock);"></div>
+        <div class="tdc-name">码头区</div>
+        <div class="tdc-en">Dockfront</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">银币台</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">倒楣酒馆</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">集装箱码头</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">贫民窟</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">黑市</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--out);"></div>
+        <div class="tdc-name">郊区</div>
+        <div class="tdc-en">Outskirts</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">白树小教堂</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">潮汐石</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">雾灯</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">镜湖</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">三岔石</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--night);"></div>
+        <div class="tdc-name">特殊地点</div>
+        <div class="tdc-en">Special Locations</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">夜市入口汇总</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">神域痕迹汇总</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">快速参考表</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     上城 HIGH WARD
+════════════════════════════════════════ -->
+<div class="district" id="high">
+  <div class="dist-banner db-high">
+    <div class="dist-banner-l">
+      <div class="dist-num">区域 I · High Ward</div>
+      <div class="dist-name">上城</div>
+      <div class="dist-name-en">教会总部所在地</div>
+    </div>
+    <div class="dist-tagline">城市最安静、最整洁、最有权力的区域。<br>从下城通过圣薇茵门进入，门口有神官值守。</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- 区域连接 -->
+    <div class="connect-note cn-high">
+      <div class="connect-note-head">
+        <div class="connect-note-label">区域连接</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">上城 ↔ 下城</div>
+      </div>
+      <div class="connect-note-body">圣薇茵门是上城和下城之间唯一的正式通道。门内是石板路、安静、有神官值守；门外是泥地、喧哗、面包和鱼的气味。穿过这道门大约十步——但这十步之内，你能感觉到声音在变化：从"被压制"到"被释放"。没有人刻意设计过，但它确实存在。</div>
+    </div>
+
+    <!-- 圣薇茵广场 -->
+    <div class="location" id="loc-svienne">
+      <div class="loc-header">
+        <div class="loc-name">圣薇茵广场</div>
+        <div class="loc-name-en">St. Vienne Square</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>主教堂（供奉灰烬之神与白树之神，双神龛）</li>
+              <li>广场中央古井（已封，井口压着刻有咒文的石板）</li>
+              <li>南侧低矮石屋（教会下层人员宿舍）</li>
+              <li>北侧钟楼（每早六点敲钟，钟声全市可闻）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-high">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">婚礼和葬礼都在这里举行。婚礼时钟声敲双数，葬礼敲单数。居民会数。</div>
+          <div class="tag-item">广场石板雨后反光特别亮。但有一块石板颜色偏暗——据说下面埋着某个被封印的东西，传说而已。</div>
+          <div class="tag-item">冬天会支起临时摊贩卖热蜂蜜酒，神官不驱赶，但会多看你一眼。</div>
+          <div class="tag-item">月光下的广场总让人觉得"太安静了"——脚步声会被放大，像有人在跟着你。</div>
+        </div>
+      </div>
+      <div class="divine-box">
+        <div class="divine-head">
+          <span>神域痕迹</span>
+          <span>静默圣母 · 地下石室</span>
+        </div>
+        <div class="divine-body">主教堂地下有一间静默圣母石室，供静默圣母（记忆与告解之神）。不对外开放，仅高阶神官知悉。</div>
+      </div>
+    </div>
+
+    <!-- 枢密院街 -->
+    <div class="location" id="loc-conclave">
+      <div class="loc-header">
+        <div class="loc-name">枢密院街</div>
+        <div class="loc-name-en">Conclave Street</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>街口铁门（常闭，侧边小门白天开）</li>
+              <li>两侧灰色石楼：教会档案馆、封印物临时存放处、高阶神官居所</li>
+              <li>街尽头圆形建筑（教会核心议事厅，非成员不得入内，无窗）</li>
+              <li>右侧死胡同，尽头有一道被封死的拱门（据说通向古代地下遗迹）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-high">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">空气中有一股陈旧的纸张和蜡烛混合的味道。</div>
+          <div class="tag-item">守卫不穿甲，着灰色长袍，不配武器。但他们走过时，你会下意识让路。</div>
+          <div class="tag-item">夜里这条街没有任何灯光——但总有脚步声在黑暗中穿过。</div>
+          <div class="tag-item">有人声称在深夜见过议事厅屋顶有微弱的蓝光，持续几分钟后消失。教会不回应。</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /上城 -->
+
+
+<!-- ════════════════════════════════════════
+     下城 LOW WARD
+════════════════════════════════════════ -->
+<div class="district" id="low">
+  <div class="dist-banner db-low">
+    <div class="dist-banner-l">
+      <div class="dist-num">区域 II · Low Ward</div>
+      <div class="dist-name">下城</div>
+      <div class="dist-name-en">商业、手工业、平民生活区</div>
+    </div>
+    <div class="dist-tagline">最热闹、最杂乱、最有人气的地方。</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- 区域连接 -->
+    <div class="connect-note cn-low">
+      <div class="connect-note-head">
+        <div class="connect-note-label">区域连接</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">下城 ↔ 旧城区</div>
+      </div>
+      <div class="connect-note-body">从龙骨巷向西走，经过一排废弃商铺，路面石板开始松动，缝隙里长出杂草。大约走六分钟，你会发现自己已经进入了旧城区——没有一个明确的边界，但你能感觉到：声音变远了，空气变凉了，路灯间隔变大了。你是在不知不觉中跨过那条线的。</div>
+    </div>
+
+    <!-- 铜壶集市 -->
+    <div class="location" id="loc-market">
+      <div class="loc-header">
+        <div class="loc-name">铜壶集市</div>
+        <div class="loc-name-en">Copper Kettle Market</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>露天摊位为主，清晨到中午最热闹，下午逐渐收摊</li>
+              <li>面包房（门口有石炉，面包师傅用元素术调温）</li>
+              <li>肉铺、菜摊、布庄、陶器铺、铁匠铺各若干</li>
+              <li>东南角茶摊（卖草药茶，兼卖简单醒神药剂）</li>
+              <li>北侧两排二层木楼（楼上住人，楼下开店）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-low">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">名字来自一个传说：某铁匠打了一只铜壶，第二天壶里自己烧开了水。没人知道怎么回事，但名字留下来了。</div>
+          <div class="tag-item">面包师傅每天早上做的第一件事不是揉面，而是把手放在炉边"感觉一下温度"。动作很轻，不熟悉的人不会注意到。</div>
+          <div class="tag-item">雨后集市地面泥泞，但有一片区域的泥总是干得更快——下面埋着旧供暖管道的遗迹，没人费心挖出来。</div>
+          <div class="tag-item">集市角落里有一只总蹲在同一个屋檐下的黑猫。没人知道它主人是谁。有人说是封印物变的，有人说只是懒。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 龙骨巷 -->
+    <div class="location" id="loc-dragonbone">
+      <div class="loc-header">
+        <div class="loc-name">龙骨巷</div>
+        <div class="loc-name-en">Dragonbone Alley</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>窄巷，两侧工坊密集</li>
+              <li>炼金材料店（门口挂干草药、矿物标本、瓶瓶罐罐）</li>
+              <li>咒文抄写铺（窗玻璃上刻着细密的符号，可从外面看到里面的人在伏案写字）</li>
+              <li>封印物鉴定所（无招牌的灰楼，门总是关着，进去要敲特定的节奏）</li>
+              <li>巷尾一口枯井（夜市入口之一）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-low">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">名字只是噱头，从来没有真的龙骨。每个新来的人都会问"龙骨在哪"，老居民会笑着指巷尾那堆烂木头。</div>
+          <div class="tag-item">永远有一股混合的气味：金属、干草、旧书、还有一点说不清的甜味（某种炼金溶剂的残留）。</div>
+          <div class="tag-item">烟囱冒的烟从来不是黑色的，而是灰白色、淡紫色、偶尔淡绿色。居民已习惯。</div>
+          <div class="tag-item">夜里这条巷子的路灯比其他地方暗——不是灯坏了，是有人故意调整过。有些工坊的工作需要低光。</div>
+        </div>
+      </div>
+      <div class="night-box">
+        <div class="night-head">夜市入口 · 枯井（The Dry Well）</div>
+        <div class="night-body">
+          <p>龙骨巷尽头一口早已干涸的枯井，井口盖着生锈的铁栅栏，可以移开。</p>
+          <p><strong>识别方式：</strong>扔一枚铜币下去，如果没有听到回响，说明今晚夜市"开门"；如果听到回响，改天再来。</p>
+          <p>井底有一条横向通道，通向旧城区地下排水系统的一部分。夜市在此不定期举办。没有人知道谁在组织。教会知道它的存在，选择默许——因为有些东西"不如知道它流向了哪里"。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /下城 -->
+
+
+<!-- ════════════════════════════════════════
+     旧城区 OLD WARD
+════════════════════════════════════════ -->
+<div class="district" id="old">
+  <div class="dist-banner db-old">
+    <div class="dist-banner-l">
+      <div class="dist-num">区域 III · Old Ward</div>
+      <div class="dist-name">旧城区</div>
+      <div class="dist-name-en">城市最早的片区，城墙改建后被半遗弃</div>
+    </div>
+    <div class="dist-tagline">安静、破旧、人少。<br>羽砾住在这里。</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- 区域连接 -->
+    <div class="connect-note cn-old">
+      <div class="connect-note-head">
+        <div class="connect-note-label">区域连接</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">旧城区 ↔ 码头区</div>
+      </div>
+      <div class="connect-note-body">倒楣酒馆的后门出去是一条窄巷，没有名字。走完大约四十步，你会看到一堵半塌的旧墙，墙上有扇铁门——锁是旧的，能撬开。铁门另一边就是旧城区的边缘。这条路常被用来"不想被人知道去了哪里"。</div>
+    </div>
+
+    <!-- 灰钟楼 -->
+    <div class="location" id="loc-belfry">
+      <div class="loc-header">
+        <div class="loc-name">灰钟楼</div>
+        <div class="loc-name-en">Grey Belfry</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>石砌钟楼，高约20米，顶部钟已不在，只剩空架子</li>
+              <li>底部铁门，锁着（老式铸铁锁，钥匙早已丢失）</li>
+              <li>旁边小空地，铺碎石子，长着几棵歪脖子树</li>
+              <li>空地上一条长石凳（表面被磨得很光滑，坐过很多人）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-old">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">钟不敲了，但偶尔在深夜会有钟声——不是真的钟声，是一种类似低频震动的声响，传不了太远。老居民说"钟楼在自言自语"。</div>
+          <div class="tag-item">有人试过撬锁，据说进去之后看到一条向下的石阶，走了十几步就退回来了——太冷，不是温度低的那种冷。</div>
+          <div class="tag-item">空地上的长石凳在晴天下午会有一小片阳光，是旧城区为数不多的"适合坐着发呆"的地方。羽砾偶尔会来这里坐一会儿。</div>
+        </div>
+      </div>
+      <div class="night-box">
+        <div class="night-head">夜市关联 · 灰钟楼地下室</div>
+        <div class="night-body">
+          <p>如果你真的有钥匙（没人知道钥匙长什么样），地下室可能通向一个不同的夜市——不是龙骨巷那个，而是更老、更深、更不常开的那个。</p>
+          <p>传言说钥匙在教会某个人手里，也有人说钥匙早就被封印进某个封印物里了。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 静石街 -->
+    <div class="location" id="loc-stillstone">
+      <div class="loc-header">
+        <div class="loc-name">静石街</div>
+        <div class="loc-name-en">Stillstone Street</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>石板路，两侧多为二层石楼，底层有铁窗（很多已锈死）</li>
+              <li>多数房屋空置，少数住人（窗台上偶尔有干枯的盆栽）</li>
+              <li><strong>No.17</strong>：羽砾工坊（木门+糊了纸的窗户）</li>
+              <li>No.17 对面：空置裁缝铺（招牌还在，字迹已模糊）</li>
+              <li>街尾路灯（灯罩歪了，但每晚准时亮，疑似炼金术驱动）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-old">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">这条街总比别处安静。在街口和街尾站两个人，喊话几乎听不见。有人说是封印物残留的影响，有人说只是街道走向聚风。</div>
+          <div class="tag-item">走在静石街上，脚步声会被削弱。穿硬底鞋也没用。那种安静会让不习惯的人觉得"耳朵好像堵了"。</div>
+          <div class="tag-item">羽砾的工坊没有招牌。想知道哪间是他的，看门口石阶——比其他家的磨得更光滑（进出频繁，但没有人记得见过他进出）。</div>
+          <div class="tag-item">隔壁空置的房子里偶尔会有动静：轻微的摩擦声、木板响。不是鬼，可能是老鼠，也可能是……旧城区总有一些说不清的东西。</div>
+        </div>
+      </div>
+
+      <!-- 羽砾工坊 -->
+      <div class="yuli-box">
+        <div class="yuli-head">
+          <div class="yh-title">羽砾工坊内部 · No.17 Stillstone Street</div>
+          <div class="yh-sub">供写作参考</div>
+        </div>
+        <div class="yuli-body">
+          <div class="yuli-level">
+            <div class="yl-label">地面层</div>
+            <div class="yl-text">小客厅兼厨房。一张桌子、两把椅子、一个壁炉、几个碗。几乎不招待客人。</div>
+          </div>
+          <div class="yuli-level">
+            <div class="yl-label">地下室</div>
+            <div class="yl-text">工坊核心。沿石阶下去，空间比地面层大两倍。工具架、工作台、封印材料柜、封印物临时存放区。空气干燥、微凉，有金属、旧木料和封印液的气味。工作台上方有一盏炼金灯（稳定的白光，不闪烁）。</div>
+          </div>
+          <div class="yuli-level">
+            <div class="yl-label">内室</div>
+            <div class="yl-text">地下室最里面有一扇加固的木门，门后是一间更小的石室。用来存放"还没判断完"的封印物。这扇门上了两把锁。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 倒楣酒馆（旧城区出口说明） -->
+    <div class="location" id="loc-misfortune-old">
+      <div class="loc-header">
+        <div class="loc-name">倒楣酒馆（旧城区出口）</div>
+        <div class="loc-name-en">The Misfortune — Old Ward Access</div>
+      </div>
+      <div class="ov-box">
+        <div class="ov-head">
+          <div class="ov-tag">关联说明</div>
+          <div class="ov-title">酒馆主体建筑在码头区，但后门通向旧城区</div>
+        </div>
+        <div class="ov-body">
+          酒馆后门出去是一条窄巷，穿过窄巷就进入旧城区的边缘。这条路常被用来"不想被人知道去了哪里"。详细建筑描述见码头区。
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /旧城区 -->
+
+
+<!-- ════════════════════════════════════════
+     码头区 DOCKFRONT
+════════════════════════════════════════ -->
+<div class="district" id="dock">
+  <div class="dist-banner db-dock">
+    <div class="dist-banner-l">
+      <div class="dist-num">区域 IV · Dockfront</div>
+      <div class="dist-name">码头区</div>
+      <div class="dist-name-en">港口、贸易、走私、民间信仰、底层居住</div>
+    </div>
+    <div class="dist-tagline">海的气味、走私的夜晚<br>与民间神祇的低语。</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- 区域连接 -->
+    <div class="connect-note cn-dock">
+      <div class="connect-note-head">
+        <div class="connect-note-label">区域连接</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">码头区 ↔ 贫民窟</div>
+      </div>
+      <div class="connect-note-body">从集装箱码头南端向南走，地面从石板变成碎砖，再从碎砖变成泥地。大约走一刻钟，你会看到第一排用帆布和木板搭起来的棚屋。没有标志，没有过渡——你只是走着走着，发现自己已经不在码头区了。</div>
+    </div>
+
+    <!-- 银币台 -->
+    <div class="location" id="loc-silverstep">
+      <div class="loc-header">
+        <div class="loc-name">银币台</div>
+        <div class="loc-name-en">Silver Step</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>伸入海中的石台，低潮时露出水面约半米，高潮时被淹没</li>
+              <li>石台表面刻有模糊的纹路（潮汐符号，被海水磨损严重）</li>
+              <li>旁边石柱，柱顶有一个浅凹槽（刚好放一枚银币）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-dock">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">渔民在风暴来临前会在这里放一枚银币，不是献给教会的神，而是献给"海"。大多数渔民说不清自己在向谁祈祷，只说"是规矩"。</div>
+          <div class="tag-item">退潮时，石台周围的礁石间偶尔会发现铜币和银币。小孩会来捡，大人会骂，但没有人敢拿走放进自己口袋——怕"海不高兴"。</div>
+          <div class="tag-item">日落时分，银币台的影子会指向正东，持续约十分钟。有人觉得这是某种"回应"。</div>
+        </div>
+      </div>
+      <div class="divine-box">
+        <div class="divine-head">
+          <span>神域痕迹</span>
+          <span>潮汐女神 · 教廷不承认</span>
+        </div>
+        <div class="divine-body">每年春分和秋分的傍晚，银币台周围的海浪会变得异常平缓，持续一刻钟。渔民把这段时间叫"女神的时间"。潮汐女神的信仰在民间流传，但教廷从未正式承认。银币台是这种"半地下信仰"最集中的地方。</div>
+      </div>
+    </div>
+
+    <!-- 倒楣酒馆 -->
+    <div class="location" id="loc-misfortune">
+      <div class="loc-header">
+        <div class="loc-name">倒楣酒馆</div>
+        <div class="loc-name-en">The Misfortune</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>两层木石混合建筑，外墙曾刷白漆，已斑驳</li>
+              <li>一楼酒馆大堂（几张木桌、吧台、壁炉——常年烧着，夏天也不熄）</li>
+              <li>二楼客房（很少开放）</li>
+              <li>后门通向旧城区边缘窄巷</li>
+              <li>地下室某面墙有暗门，通向旧城区下水道</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-dock">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">没有招牌。认识的人知道"那扇门颜色比旁边深一点"。</div>
+          <div class="tag-item">酒馆里的酒很淡，但有一种自产的草药酒（绿色，甜，后劲大）。老顾客叫它"忘忧"。</div>
+          <div class="tag-item">老板是一个沉默的中年女人，从不问客人名字。你坐在吧台前超过十分钟，她会推过来一杯水（免费）。这是她的"识别方式"：陌生人喝不喝？不喝，没问题；喝了，她会多看你一眼。</div>
+          <div class="tag-item">常有穿着体面的人从后门进来，在前门坐下喝一杯然后离开——他们是来确认"今晚有没有集会"的，不是来喝酒的。</div>
+        </div>
+      </div>
+      <div class="night-box">
+        <div class="night-head">夜市入口 · 倒楣酒馆后门</div>
+        <div class="night-body">
+          <p><strong>识别方式：</strong>问老板"今晚有集会吗"。她认识你才会回答。不认识的人，她只会看你一眼然后继续擦杯子。</p>
+          <p>地下室的暗门是通往夜市的主要路径之一。这条路比龙骨巷的枯井更"正规"，因为有人把守。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 集装箱码头 -->
+    <div class="location" id="loc-docks">
+      <div class="loc-header">
+        <div class="loc-name">集装箱码头</div>
+        <div class="loc-name-en">Container Docks</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>木质栈桥延伸入海，可停靠中型货船</li>
+              <li>岸边堆放货物（木箱、桶、帆布盖着的不明物体）</li>
+              <li>海关小屋（两层石楼，门口有值守）</li>
+              <li>最东边有一个废弃的吊车（铁架生锈，不再使用）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-dock">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">走私是公开的秘密。海关的人知道哪些船"需要多检查一会"，哪些船"看一眼就行"。行贿方式五花八门。</div>
+          <div class="tag-item">深夜码头区会有"无声的搬运"——几个人不说话，只用手势和点头，把货物从船上搬到某辆马车上。没有人知道货物是什么，没有人问。</div>
+          <div class="tag-item">废弃的吊车顶部有人见过在深夜发出微光，但走过去看什么也没有。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 贫民窟 -->
+    <div class="location" id="loc-shanty">
+      <div class="loc-header">
+        <div class="loc-name">贫民窟</div>
+        <div class="loc-name-en">Shantytown</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>码头区南侧，紧贴城墙外侧（城墙在此处有一段坍塌，形成缺口）</li>
+              <li>木板和帆布搭建的棚屋，密集、潮湿、道路泥泞</li>
+              <li>一口公共水井（水有咸味，但能喝）</li>
+              <li>露天市场（旧衣物、不值钱的杂物、偶尔有奇怪的小东西）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-dock">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">住在这里的人大多是码头工人、失业者、不被任何地方接纳的人。</div>
+          <div class="tag-item">贫民窟里流传着一种说法：城墙缺口处的碎石下面，压着"旧城墙的鬼"。晚上经过那里会听到石头发出的低响。</div>
+          <div class="tag-item">有些孩子在这里出生、长大，从未去过上城。他们觉得城市就是码头、水和泥路。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 黑市 -->
+    <div class="location" id="loc-blackmarket">
+      <div class="loc-header">
+        <div class="loc-name">黑市（消息站）</div>
+        <div class="loc-name-en">Black Market — The Information Node</div>
+      </div>
+      <div class="ov-box">
+        <div class="ov-head">
+          <div class="ov-tag">说明</div>
+          <div class="ov-title">黑市不是固定地点，而是夜市的一部分</div>
+        </div>
+        <div class="ov-body">
+          在码头区，有一个"如果不知道夜市在哪，可以先来这里问"的地址：<br><br>
+          <strong>位置：</strong>贫民窟东北角，一栋相对结实的木屋，门口挂着一串干鱼。<br><br>
+          木屋里住着一个老人，人称"鱼干老陈"。他卖的不是鱼，是消息。想知道夜市今晚在哪个入口？给他三枚铜币，他会告诉你一个方向和一个时间。他的消息不一定准，但"不准可以回来骂他，他不会生气"。
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /码头区 -->
+
+
+<!-- ════════════════════════════════════════
+     郊区 OUTSKIRTS
+════════════════════════════════════════ -->
+<div class="district" id="out">
+  <div class="dist-banner db-out">
+    <div class="dist-banner-l">
+      <div class="dist-num">区域 V · Outskirts</div>
+      <div class="dist-name">郊区与自然地貌</div>
+      <div class="dist-name-en">Outskirts — Natural Landmarks</div>
+    </div>
+    <div class="dist-tagline">城墙之外的世界，<br>神祇的痕迹更容易被感知到。</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- 区域连接 -->
+    <div class="connect-note cn-out">
+      <div class="connect-note-head">
+        <div class="connect-note-label">区域连接</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">城市 ↔ 郊区</div>
+      </div>
+      <div class="connect-note-body">城墙有两处塌陷：旧城区段和北郊段。从北郊段缺口出去，步行约半小时可到白树小教堂。从旧城区段缺口出去，走的是一条被踩出来的土径，通向采石场方向，没有路标。</div>
+    </div>
+
+    <!-- 白树小教堂 -->
+    <div class="location" id="loc-chapel">
+      <div class="loc-header">
+        <div class="loc-name">北郊 · 白树小教堂</div>
+        <div class="loc-name-en">North Outskirts — White Tree Chapel</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">建筑构成</div>
+            <ul class="bld-list">
+              <li>小石教堂，高约8米，外墙爬满藤蔓</li>
+              <li>内有一尊白树之神的木雕（树干形状，无具体人形）</li>
+              <li>门前有一棵老白杨树（树皮颜色浅，非真正"白树"）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-out">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">这里是轮回之神的圣地。路过的人会进去点一支蜡烛，为自己或已故的人祈祷。蜡烛不收费，烛台旁有一个木箱，自愿投币。</div>
+          <div class="tag-item">教堂管理员是一个老修女，很少说话，但会给你一杯水。</div>
+          <div class="tag-item">据说深夜在教堂里坐着，会感觉到一种"被看着但温和"的感觉。有人说是白树之神的注视，有人说是心理作用。</div>
+        </div>
+      </div>
+      <div class="divine-box">
+        <div class="divine-head">
+          <span>神域痕迹</span>
+          <span>白树之神（轮回）· 教廷正式承认</span>
+        </div>
+        <div class="divine-body">这是维泽尔港周边唯一被教廷正式承认的非城内神域痕迹。教廷承认其正统性，但也因此对这里保持更紧密的管控。</div>
+      </div>
+    </div>
+
+    <!-- 潮汐石与雾灯 -->
+    <div class="location" id="loc-tides">
+      <div class="loc-header">
+        <div class="loc-name">南郊 · 潮汐石与雾灯</div>
+        <div class="loc-name-en">South Outskirts — Tide Stone & Foglight</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">潮汐石 · Tide Stone</div>
+            <ul class="bld-list">
+              <li>巨大的黑色礁石，位于南郊海岸线，退潮时完全露出</li>
+              <li>表面有天然纹路，被附会为"神的文字"</li>
+            </ul>
+          </div>
+          <div class="bld-section" style="margin-top:12px;">
+            <div class="bld-head">雾灯 · Foglight</div>
+            <ul class="bld-list">
+              <li>废弃灯塔，石结构，高约15米</li>
+              <li>顶端曾有魔法火焰（不燃烧的蓝白光），现已熄灭</li>
+              <li>塔门锁着（锁是新的，教会换的），有一扇破窗可以爬进去</li>
+              <li>里面只有盘旋的石阶和空房间</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-out">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">渔民在风暴前会来潮汐石摸一下石头，然后摸自己的额头。一个极其古老的仪式，没有人记得起源。</div>
+          <div class="tag-item">每年冬至那天晚上，雾灯塔顶会重新亮起来几秒钟，然后熄灭。教会不置评。</div>
+          <div class="tag-item">没人知道最初是谁建的雾灯，也没人知道那种蓝白光是用什么炼金术维持的。教会换上新锁这件事本身就很值得关注。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 镜湖与三岔石 -->
+    <div class="location" id="loc-west">
+      <div class="loc-header">
+        <div class="loc-name">西郊 · 镜湖与三岔石</div>
+        <div class="loc-name-en">West Outskirts — Mirror Lake & Three Forks Stone</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">镜湖 · Mirror Lake</div>
+            <ul class="bld-list">
+              <li>废弃采石场积水形成的小湖，水面异常平静</li>
+              <li>周围是碎石坡和几棵歪松树</li>
+            </ul>
+          </div>
+          <div class="bld-section" style="margin-top:12px;">
+            <div class="bld-head">三岔石 · Three Forks Stone</div>
+            <ul class="bld-list">
+              <li>旧采石场入口处的大石头，天然分成三个岔状凸起</li>
+              <li>三条路在这里交汇（城市方向 / 采石场 / 北绕向森林）</li>
+              <li>石头上常年堆着路过者放置的小东西（面包、铜币等）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-out">
+          <div class="tag-head">叙事标签</div>
+          <div class="tag-item">无论起风多大，镜湖湖面几乎没有波纹。有人在湖边感觉"时间变慢了"——看一眼几分钟好像被拉长了。教会曾派人检查是否有封印物在湖底，结论是没有。民间不信。</div>
+          <div class="tag-item">长阶之神（旅途与命运之神）没有固定神殿，人们相信"每一个分岔路口"都有祂的影子。三岔石是本地最出名的"分岔路"。</div>
+          <div class="tag-item">凌晨经过三岔石的人说，偶尔会看到一个模糊的影子站在石头旁边，像在等人。走近就消失了。</div>
+        </div>
+      </div>
+      <div class="divine-box">
+        <div class="divine-head">
+          <span>神域痕迹（三岔石）</span>
+          <span>长阶之神 · 教廷视为民间习俗</span>
+        </div>
+        <div class="divine-body">长阶之神（旅途与命运）没有教廷授权的正式神殿，教廷将三岔石处的信仰行为归类为"民俗习惯"而非宗教仪式，既不承认也不干涉。</div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /郊区 -->
+
+
+<!-- ════════════════════════════════════════
+     特殊地点汇总
+════════════════════════════════════════ -->
+<div class="special-section" id="special">
+  <div class="sp-head">
+    <div>
+      <div class="sp-title">特殊地点汇总</div>
+      <div class="sp-sub">夜市入口 · 神域痕迹</div>
+    </div>
+    <div class="sp-badge" style="background:var(--night);">跨区域参考</div>
+  </div>
+
+  <div class="sub-head">夜市入口（已知三处）</div>
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th class="th-night">入口名称</th>
+        <th class="th-night">位置</th>
+        <th class="th-night">识别方式</th>
+        <th class="th-night">风险等级</th>
+        <th class="th-night">备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="key">枯井</td>
+        <td>下城 · 龙骨巷尾</td>
+        <td>扔铜币，无回响则开</td>
+        <td><span class="risk r-low">低</span></td>
+        <td>偶尔有教廷线人</td>
+      </tr>
+      <tr>
+        <td class="key">倒楣酒馆后门</td>
+        <td>码头区/旧城区交界</td>
+        <td>问老板"今晚有集会吗"</td>
+        <td><span class="risk r-mid">中</span></td>
+        <td>老板不认识的人不答</td>
+      </tr>
+      <tr>
+        <td class="key">灰钟楼地下室</td>
+        <td>旧城区 · 灰钟楼</td>
+        <td>需要钥匙（已丢失，下落不明）</td>
+        <td><span class="risk r-high">极高</span></td>
+        <td>通向更老、更深的夜市；钥匙传言与教会有关</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sub-head">神域痕迹（五处已知）</div>
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th class="th-divine">名称</th>
+        <th class="th-divine">位置</th>
+        <th class="th-divine">关联神祇</th>
+        <th class="th-divine">教廷态度</th>
+        <th class="th-divine">现象</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="key">银币台</td>
+        <td>码头区</td>
+        <td>潮汐女神</td>
+        <td>不承认，未干涉</td>
+        <td>春分秋分傍晚，海浪异常平缓一刻钟</td>
+      </tr>
+      <tr>
+        <td class="key">白树小教堂</td>
+        <td>北郊</td>
+        <td>白树之神（轮回）</td>
+        <td>正式承认，管控</td>
+        <td>深夜有"被温和注视"的感觉</td>
+      </tr>
+      <tr>
+        <td class="key">静默圣母石室</td>
+        <td>上城 · 主教堂地下</td>
+        <td>静默圣母（记忆）</td>
+        <td>控制，不开放</td>
+        <td>存在本身对外保密</td>
+      </tr>
+      <tr>
+        <td class="key">三岔石</td>
+        <td>西郊 · 旧采石场入口</td>
+        <td>长阶之神（旅途）</td>
+        <td>不承认，视为民俗</td>
+        <td>凌晨偶见模糊影子，走近消失</td>
+      </tr>
+      <tr>
+        <td class="key">主教堂双神龛</td>
+        <td>上城 · 圣薇茵广场</td>
+        <td>灰烬之神</td>
+        <td>正式承认</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div><!-- /特殊地点 -->
+
+
+<!-- ════════════════════════════════════════
+     快速参考表
+════════════════════════════════════════ -->
+<div class="closing" id="quickref">
+  <div class="cl-label">写作快速参考 · 地点氛围与用途</div>
+  <div class="quick-ref-grid">
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--high);"></div>
+      <div class="qr-name">圣薇茵广场</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">庄严 · 仪式 · 夜间异象</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--high);"></div>
+      <div class="qr-name">枢密院街</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">封闭 · 灰色 · 有秘密</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--low);"></div>
+      <div class="qr-name">铜壶集市</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">热 · 杂 · 烟火气</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--low);"></div>
+      <div class="qr-name">龙骨巷</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">窄 · 气味复杂 · 神秘</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--old);"></div>
+      <div class="qr-name">静石街</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">异常安静 · 光线偏暗</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--old);"></div>
+      <div class="qr-name">羽砾工坊</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">功能性 · 封闭 · 地下</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--old);"></div>
+      <div class="qr-name">灰钟楼</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">废弃但仍"活着"</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--dock);"></div>
+      <div class="qr-name">银币台</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">民间信仰 · 海 · 半合法</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--dock);"></div>
+      <div class="qr-name">倒楣酒馆</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">沉默 · 试探 · 灰色地带</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--dock);"></div>
+      <div class="qr-name">集装箱码头</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">走私 · 深夜 · 无言搬运</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--dock);"></div>
+      <div class="qr-name">贫民窟</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">潮湿 · 边缘 · 底层生活</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">白树小教堂</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">轮回 · 蜡烛 · 温和注视</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">潮汐石</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">古老仪式 · 海岸 · 无言</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">雾灯</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">废弃 · 冬至亮起 · 教会锁门</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">镜湖</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">异常平静 · 时间感错乱</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">三岔石</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">旅途 · 选择 · 民间仪式</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--night);"></div>
+      <div class="qr-name">夜市（总称）</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">地下 · 不定时 · 教廷默许</div>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- shell -->
+</body>
+</html>

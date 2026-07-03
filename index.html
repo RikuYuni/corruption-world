@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corruption 世界观 · 入口</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+:root {
+  --p0: #f5edd8;
+  --p1: #ede3c4;
+  --p2: #e0d4b0;
+  --p3: #cfc290;
+  --p4: #b8a870;
+  --ink0: #1a1408;
+  --ink1: #2e2410;
+  --ink2: #4a3e28;
+  --ink3: #6e5e40;
+  --ink4: #9a8868;
+  --ink5: #c4b090;
+  --flame: #c8813a;
+  --flame-dim: rgba(200,129,58,0.35);
+  --line: rgba(140,110,60,0.22);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #16100a;
+  font-family: 'Noto Serif SC', 'Lora', serif;
+  color: var(--ink1);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ambient candlelight glow, slow flicker */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 65% 55% at 50% 18%, rgba(200,129,58,0.10) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 80% at 50% 40%, #201808 0%, #16100a 70%);
+  pointer-events: none;
+  animation: flicker 7s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  38% { opacity: 0.94; }
+  52% { opacity: 1; }
+  61% { opacity: 0.9; }
+  75% { opacity: 1; }
+}
+
+/* Whole-page slow fade-in — "opening the book" */
+.veil {
+  opacity: 0;
+  animation: openBook 1.9s ease-out forwards;
+}
+@keyframes openBook {
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 60px 16px 90px;
+}
+
+.book {
+  width: 100%;
+  max-width: 620px;
+  position: relative;
+  filter:
+    drop-shadow(-6px 6px 0 rgba(0,0,0,0.5))
+    drop-shadow(-3px 3px 0 rgba(0,0,0,0.3));
+}
+
+.spine {
+  position: absolute;
+  left: -14px; top: 4px; bottom: -4px;
+  width: 14px;
+  background: linear-gradient(to right, #0e0a05, #2a1e0e, #1a1208);
+  transform: skewY(-0.2deg);
+  z-index: 0;
+}
+.spine::after {
+  content: 'CORRUPTION';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(180deg);
+  writing-mode: vertical-lr;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: rgba(180,140,70,0.5);
+  white-space: nowrap;
+}
+
+.pages-edge {
+  position: absolute;
+  right: -3px; top: 3px; bottom: -3px;
+  width: 8px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--p1) 0px, var(--p2) 1px,
+    var(--p1) 2px, var(--p3) 3px
+  );
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.pages {
+  position: relative;
+  z-index: 1;
+  background: var(--p0);
+  overflow: hidden;
+}
+.pages::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.pages::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 27px,
+    var(--line) 27px, var(--line) 28px
+  );
+  background-position: 0 64px;
+  pointer-events: none;
+  z-index: 0;
+}
+.pages-inner { position: relative; z-index: 1; }
+
+/* ─── HERO / COVER ─── */
+.cover {
+  background: linear-gradient(175deg, #1a1208 0%, #0e0a06 100%);
+  padding: 76px 52px 64px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(180,140,60,0.25);
+  pointer-events: none;
+}
+.cover::after {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border: 1px solid rgba(180,140,60,0.1);
+  pointer-events: none;
+}
+.cover-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 55% at 50% 40%, rgba(200,129,58,0.16) 0%, transparent 68%);
+  pointer-events: none;
+  animation: flicker 6s ease-in-out infinite;
+}
+.corner { position: absolute; width: 24px; height: 24px; opacity: 0.5; }
+.corner.tl { top: 28px; left: 28px; border-top: 1px solid var(--p4); border-left: 1px solid var(--p4); }
+.corner.tr { top: 28px; right: 28px; border-top: 1px solid var(--p4); border-right: 1px solid var(--p4); }
+.corner.bl { bottom: 28px; left: 28px; border-bottom: 1px solid var(--p4); border-left: 1px solid var(--p4); }
+.corner.br { bottom: 28px; right: 28px; border-bottom: 1px solid var(--p4); border-right: 1px solid var(--p4); }
+
+.cover-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 6px;
+  color: var(--p4);
+  opacity: 0.75;
+  text-transform: uppercase;
+  margin-bottom: 34px;
+  position: relative; z-index: 1;
+}
+.cover-fraktur {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 52px;
+  color: var(--p0);
+  letter-spacing: 2px;
+  line-height: 1.1;
+  display: block;
+  text-shadow: 0 2px 24px rgba(200,129,58,0.35);
+  margin-bottom: 6px;
+  position: relative; z-index: 1;
+}
+.cover-title-zh {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--p3);
+  letter-spacing: 10px;
+  margin-bottom: 34px;
+  opacity: 0.85;
+  position: relative; z-index: 1;
+}
+.cover-rule {
+  width: 68%;
+  margin: 0 auto 28px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--p4), transparent);
+  opacity: 0.55;
+  position: relative; z-index: 1;
+}
+.cover-epigraph {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--p3);
+  line-height: 2;
+  opacity: 0.8;
+  max-width: 360px;
+  margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.cover-epigraph .attr {
+  display: block;
+  margin-top: 16px;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--ink5);
+  font-style: normal;
+  opacity: 0.6;
+}
+
+/* ─── SECTION SHARED ─── */
+.section {
+  padding: 56px 52px 52px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.section:nth-child(even) {
+  background: linear-gradient(to bottom right, var(--p0) 60%, var(--p1));
+}
+.section-head {
+  margin-bottom: 30px;
+}
+.section-eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--ink5);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink0);
+  letter-spacing: 0.5px;
+}
+.section-sub {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--ink4);
+  margin-top: 4px;
+}
+
+/* ─── READING PATH ─── */
+.path-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.path-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 18px;
+  padding: 20px 22px;
+  background: rgba(255,255,255,0.28);
+  border: 1px solid var(--p3);
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.path-card:hover {
+  border-color: var(--flame);
+  box-shadow: 0 6px 24px rgba(30,20,5,0.18), 0 0 0 1px var(--flame-dim);
+  transform: translateY(-1px);
+}
+
+.path-num {
+  flex-shrink: 0;
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 34px;
+  color: var(--p3);
+  line-height: 1;
+  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.path-num::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  background: radial-gradient(circle, rgba(200,129,58,0.10) 0%, transparent 70%);
+}
+
+.path-body { flex: 1; min-width: 0; }
+.path-file {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink5);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.path-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink0);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.path-desc {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--ink3);
+  line-height: 1.6;
+}
+
+.path-go {
+  flex-shrink: 0;
+  align-self: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--ink2);
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border: 1px solid var(--p4);
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.path-card:hover .path-go {
+  background: var(--flame);
+  border-color: var(--flame);
+  color: #fdf6e8;
+}
+
+/* connecting thread between cards */
+.path-list .path-card:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 42px;
+  bottom: -14px;
+  width: 1px;
+  height: 14px;
+  background: linear-gradient(to bottom, var(--p4), transparent);
+  opacity: 0.6;
+}
+
+/* ─── APPENDIX ─── */
+.appendix-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9.5px;
+  letter-spacing: 4px;
+  color: var(--ink5);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.appendix-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--p3), transparent);
+  opacity: 0.5;
+}
+
+.appendix-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.appendix-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 4px;
+  border-bottom: 1px dashed var(--line);
+  font-size: 12.5px;
+}
+.appendix-item:last-child { border-bottom: none; }
+.appendix-item::before {
+  content: '—';
+  color: var(--ink5);
+  font-family: 'Cormorant Garamond', serif;
+  flex-shrink: 0;
+}
+.appendix-name {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--ink3);
+}
+.appendix-note {
+  font-size: 11px;
+  color: var(--ink5);
+}
+
+.appendix-caption {
+  margin-top: 18px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--ink4);
+  line-height: 1.8;
+}
+
+/* ─── CLOSING ─── */
+.closing {
+  background: linear-gradient(175deg, #1c1408 0%, #100c06 100%);
+  padding: 48px 52px 46px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.closing::before {
+  content: '';
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(180,140,60,0.18);
+  pointer-events: none;
+}
+.closing-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(200,129,58,0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cl-rule {
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--p4), transparent);
+  margin: 0 auto 18px;
+  opacity: 0.4;
+  position: relative; z-index: 1;
+}
+.cl-text {
+  position: relative;
+  z-index: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10.5px;
+  letter-spacing: 2.5px;
+  color: var(--ink5);
+  opacity: 0.6;
+  text-transform: uppercase;
+  line-height: 2;
+}
+
+@media (max-width: 560px) {
+  .section { padding: 44px 30px 44px; }
+  .cover { padding: 56px 30px 48px; }
+  .closing { padding: 40px 28px; }
+  .cover-fraktur { font-size: 38px; }
+  .path-card { flex-wrap: wrap; padding: 18px; gap: 12px; }
+  .path-num { width: 32px; font-size: 26px; }
+  .path-go { width: 100%; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veil { animation: none; opacity: 1; }
+  body::before, .cover-glow { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="veil">
+<div class="stage">
+<div class="book">
+  <div class="spine"></div>
+  <div class="pages-edge"></div>
+  <div class="pages">
+    <div class="pages-inner">
+
+      <!-- ══════════ COVER / HERO ══════════ -->
+      <div class="cover">
+        <div class="cover-glow"></div>
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <div class="cover-label">世界观入口 · World Gateway</div>
+        <span class="cover-fraktur">Corruption</span>
+        <div class="cover-title-zh">污　染</div>
+        <div class="cover-rule"></div>
+        <div class="cover-epigraph">
+          有些东西只是和常识不太一样。<br>
+          大多数人一辈子都不会真正接触它们。<br>
+          即使遇见了，<br>
+          也未必会意识到那意味着什么。
+          <span class="attr">—— 题记</span>
+        </div>
+      </div>
+
+      <!-- ══════════ READING PATH ══════════ -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-eyebrow">Reading Order</div>
+          <div class="section-title">阅读顺序</div>
+          <div class="section-sub">建议按此顺序翻阅，如同逐章打开这个世界。</div>
+        </div>
+
+        <div class="path-list">
+
+          <a class="path-card" href="./World_Primer_v2.html">
+            <div class="path-num">一</div>
+            <div class="path-body">
+              <div class="path-file">File 01 · World Primer</div>
+              <div class="path-name">世界观读本</div>
+              <div class="path-desc">从这里开始——了解这个世界的基调、诸神、教会与滞留者。</div>
+            </div>
+            <div class="path-go">翻开</div>
+          </a>
+
+          <a class="path-card" href="./Riku_Yuni_Character_Document_v2.html">
+            <div class="path-num">二</div>
+            <div class="path-body">
+              <div class="path-file">File 02 · Character Document</div>
+              <div class="path-name">角色档案 · 羽砾</div>
+              <div class="path-desc">认识羽砾——住在旧城区的封印物修复师，一个身体，两重意识。</div>
+            </div>
+            <div class="path-go">翻开</div>
+          </a>
+
+          <a class="path-card" href="./Vizel_Port_Locations_v2.html">
+            <div class="path-num">三</div>
+            <div class="path-body">
+              <div class="path-file">File 03 · Location Reference</div>
+              <div class="path-name">地点设定 · 维泽尔港</div>
+              <div class="path-desc">漫步维泽尔港——上城、下城、旧城区、码头与郊野的每一寸细节。</div>
+            </div>
+            <div class="path-go">翻开</div>
+          </a>
+
+          <a class="path-card" href="./Magic_Book_v2.html">
+            <div class="path-num">四</div>
+            <div class="path-body">
+              <div class="path-file">File 04 · Encyclopaedia Magica</div>
+              <div class="path-name">魔法体系百科全书</div>
+              <div class="path-desc">理解魔法——六大施法体系、代价机制，以及灵魂与世界沟通的方法。</div>
+            </div>
+            <div class="path-go">翻开</div>
+          </a>
+
+          <a class="path-card" href="./Corruption_Encyclopedia_V3_v2.html">
+            <div class="path-num">五</div>
+            <div class="path-body">
+              <div class="path-file">File 05 · System Reference Rev.3</div>
+              <div class="path-name">系统设定全书 · 滞留者</div>
+              <div class="path-desc">深入核心——Corruption 的完整机制、进化路径与未被言说的部分。</div>
+            </div>
+            <div class="path-go">翻开</div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ══════════ APPENDIX ══════════ -->
+      <div class="section">
+        <div class="appendix-label">供翻阅的附录 · Not Part of the Main Path</div>
+
+        <div class="appendix-grid">
+          <div class="appendix-item">
+            <span class="appendix-name">魔物列表</span>
+            <span class="appendix-note">大陆边缘的另一种生态</span>
+          </div>
+          <div class="appendix-item">
+            <span class="appendix-name">封印物列表</span>
+            <span class="appendix-note">残留了太多东西的寻常之物</span>
+          </div>
+          <div class="appendix-item">
+            <span class="appendix-name">角色列表</span>
+            <span class="appendix-note">维泽尔港里，各自呼吸的灵魂</span>
+          </div>
+        </div>
+
+        <div class="appendix-caption">
+          以上内容不构成主阅读路径的一部分，仅供在了解世界基础后随时翻阅、查证细节之用。
+        </div>
+      </div>
+
+      <!-- ══════════ CLOSING ══════════ -->
+      <div class="closing">
+        <div class="closing-glow"></div>
+        <div class="cl-rule"></div>
+        <div class="cl-text">作者内部视角 · 持续修订中</div>
+      </div>
+
+    </div><!-- pages-inner -->
+  </div><!-- pages -->
+</div><!-- book -->
+</div><!-- stage -->
+</div><!-- veil -->
+
+</body>
+</html>

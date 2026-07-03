@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《Corruption》——世界观读本</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────
+   ROOT & RESET
+───────────────────────────────────── */
+:root {
+  --p0: #f5edd8;
+  --p1: #ede3c4;
+  --p2: #e0d4b0;
+  --p3: #cfc290;
+  --p4: #b8a870;
+  --ink0: #1a1408;
+  --ink1: #2e2410;
+  --ink2: #4a3e28;
+  --ink3: #6e5e40;
+  --ink4: #9a8868;
+  --ink5: #c4b090;
+  --red: #7a2010;
+  --red2: #a03020;
+  --red3: #c85030;
+  --sage: #3e5030;
+  --sage2: #5a6e48;
+  --line: rgba(140,110,60,0.22);
+  --drop: rgba(30,20,5,0.18);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #16100a;
+  font-family: 'Noto Serif SC', 'Lora', serif;
+  color: var(--ink1);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ambient glow */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 40%, #201808 0%, #16100a 70%);
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────
+   OUTER STAGE
+───────────────────────────────────── */
+.stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 52px 16px 80px;
+}
+
+/* ─────────────────────────────────────
+   BOOK — narrow portrait chapbook
+───────────────────────────────────── */
+.book {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  /* multi-layer shadow for book depth */
+  filter:
+    drop-shadow(-6px 6px 0 rgba(0,0,0,0.5))
+    drop-shadow(-3px 3px 0 rgba(0,0,0,0.3));
+}
+
+/* Spine */
+.spine {
+  position: absolute;
+  left: -14px; top: 4px; bottom: -4px;
+  width: 14px;
+  background: linear-gradient(to right, #0e0a05, #2a1e0e, #1a1208);
+  transform: skewY(-0.3deg);
+  z-index: 0;
+}
+
+.spine::after {
+  content: 'CORRUPTION';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(180deg);
+  writing-mode: vertical-lr;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: rgba(180,140,70,0.5);
+  white-space: nowrap;
+}
+
+/* Pages stack illusion */
+.pages-edge {
+  position: absolute;
+  right: -3px; top: 3px; bottom: -3px;
+  width: 8px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--p1) 0px, var(--p2) 1px,
+    var(--p1) 2px, var(--p3) 3px
+  );
+  opacity: 0.7;
+  z-index: 0;
+}
+
+/* Main paper body */
+.pages {
+  position: relative;
+  z-index: 1;
+  background: var(--p0);
+  overflow: hidden;
+}
+
+/* Paper grain */
+.pages::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ruled lines */
+.pages::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 27px,
+    var(--line) 27px, var(--line) 28px
+  );
+  background-position: 0 64px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pages-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─────────────────────────────────────
+   COVER PAGE
+───────────────────────────────────── */
+.cover {
+  background: linear-gradient(175deg, #1a1208 0%, #0e0a06 100%);
+  padding: 72px 52px 64px;
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* Cover border frame */
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(180,140,60,0.25);
+  pointer-events: none;
+}
+
+.cover::after {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border: 1px solid rgba(180,140,60,0.1);
+  pointer-events: none;
+}
+
+/* Radial center glow */
+.cover-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 45%, rgba(80,60,20,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Corner ornaments */
+.corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+}
+.corner.tl { top: 28px; left: 28px; border-top: 1px solid var(--p4); border-left: 1px solid var(--p4); }
+.corner.tr { top: 28px; right: 28px; border-top: 1px solid var(--p4); border-right: 1px solid var(--p4); }
+.corner.bl { bottom: 28px; left: 28px; border-bottom: 1px solid var(--p4); border-left: 1px solid var(--p4); }
+.corner.br { bottom: 28px; right: 28px; border-bottom: 1px solid var(--p4); border-right: 1px solid var(--p4); }
+
+.cover-top { position: relative; z-index: 1; }
+.cover-bottom { position: relative; z-index: 1; }
+
+.cover-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--p4);
+  opacity: 0.7;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.cover-fraktur {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 48px;
+  color: var(--p0);
+  letter-spacing: 2px;
+  line-height: 1.1;
+  display: block;
+  text-shadow: 0 2px 20px rgba(180,140,60,0.3);
+  margin-bottom: 6px;
+}
+
+.cover-title-zh {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--p3);
+  letter-spacing: 8px;
+  margin-bottom: 36px;
+  opacity: 0.8;
+}
+
+.cover-rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--p4), transparent);
+  margin-bottom: 28px;
+  opacity: 0.5;
+}
+
+.cover-epigraph {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--p3);
+  line-height: 1.9;
+  opacity: 0.75;
+  max-width: 300px;
+}
+
+.cover-meta {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--ink4);
+  text-align: center;
+  line-height: 2;
+}
+
+/* ─────────────────────────────────────
+   HALF-TITLE PAGE
+───────────────────────────────────── */
+.half-title {
+  padding: 80px 52px 80px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(to bottom, var(--p1), var(--p0));
+}
+
+.ht-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--ink5);
+  margin-bottom: 32px;
+  text-transform: uppercase;
+}
+
+.ht-fraktur {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 36px;
+  color: var(--ink0);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ht-subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink3);
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+}
+
+.ht-ornament {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--ink5);
+  letter-spacing: 8px;
+  opacity: 0.6;
+}
+
+/* ─────────────────────────────────────
+   CHAPTER PAGES
+───────────────────────────────────── */
+.chapter {
+  padding: 60px 52px 56px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+/* Alternating very subtle tint */
+.chapter:nth-child(even) {
+  background: linear-gradient(to bottom right, var(--p0) 60%, var(--p1));
+}
+
+/* Chapter drop cap number */
+.ch-header {
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.ch-num {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 56px;
+  color: var(--p2);
+  line-height: 1;
+  float: left;
+  margin-right: 14px;
+  margin-top: 4px;
+  user-select: none;
+  position: relative;
+  z-index: 0;
+}
+
+.ch-num::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: radial-gradient(circle, rgba(180,140,60,0.08) 0%, transparent 70%);
+}
+
+.ch-titles {
+  overflow: hidden;
+  padding-top: 4px;
+}
+
+.ch-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--ink5);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.ch-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink0);
+  line-height: 1.25;
+  letter-spacing: 0.5px;
+}
+
+.ch-title-en {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink4);
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  display: block;
+}
+
+.ch-divider {
+  clear: both;
+  height: 1px;
+  background: linear-gradient(to right, var(--ink0), transparent);
+  margin-bottom: 28px;
+  opacity: 0.15;
+}
+
+/* ─────────────────────────────────────
+   BODY TEXT
+───────────────────────────────────── */
+p.body {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13.5px;
+  color: var(--ink2);
+  line-height: 2.05;
+  text-align: justify;
+  margin-bottom: 18px;
+  text-indent: 2em;
+}
+p.body:first-of-type { text-indent: 0; }
+
+/* Poetic / spaced-out text blocks */
+.poetic {
+  margin: 20px 0 20px 2em;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 2.2;
+}
+
+.poetic-line {
+  display: block;
+}
+
+/* inline emphasis */
+em.w {
+  font-style: normal;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink0);
+  letter-spacing: 0.3px;
+}
+
+/* ─────────────────────────────────────
+   PULL QUOTE
+───────────────────────────────────── */
+.pq {
+  margin: 24px 0;
+  padding: 20px 24px;
+  border-left: 2px solid var(--ink0);
+  background: rgba(160,130,60,0.05);
+  position: relative;
+}
+
+.pq::before {
+  content: '"';
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 54px;
+  color: var(--p3);
+  position: absolute;
+  top: -8px; left: 10px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.pq-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink1);
+  line-height: 1.75;
+  padding-left: 18px;
+  letter-spacing: 0.2px;
+}
+
+/* ─────────────────────────────────────
+   GOD TABLE
+───────────────────────────────────── */
+.god-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 12.5px;
+}
+
+.god-table thead tr {
+  border-bottom: 1px solid var(--ink3);
+}
+
+.god-table th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink4);
+  padding: 8px 0;
+  text-align: left;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.god-table td {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(140,110,60,0.12);
+  color: var(--ink2);
+  vertical-align: top;
+  line-height: 1.7;
+}
+
+.god-table td:first-child {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink0);
+  width: 44%;
+  padding-right: 16px;
+}
+
+/* ─────────────────────────────────────
+   LIST — poetic single items
+───────────────────────────────────── */
+.item-list {
+  list-style: none;
+  margin: 14px 0 14px 1em;
+}
+
+.item-list li {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 2;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.item-list li::before {
+  content: '—';
+  color: var(--ink5);
+  font-style: normal;
+  flex-shrink: 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Compact functional list */
+.func-list {
+  list-style: none;
+  margin: 14px 0 14px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 20px;
+}
+
+.func-list li {
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.8;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.func-list li::before {
+  content: '·';
+  color: var(--ink5);
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────
+   SCENE BOX
+───────────────────────────────────── */
+.scene {
+  margin: 20px 0;
+  padding: 18px 20px;
+  background: rgba(240,225,190,0.4);
+  border: 1px solid var(--p3);
+  position: relative;
+}
+
+.scene::before {
+  content: attr(data-loc);
+  position: absolute;
+  top: -10px; left: 14px;
+  background: var(--p0);
+  padding: 0 8px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink4);
+  text-transform: uppercase;
+}
+
+.scene p {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.95;
+}
+
+/* ─────────────────────────────────────
+   SIDEBAR / MARGIN NOTE
+───────────────────────────────────── */
+.aside {
+  float: right;
+  clear: right;
+  width: 130px;
+  margin: 2px -8px 16px 16px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink4);
+  line-height: 1.7;
+  border-left: 1px solid var(--p3);
+  padding-left: 10px;
+  opacity: 0.85;
+}
+
+/* ─────────────────────────────────────
+   DIVIDERS
+───────────────────────────────────── */
+.divider {
+  text-align: center;
+  margin: 24px 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--ink5);
+  letter-spacing: 10px;
+  opacity: 0.5;
+}
+
+.h-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--p3), transparent);
+  margin: 20px 0;
+  opacity: 0.6;
+}
+
+/* ─────────────────────────────────────
+   CHARACTER — Yu Li
+───────────────────────────────────── */
+.yuli-block {
+  border: 1px solid var(--p3);
+  padding: 24px 24px;
+  margin: 20px 0;
+  position: relative;
+  background: rgba(240,225,190,0.25);
+}
+
+.yuli-block::before {
+  content: '羽砾';
+  position: absolute;
+  top: -14px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--p0);
+  padding: 0 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 6px;
+  color: var(--ink3);
+}
+
+.yuli-name {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 32px;
+  color: var(--ink0);
+  text-align: center;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.yuli-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink4);
+  text-align: center;
+  display: block;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.yuli-desc {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.95;
+  text-align: justify;
+}
+
+.yuli-desc + .yuli-desc {
+  margin-top: 10px;
+}
+
+/* ─────────────────────────────────────
+   EDITORIAL NOTE — 阅读说明块
+───────────────────────────────────── */
+.note {
+  padding: 44px 52px 48px;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(to bottom, var(--p1), var(--p0));
+  position: relative;
+}
+
+.note-eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9.5px;
+  letter-spacing: 4.5px;
+  color: var(--ink5);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.note-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--p3), transparent);
+  opacity: 0.45;
+}
+
+.note-body {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 2.05;
+  text-align: justify;
+  border-left: 2px solid var(--p4);
+  padding-left: 20px;
+}
+
+/* ─────────────────────────────────────
+   CLOSING PAGE
+───────────────────────────────────── */
+.closing {
+  background: linear-gradient(175deg, #1c1408 0%, #100c06 100%);
+  padding: 72px 52px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.closing::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(180,140,60,0.2);
+  pointer-events: none;
+}
+
+.closing-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(80,55,15,0.4) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.closing-top {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 40px;
+}
+
+.cl-fraktur {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 28px;
+  color: var(--p3);
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.9;
+}
+
+.cl-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--p4);
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+.cl-rule {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--p4), transparent);
+  margin: 24px auto;
+  opacity: 0.4;
+}
+
+.cl-quote {
+  position: relative;
+  z-index: 1;
+  max-width: 320px;
+  margin: 0 auto 40px;
+}
+
+.cl-quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--p1);
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+  opacity: 0.85;
+}
+
+.cl-quote-attr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--p4);
+  opacity: 0.5;
+  margin-top: 14px;
+  display: block;
+}
+
+.cl-bottom {
+  position: relative;
+  z-index: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink5);
+  opacity: 0.5;
+  line-height: 2;
+}
+
+/* ─────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────── */
+@media (max-width: 560px) {
+  .chapter { padding: 48px 36px 44px; }
+  .cover { padding: 52px 36px 48px; }
+  .half-title { padding: 60px 36px; }
+  .closing { padding: 52px 36px; }
+  .note { padding: 36px 36px 40px; }
+  .func-list { grid-template-columns: 1fr; }
+  .aside { float: none; width: auto; margin: 12px 0; }
+  .cover-fraktur { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+<div class="book">
+  <div class="spine"></div>
+  <div class="pages-edge"></div>
+  <div class="pages">
+    <div class="pages-inner">
+
+    <!-- ══════════════ COVER ══════════════ -->
+    <div class="cover">
+      <div class="cover-glow"></div>
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+
+      <div class="cover-top">
+        <div class="cover-label">世界观读本 · World Primer</div>
+        <span class="cover-fraktur">Corruption</span>
+        <div class="cover-title-zh">污　染</div>
+        <div class="cover-rule"></div>
+        <div class="cover-epigraph">
+          有些东西只是和常识不太一样。<br>
+          大多数人一辈子都不会真正接触它们。<br>
+          即使遇见了，<br>
+          也未必会意识到那意味着什么。
+        </div>
+      </div>
+
+      <div class="cover-meta">
+        世界观框架文本 · 第一辑<br>
+        供创作参考使用
+      </div>
+    </div>
+
+
+    <!-- ══════════════ HALF-TITLE ══════════════ -->
+    <div class="half-title">
+      <div class="ht-num">— 序 —</div>
+      <span class="ht-fraktur">世界基调</span>
+      <div class="ht-subtitle">The Tone of This World</div>
+      <div class="ht-ornament">· · ·</div>
+    </div>
+
+
+    <!-- ══════════════ CH 1 · 世界基调 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">一</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter One</span>
+          <div class="ch-title">世界基调</div>
+          <span class="ch-title-en">The Texture of Ordinary Life</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">这是一个中世纪风格的大陆。钟声、石路、教堂、集市、旧书页上的墨痕构成了大部分人的日常。魔法并不稀奇，就像识字、耕作、打铁一样，是文明的一部分。</p>
+
+      <div class="poetic">
+        <span class="poetic-line">孩子会在学校学习基础术式。</span>
+        <span class="poetic-line">商人会用保温符维持货物。</span>
+        <span class="poetic-line">医生会用安神咒减轻疼痛。</span>
+        <span class="poetic-line">渔民会在暴雨前向海神献上一枚银币。</span>
+      </div>
+
+      <p class="body">人们相信诸神真实存在。因为神迹确实偶尔会出现。</p>
+
+      <p class="body">只是很少有人知道：这个世界真正危险的东西，并不总长着獠牙。</p>
+
+      <div class="scene" data-loc="某个普通的早晨">
+        <p>集市的面包师傅顺手调了一下炉温，头也没抬。街角那盏路灯在雨里还亮着，没人记得是谁点的。教堂的钟敲了七下。一切都很正常。</p>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 2 · 诸神与轮回 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">二</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Two</span>
+          <div class="ch-title">诸神与轮回</div>
+          <span class="ch-title-en">The Gods and the Long River</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">世界存在众多神明。祂们并非全知全能，而更像是掌管不同"秩序"的存在——每一位神守护着某种规律，而非整个世界。</p>
+
+      <table class="god-table">
+        <thead>
+          <tr><th>神系</th><th>权能</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>灰烬之神</td><td>死亡与火</td></tr>
+          <tr><td>潮汐女神</td><td>海洋与梦</td></tr>
+          <tr><td>长阶之神</td><td>旅途与命运</td></tr>
+          <tr><td>静默圣母</td><td>记忆与告解</td></tr>
+          <tr><td>白树之神</td><td>新生与轮回</td></tr>
+        </tbody>
+      </table>
+
+      <p class="body">其中最古老的教义之一认为：</p>
+
+      <div class="pq">
+        <div class="pq-text">灵魂会在死亡后回归"长河"，随后被重新带回世间。</div>
+      </div>
+
+      <p class="body">大多数人对此深信不疑。只有极少数教会高层知道：</p>
+
+      <p class="body"><em class="w">有些东西，拒绝回到长河。</em></p>
+    </div>
+
+
+    <!-- ══════════════ CH 3 · 封印物 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">三</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Three</span>
+          <div class="ch-title">封印物</div>
+          <span class="ch-title-en">Objects That Remember Too Much</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">世界上存在一些被称作"封印物"的东西。它们可能是最寻常的形态：</p>
+
+      <ul class="item-list">
+        <li>一枚戒指</li>
+        <li>一把旧钥匙</li>
+        <li>一只音乐盒</li>
+        <li>一页写不完的纸</li>
+        <li>一面不会映出人脸的镜子</li>
+      </ul>
+
+      <p class="body">大多数封印物并不危险。它们只是：</p>
+
+      <div class="pq">
+        <div class="pq-text">残留了太多东西。<br>情绪。执念。记忆。愿望。祈祷。<br>有时是某种无法解释的"停留"。</div>
+      </div>
+
+      <div class="aside">有些封印物存在了几百年，没有人知道它们究竟在等什么。</div>
+
+      <p class="body">封印物通常拥有微弱意志与情绪残响，有时会在雨天发热，在夜里轻响，对特定人产生反应，或让持有者梦见相同的场景。</p>
+
+      <p class="body">极少数则会真正伤人。因此教会内部存在专门负责处理它们的人。</p>
+
+      <div class="scene" data-loc="旧城区某工坊">
+        <p>那枚戒指被放在桌上已经三天了。每天早上他来工作，都发现它移动了一点点，从不超过半米。没有人动过它。他已经习惯了，只是每次进门先看一眼，确认它还在。</p>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 4 · 教会 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">四</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Four</span>
+          <div class="ch-title">教会</div>
+          <span class="ch-title-en">The Church and Its Hidden Core</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">教会是大陆最大的组织。表面上，它负责信仰传播、魔法教育、节日与祈祷、婚礼与葬礼，以及城镇秩序的维护。</p>
+
+      <p class="body">但真正的核心部门，从不公开。</p>
+
+      <div class="h-rule"></div>
+
+      <p class="body">只有极少数神官知道：教会长期在处理那些"不该流入世间"的东西。</p>
+
+      <ul class="func-list">
+        <li>危险封印物</li>
+        <li>灵魂残响</li>
+        <li>古老术式</li>
+        <li>某些无法解释的存在</li>
+        <li>历史上的灵魂异常</li>
+        <li>禁忌仪式遗留物</li>
+      </ul>
+
+      <p class="body">这些东西通常不会出现在普通人面前。即使出现，也会被迅速带走。大部分人一辈子都不会知道真相。</p>
+
+      <p class="body">教会比这个世界上任何人都更清楚：<em class="w">有些事情，让人不知道，比让人知道更安全。</em></p>
+    </div>
+
+
+    <!-- ══════════════ CH 5 · Corruption ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">五</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Five</span>
+          <div class="ch-title">滞留者</div>
+          <span class="ch-title-en">Corruption — Those Who Would Not Return</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">教会内部将其记载为「滞留者」。</p>
+
+      <div class="pq">
+        <div class="pq-text">没有回到轮回中的灵魂。</div>
+      </div>
+
+      <p class="body">它们极其稀少。甚至很多高阶神官终生都未曾真正见过。</p>
+
+      <div class="h-rule"></div>
+
+      <p class="body">没有人知道它们究竟是什么。有人认为它们是失败的灵魂，也有人认为它们只是——</p>
+
+      <p class="body"><em class="w">不愿结束。</em></p>
+
+      <p class="body">它们会模仿、学习、观察，逐渐接近"人"。但并不总伴随毁灭。有些甚至会安静地存在很多年。</p>
+
+      <p class="body">直到某一天，有人忽然意识到：</p>
+
+      <div class="pq">
+        <div class="pq-text">那个人哭泣的时候，从来没有眼泪。</div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 6 · 魔物 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">六</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Six</span>
+          <div class="ch-title">魔物</div>
+          <span class="ch-title-en">Creatures of the World's Margins</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">大陆上存在魔物。但它们并非"魔王军"式的东西。更像是另一种生态——有自己的栖息地、迁徙路线、季节习性。</p>
+
+      <div class="aside">多数魔物并不主动攻击人类。它们只是活在世界的边缘地带。</div>
+
+      <ul class="item-list">
+        <li>会模仿鸟叫的灰皮兽</li>
+        <li>夜间漂浮的灯虫</li>
+        <li>喜欢偷走金属的小型穴妖</li>
+        <li>冬季迁徙的白角兽群</li>
+      </ul>
+
+      <p class="body">真正大规模袭击城镇的情况非常少。普通人对魔物的态度更接近猎人对待野兽，渔民对待暴风雨。</p>
+
+      <div class="pq">
+        <div class="pq-text">不是"世界末日"。<br>而是——世界本来就有危险。</div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 7 · 黑市 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">七</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Seven</span>
+          <div class="ch-title">夜市</div>
+          <span class="ch-title-en">The Shadow Market</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">除了教会之外，大陆地下还存在大量隐秘交易网络。人们称其为「夜市」。</p>
+
+      <ul class="func-list">
+        <li>禁书</li>
+        <li>古代遗物</li>
+        <li>未登记术式</li>
+        <li>来历不明的封印物</li>
+      </ul>
+
+      <div class="h-rule"></div>
+
+      <p class="body">教会默认其存在。因为有些东西：</p>
+
+      <div class="pq">
+        <div class="pq-text">与其彻底消失，<br>不如知道它流向了哪里。</div>
+      </div>
+
+      <p class="body">这是一种奇怪的默契。双方都心知肚明，但从不挑破。夜市里的人知道某些货物会引来教会，教会也知道某些货物最好让夜市自己处理。</p>
+    </div>
+
+
+    <!-- ══════════════ CH 8 · 羽砾 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">八</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Eight</span>
+          <div class="ch-title">羽砾</div>
+          <span class="ch-title-en">Yu Li — The Quiet Restorer</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <div class="yuli-block">
+        <span class="yuli-name">羽　砾</span>
+        <span class="yuli-en">Yu Li · 封印物修复师</span>
+        <p class="yuli-desc">羽砾住在旧城区边缘。那里很安静。房子不大，但地下室很深。</p>
+        <p class="yuli-desc">他并不属于教会，也很少与人长期来往。他偶尔会接一些特殊委托——修复封印物、稳定失控术式、判断遗物是否危险、处理"有点奇怪"的东西。大多数客人不知道他的真名。</p>
+      </div>
+
+      <div class="h-rule"></div>
+
+      <p class="body">羽砾拥有两个人格。但那并不是病。</p>
+
+      <p class="body">他们不会争夺身体，不会彼此压制。只是共享同一个存在——两道意识并列运行，可以自由切换，大多数时候甚至同时在线。</p>
+
+      <p class="body">他能感知封印物中的"残响"：情绪、记忆、执念，有时甚至是某些未曾离开的东西。因此：</p>
+
+      <div class="pq">
+        <div class="pq-text">越危险、越古老、越奇怪的东西，<br>他反而越感兴趣。</div>
+      </div>
+
+      <div class="scene" data-loc="羽砾的工坊">
+        <p>他把工具放回原位，在椅子上坐着发了很长时间的呆。不是在想什么。只是坐着。另一个人格沉默地陪着。雨声还在，茶凉了也没有去热。</p>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 9 · 世界氛围 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">九</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Nine</span>
+          <div class="ch-title">世界真正的氛围</div>
+          <span class="ch-title-en">What This World Actually Feels Like</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">这个世界并不总是阴暗的。大多数日子其实很普通。</p>
+
+      <ul class="item-list">
+        <li>去市场买菜</li>
+        <li>在教堂祈祷</li>
+        <li>讨论天气</li>
+        <li>担心收成</li>
+        <li>在酒馆聊天</li>
+      </ul>
+
+      <p class="body">只是偶尔，会有一些说不清的东西出现。</p>
+
+      <div class="poetic">
+        <span class="poetic-line">一只永远停在同一屋檐下的乌鸦</span>
+        <span class="poetic-line">某条街总比别处安静</span>
+        <span class="poetic-line">某面镜子照不出疲惫的人</span>
+        <span class="poetic-line">某件封印物会在深夜轻轻震动</span>
+      </div>
+
+      <p class="body">没人知道那意味着什么。</p>
+      <p class="body">很多时候，也不需要知道。</p>
+    </div>
+
+
+    <!-- ══════════════ CH 10 · 故事核心 ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">十</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Ten</span>
+          <div class="ch-title">故事核心</div>
+          <span class="ch-title-en">What This Story Is Actually About</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">《Corruption》并不是关于"拯救世界"的故事。因为世界大多数时候，运转得很好。</p>
+
+      <p class="body">它真正想讲的是：</p>
+
+      <div class="pq">
+        <div class="pq-text">人如何以自己的方式活下去。</div>
+      </div>
+
+      <p class="body">包括：不愿被定义的人，不愿消失的灵魂，无法放下执念的人，以及那些明知道世界并不完全正常，却依旧继续生活的人。</p>
+
+      <div class="h-rule"></div>
+
+      <p class="body">毕竟人类最大的本事，就是一边觉得"这事不对劲"，一边继续把晚饭吃完。</p>
+
+      <p class="body">文明能延续至今，靠的基本就是这种诡异的适应力。</p>
+
+      <div class="divider">✦ &nbsp; ✦ &nbsp; ✦</div>
+    </div>
+
+
+    <!-- ══════════════ EDITORIAL NOTE ══════════════ -->
+    <div class="note">
+      <div class="note-eyebrow">阅读说明</div>
+      <div class="note-body">本读本所呈现的内容，是《Corruption》世界中"可以被说出来的那部分"。教廷有教廷的记录，民间有民间的说法，修复师有自己的经验。这些叙述之间并非总能彼此印证。本读本选择了一种温和、克制的呈现方式——它不代表"全部真相"，只代表"目前被知道的部分"。有些东西不在书里，不是被遗漏，而是它们尚未被理解到可以被写下来的程度。</div>
+    </div>
+
+
+    <!-- ══════════════ CLOSING ══════════════ -->
+    <div class="closing">
+      <div class="closing-glow"></div>
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+
+      <div class="closing-top">
+        <span class="cl-fraktur">Corruption</span>
+        <div class="cl-subtitle">World Overview Primer · Vol. I</div>
+      </div>
+
+      <div class="cl-rule"></div>
+
+      <div class="cl-quote">
+        <div class="cl-quote-text">
+          有些东西只是和常识不太一样。<br>
+          大多数人一辈子都不会真正接触它们。<br>
+          即使遇见了，<br>
+          也未必会意识到那意味着什么。
+        </div>
+        <span class="cl-quote-attr">—— 题记</span>
+      </div>
+
+      <div class="cl-rule"></div>
+
+      <div class="cl-bottom">
+        供创作参考使用 · 与 ARCH-000 / ARCH-001 / 魔法体系百科 并行存档
+      </div>
+    </div>
+
+
+    </div><!-- pages-inner -->
+  </div><!-- pages -->
+</div><!-- book -->
+</div><!-- stage -->
+
+</body>
+</html>

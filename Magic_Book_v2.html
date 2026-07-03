@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《Corruption》混合魔法体系百科全书</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Sacramento&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f4edd8;
+  --paper-warm: #ede3c4;
+  --paper-mid: #ddd0aa;
+  --paper-dark: #c8b888;
+  --ink: #221c10;
+  --ink-mid: #3e3218;
+  --ink-light: #6a5838;
+  --ink-faded: #9a8460;
+  --ink-ghost: #c4aa7a;
+  --sage: #4a5e3a;
+  --sage-mid: #6a7e58;
+  --sage-light: #8a9e78;
+  --sage-pale: #c0d0a8;
+  --sage-wash: rgba(74,94,58,0.06);
+  --rust: #7a3820;
+  --rust-mid: #a05030;
+  --rust-light: #c87050;
+  --rust-pale: #e8c0a0;
+  --rust-wash: rgba(122,56,32,0.05);
+  --gold: #8a6820;
+  --gold-mid: #b08830;
+  --gold-light: #d0a848;
+  --gold-pale: #f0dfa0;
+  --gold-wash: rgba(138,104,32,0.06);
+  --blue: #3a4e68;
+  --blue-mid: #5a6e88;
+  --blue-pale: #b8c8d8;
+  --blue-wash: rgba(58,78,104,0.06);
+  --violet: #5a3868;
+  --violet-pale: #c8b0d8;
+  --line: rgba(160,130,80,0.2);
+  --shadow: rgba(50,35,10,0.1);
+
+  /* School colors */
+  --faith: #6a5020;
+  --word: #2a4a3a;
+  --soul: #4a2a5a;
+  --elem: #3a4a20;
+  --ritual: #5a2a20;
+  --alch: #2a3a5a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #1e180e;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 60%, #28201200 0%, #1e180e 70%),
+    repeating-linear-gradient(45deg, transparent, transparent 60px, rgba(80,60,20,0.015) 60px, rgba(80,60,20,0.015) 61px);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════
+   OUTER WRAPPER
+═══════════════════════════════════ */
+.outer {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 40px 16px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════
+   BOOK CONTAINER
+═══════════════════════════════════ */
+.book {
+  position: relative;
+  background: var(--paper);
+  box-shadow:
+    -12px 0 24px rgba(0,0,0,0.5),
+    12px 0 24px rgba(0,0,0,0.5),
+    0 12px 80px rgba(0,0,0,0.7),
+    inset 0 0 140px rgba(160,130,60,0.1);
+}
+
+.book::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 40px;
+  background: linear-gradient(to right, rgba(30,20,5,0.4), rgba(30,20,5,0.08), transparent);
+  z-index: 20; pointer-events: none;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23g)' opacity='0.052'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1;
+}
+
+.ruled {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 30px,
+    var(--line) 30px, var(--line) 31px
+  );
+  background-position: 0 100px;
+  pointer-events: none; z-index: 0;
+}
+
+.book-inner { position: relative; z-index: 2; }
+
+/* ═══════════════════════════════════
+   NAVIGATION (sticky tab bar)
+═══════════════════════════════════ */
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  background: var(--ink);
+  display: flex;
+  gap: 0;
+  z-index: 100;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sticky-nav::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 1.5px;
+  color: var(--ink-ghost);
+  padding: 12px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  text-decoration: none;
+  display: block;
+}
+
+.nav-tab:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--paper);
+}
+
+.nav-tab.active {
+  background: var(--sage);
+  color: #f0f4ec;
+}
+
+/* ═══════════════════════════════════
+   COVER
+═══════════════════════════════════ */
+.cover {
+  background: linear-gradient(160deg, #ede5cc 0%, #ddd4b0 35%, #ccc098 65%, #b8ac82 100%);
+  padding: 90px 88px 80px 96px;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 3px solid var(--paper-dark);
+}
+
+/* Corner decoration */
+.cover::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 240px; height: 240px;
+  background:
+    conic-gradient(from 180deg at 100% 0%,
+      transparent 0deg,
+      rgba(74,94,58,0.08) 60deg,
+      transparent 120deg,
+      rgba(74,94,58,0.05) 180deg,
+      transparent 360deg
+    );
+  pointer-events: none;
+}
+
+.cover-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--ink-faded);
+  margin-bottom: 28px;
+  text-transform: uppercase;
+}
+
+.cover-volume {
+  font-family: 'Sacramento', cursive;
+  font-size: 28px;
+  color: var(--sage-mid);
+  margin-bottom: 10px;
+}
+
+.cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 46px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.cover-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-light);
+  margin-bottom: 36px;
+  letter-spacing: 0.5px;
+}
+
+.cover-ornament {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  color: var(--gold-mid);
+  opacity: 0.7;
+}
+.cover-ornament::before, .cover-ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-mid), transparent);
+}
+
+.cover-summary {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 2;
+  max-width: 520px;
+  margin-bottom: 48px;
+}
+
+.cover-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cover-index-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cip-row {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faded);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.cip-dot {
+  width: 6px; height: 6px;
+  background: var(--ink-faded);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cover-motto {
+  text-align: right;
+}
+
+.cm-main {
+  font-family: 'Sacramento', cursive;
+  font-size: 28px;
+  color: var(--rust-mid);
+  display: block;
+  line-height: 1.4;
+}
+
+.cm-attr {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink-faded);
+  letter-spacing: 1px;
+}
+
+/* ═══════════════════════════════════
+   SECTIONS
+═══════════════════════════════════ */
+.section {
+  padding: 64px 88px 72px 96px;
+  border-bottom: 1px solid var(--paper-mid);
+  position: relative;
+}
+
+.section:nth-child(even) {
+  background: linear-gradient(to bottom right, var(--paper), #f0e8d0);
+}
+
+/* School color accent stripe */
+.section[data-school]::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--school-color, var(--sage));
+}
+
+.section[data-school="faith"] { --school-color: var(--faith); }
+.section[data-school="word"] { --school-color: var(--word); }
+.section[data-school="soul"] { --school-color: var(--soul); }
+.section[data-school="elem"] { --school-color: var(--elem); }
+.section[data-school="ritual"] { --school-color: var(--ritual); }
+.section[data-school="alch"] { --school-color: var(--alch); }
+
+/* ─── Section Header ─── */
+.sec-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--paper-dark);
+  position: relative;
+}
+
+.sec-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--paper-dark);
+  line-height: 0.85;
+  flex-shrink: 0;
+  user-select: none;
+  margin-top: 4px;
+}
+
+.sec-titles { flex: 1; }
+
+.sec-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 4px;
+  color: var(--ink-faded);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+  margin-bottom: 5px;
+}
+
+.sec-subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-light);
+  letter-spacing: 0.3px;
+}
+
+/* School badge (for school sections) */
+.school-badge {
+  position: absolute;
+  right: 0; top: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  padding: 8px 16px;
+  color: white;
+  background: var(--school-color, var(--sage));
+}
+
+/* ─── Body text ─── */
+p.b {
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 2.1;
+  text-align: justify;
+  margin-bottom: 16px;
+  text-indent: 2em;
+}
+p.b:first-of-type { text-indent: 0; }
+
+/* ─── Pull quote ─── */
+.pq {
+  margin: 28px 0;
+  padding: 24px 40px;
+  background: linear-gradient(135deg, var(--gold-wash), rgba(240,223,160,0.15));
+  border-left: 3px solid var(--gold-mid);
+  position: relative;
+}
+
+.pq::before {
+  content: '"';
+  position: absolute;
+  top: -4px; left: 16px;
+  font-family: 'Playfair Display', serif;
+  font-size: 60px;
+  color: var(--gold-pale);
+  line-height: 1;
+}
+
+.pq-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink);
+  line-height: 1.7;
+  letter-spacing: 0.3px;
+  padding-left: 12px;
+}
+
+.pq-attr {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gold-mid);
+  margin-top: 10px;
+  padding-left: 12px;
+  display: block;
+}
+
+/* ─── Entry definition ─── */
+.entry {
+  margin: 20px 0;
+  padding: 20px 24px;
+  border: 1px solid var(--paper-dark);
+  background: rgba(255,255,255,0.35);
+  position: relative;
+}
+
+.entry::before {
+  content: attr(data-tag);
+  position: absolute;
+  top: -11px; left: 14px;
+  background: var(--paper);
+  padding: 0 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.entry-term {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.entry-body {
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 1.9;
+}
+
+.entry-sub {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--ink-light);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--paper-dark);
+  line-height: 1.75;
+}
+
+/* ─── Foundation table ─── */
+.found-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13.5px;
+}
+
+.found-table thead tr {
+  border-bottom: 2px solid var(--ink);
+}
+
+.found-table th {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--ink-light);
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.found-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--paper-mid);
+  vertical-align: top;
+  line-height: 1.8;
+  color: var(--ink-mid);
+}
+
+.found-table tr:hover td { background: rgba(160,130,60,0.06); }
+
+.found-table .key-col {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 14px;
+  width: 120px;
+}
+
+/* ─── Overload states table ─── */
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.state-card {
+  border: 1px solid var(--paper-dark);
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(240,230,200,0.2));
+  position: relative;
+  transition: transform 0.15s;
+}
+.state-card:hover { transform: translateY(-1px); box-shadow: 0 3px 14px var(--shadow); }
+
+.sc-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--rust-mid);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.sc-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.sc-desc {
+  font-size: 12.5px;
+  color: var(--ink-light);
+  line-height: 1.75;
+}
+
+/* ─── School card (main cards for each school) ─── */
+.school-card {
+  background: rgba(255,255,255,0.3);
+  border: 1px solid var(--paper-dark);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.school-card-head {
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sch-name-zh {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.sch-name-en {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-faded);
+  margin-top: 2px;
+}
+
+.sch-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 6px 14px;
+  border: 1px solid currentColor;
+}
+
+.school-card-body {
+  padding: 0 22px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.scb-section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2px;
+  color: var(--ink-faded);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--paper-dark);
+}
+
+.scb-item {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  margin-bottom: 4px;
+  align-items: flex-start;
+}
+
+.scb-item::before {
+  content: '·';
+  color: var(--ink-faded);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.scb-core {
+  grid-column: 1 / -1;
+  background: rgba(160,130,60,0.06);
+  border-left: 2px solid var(--school-color, var(--sage));
+  padding: 12px 16px;
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 1.85;
+  font-style: italic;
+}
+
+/* School-specific header colors */
+.faith-head { background: linear-gradient(to right, rgba(106,80,32,0.1), transparent); }
+.word-head { background: linear-gradient(to right, rgba(42,74,58,0.1), transparent); }
+.soul-head { background: linear-gradient(to right, rgba(74,42,90,0.1), transparent); }
+.elem-head { background: linear-gradient(to right, rgba(58,74,32,0.1), transparent); }
+.ritual-head { background: linear-gradient(to right, rgba(90,42,32,0.1), transparent); }
+.alch-head { background: linear-gradient(to right, rgba(42,58,90,0.1), transparent); }
+
+.faith-tag { color: var(--faith); }
+.word-tag { color: var(--word); }
+.soul-tag { color: var(--soul); }
+.elem-tag { color: var(--elem); }
+.ritual-tag { color: var(--ritual); }
+.alch-tag { color: var(--alch); }
+
+/* ─── Phenomenon box ─── */
+.phenom-box {
+  background: var(--gold-wash);
+  border: 1px solid rgba(176,136,48,0.25);
+  border-top: 2px solid var(--gold-mid);
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+
+.phenom-title {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--gold-mid);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.phenom-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.phenom-list li {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mid);
+  padding: 5px 14px;
+  border: 1px solid var(--paper-dark);
+  background: rgba(255,255,255,0.5);
+}
+
+/* ─── Combination table ─── */
+.combo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.combo-card {
+  border: 1px solid var(--paper-dark);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.combo-card:hover { box-shadow: 0 4px 18px var(--shadow); }
+
+.combo-schools {
+  display: flex;
+}
+
+.cs-tag {
+  flex: 1;
+  padding: 8px 10px;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: white;
+}
+
+.cs-plus {
+  background: rgba(0,0,0,0.15);
+  padding: 8px 6px;
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.combo-result {
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.3);
+}
+
+.cr-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.cr-desc {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.7;
+}
+
+.cr-yuli {
+  margin-top: 8px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--sage-mid);
+  border-top: 1px dashed var(--paper-dark);
+  padding-top: 6px;
+}
+
+/* ─── Practitioner table ─── */
+.prac-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 13px;
+}
+
+.prac-table thead th {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  color: var(--ink-faded);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--ink);
+  font-weight: 500;
+}
+
+.prac-table tbody td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--paper-mid);
+  color: var(--ink-mid);
+  line-height: 1.75;
+  vertical-align: top;
+}
+
+.prac-table .type-col {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.prac-school-tag {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  margin: 2px 2px 2px 0;
+}
+
+/* ─── Scene sample ─── */
+.scene {
+  margin: 20px 0;
+  background: rgba(255,255,255,0.4);
+  border: 1px solid var(--paper-dark);
+  border-top: 2px solid var(--ink-faded);
+  padding: 20px 26px;
+}
+
+.scene-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 3px;
+  color: var(--ink-faded);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.scene-text {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 2;
+}
+
+/* ─── Keyword strips ─── */
+.kw-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.kw {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  padding: 5px 14px;
+  border: 1px solid var(--paper-dark);
+  background: rgba(255,255,255,0.4);
+  color: var(--ink-mid);
+  cursor: default;
+  transition: all 0.15s;
+}
+.kw:hover { background: var(--sage-pale); border-color: var(--sage-light); color: var(--sage); }
+.kw.g { color: var(--sage); border-color: var(--sage-pale); }
+.kw.r { color: var(--rust-mid); border-color: var(--rust-pale); }
+.kw.o { color: var(--gold); border-color: rgba(176,136,48,0.3); }
+
+/* ─── Final summary ─── */
+.final-block {
+  background: linear-gradient(160deg, var(--ink) 0%, #2e2010 100%);
+  padding: 60px 88px 60px 96px;
+  position: relative;
+  overflow: hidden;
+}
+
+.final-block::before {
+  content: '';
+  position: absolute;
+  right: -40px; bottom: -40px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90,107,74,0.15) 0%, transparent 70%);
+}
+
+.fb-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--ink-ghost);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.fb-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--paper-warm);
+  line-height: 1.7;
+  letter-spacing: 0.3px;
+  margin-bottom: 20px;
+}
+
+.fb-highlight {
+  display: block;
+  font-family: 'Sacramento', cursive;
+  font-size: 42px;
+  color: var(--gold-pale);
+  margin-top: 8px;
+  letter-spacing: 2px;
+  line-height: 1.3;
+}
+
+.fb-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.fb-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 6px 14px;
+  border: 1px solid rgba(160,130,60,0.4);
+  color: var(--ink-ghost);
+}
+
+/* ─── H-rule ─── */
+.hr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 28px 0;
+  opacity: 0.5;
+}
+.hr::before, .hr::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-mid), transparent);
+}
+.hr span { font-family: 'Lora', serif; font-size: 14px; color: var(--gold-mid); }
+
+/* ─── Margin note ─── */
+.mn {
+  float: right;
+  clear: right;
+  width: 150px;
+  margin: 0 -60px 16px 20px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--rust-mid);
+  line-height: 1.65;
+  border-left: 1px solid rgba(160,80,48,0.35);
+  padding-left: 10px;
+}
+
+/* ─── Anomaly list (§1.5 unclassified phenomena) ─── */
+.anomaly-list {
+  list-style: none;
+  margin: 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.anomaly-item {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 15px 20px;
+  background: rgba(255,255,255,0.28);
+  border: 1px solid var(--paper-dark);
+  border-left: 3px solid var(--ink-faded);
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.9;
+  transition: background 0.15s;
+}
+.anomaly-item:hover {
+  background: rgba(255,255,255,0.44);
+}
+.ai-num {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faded);
+  flex-shrink: 0;
+  padding-top: 4px;
+  min-width: 20px;
+  text-align: right;
+  user-select: none;
+}
+.anomaly-note {
+  margin-top: 20px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(154,132,96,0.07), transparent);
+  border-top: 1px solid var(--paper-dark);
+  border-bottom: 1px solid var(--paper-dark);
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 1.95;
+}
+.anomaly-note-attr {
+  display: block;
+  margin-top: 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  color: var(--ink-faded);
+  font-style: normal;
+}
+
+/* Responsive */
+@media (max-width: 680px) {
+  .section { padding: 44px 28px 48px 36px; }
+  .cover { padding: 56px 32px 48px 40px; }
+  .cover-title { font-size: 32px; }
+  .combo-grid { grid-template-columns: 1fr; }
+  .state-grid { grid-template-columns: 1fr; }
+  .school-card-body { grid-template-columns: 1fr; }
+  .scb-core { grid-column: 1; }
+  .mn { float: none; width: auto; margin: 12px 0; }
+  .sec-num { font-size: 48px; }
+  .final-block { padding: 40px 28px 44px 36px; }
+}
+</style>
+</head>
+<body>
+<div class="outer">
+<div class="book">
+<div class="grain"></div>
+<div class="ruled"></div>
+<div class="book-inner">
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <a href="#cover" class="nav-tab">封面</a>
+  <a href="#s1" class="nav-tab">本质理论</a>
+  <a href="#s1-5" class="nav-tab">无法归类</a>
+  <a href="#s2" class="nav-tab">代价体系</a>
+  <a href="#s3" class="nav-tab">神术</a>
+  <a href="#s4" class="nav-tab">咒文术</a>
+  <a href="#s5" class="nav-tab">灵魂术</a>
+  <a href="#s6" class="nav-tab">元素术</a>
+  <a href="#s7" class="nav-tab">仪式术</a>
+  <a href="#s8" class="nav-tab">炼金术</a>
+  <a href="#s9" class="nav-tab">混合应用</a>
+  <a href="#s10" class="nav-tab">施法者分类</a>
+  <a href="#s11" class="nav-tab">世界风格</a>
+</nav>
+
+<!-- COVER -->
+<div class="cover" id="cover">
+  <div>
+    <div class="cover-eyebrow">Corruption · Encyclopaedia Magica · Vol. I</div>
+    <div class="cover-volume">混合魔法体系</div>
+    <div class="cover-title">百科全书</div>
+    <div class="cover-subtitle">A Complete Reference of the Living Magic System</div>
+    <div class="cover-ornament"><span>✦</span></div>
+    <div class="cover-summary">
+      本卷系统收录《Corruption》世界中魔法的本质定义、统一底层理论、
+      六大施法体系完整词条、代价机制、混合应用图谱、施法者社会定位，
+      以及整体写作风格规范。<br>
+      适用于长期创作参考、世界观构建与角色设定。
+    </div>
+  </div>
+  <div class="cover-footer">
+    <div class="cover-index-preview">
+      <div class="cip-row"><div class="cip-dot"></div>卷一 · 魔法本质与底层理论</div>
+      <div class="cip-row"><div class="cip-dot"></div>卷二 · 施法代价体系</div>
+      <div class="cip-row"><div class="cip-dot"></div>卷三至八 · 六大体系详解</div>
+      <div class="cip-row"><div class="cip-dot"></div>卷九 · 混合应用与化学反应</div>
+      <div class="cip-row"><div class="cip-dot"></div>卷十 · 施法者社会分类</div>
+      <div class="cip-row"><div class="cip-dot"></div>卷十一 · 写作风格总则</div>
+    </div>
+    <div class="cover-motto">
+      <span class="cm-main">灵魂与世界<br>沟通的方法</span>
+      <span class="cm-attr">—— 魔法体系一句话总结</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 1 · 本质理论
+══════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="sec-head">
+    <div class="sec-num">一</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK ONE · FUNDAMENTALS</div>
+      <div class="sec-title">魔法本质与底层理论</div>
+      <div class="sec-subtitle">The Unified Theory of All Magic</div>
+    </div>
+  </div>
+
+  <p class="b">在《Corruption》的世界里，魔法不是由某种神秘元素构成的外来力量，也不是神明赐予少数人的特权。它是这个世界内在运作逻辑的一部分——一种存在于每一个有灵魂的生命体内部的基础能力。</p>
+
+  <div class="pq">
+    <div class="pq-text">魔法的本质，是"灵魂与意识对现实的干涉"。</div>
+    <span class="pq-attr">—— 混合体系 · 统一根基定义</span>
+  </div>
+
+  <p class="b">所有施法行为的发生，都源自同一个机制：施法者内部的意识活动，以某种形式对外部现实的规律施加了影响。不同的施法流派、不同的文化理解，只是描述和引导这一过程的不同方式——而非不同的"力量来源"。</p>
+
+  <div class="entry" data-tag="核心词条">
+    <div class="entry-term">施法基础五要素</div>
+    <div class="entry-body">
+      <table class="found-table">
+        <thead><tr><th>要素</th><th>定义</th><th>失去时的影响</th></tr></thead>
+        <tbody>
+          <tr><td class="key-col">意识</td><td>发起对现实的干涉冲动。魔法的起点。</td><td>无法施法，感知趋于关闭</td></tr>
+          <tr><td class="key-col">灵魂结构</td><td>稳定施法过程，防止意识干涉失控。</td><td>施法结果不可预测，可能伤及自身</td></tr>
+          <tr><td class="key-col">认知模型</td><td>施法者对"法术应该如何运作"的理解框架。</td><td>法术可能以意料之外的方式生效</td></tr>
+          <tr><td class="key-col">魔力流动</td><td>灵魂活动产生的现实干涉力，魔法的燃料。</td><td>法术效果衰减至消失</td></tr>
+          <tr><td class="key-col">引导方式</td><td>让现实接受意识干涉的路径（语言、仪式、信仰等）。</td><td>干涉无法着陆，如同呼喊进虚空</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="hr"><span>✦</span></div>
+
+  <div class="entry" data-tag="关键定义">
+    <div class="entry-term">魔力（Mana）的真实性质</div>
+    <div class="entry-body">
+      魔力不是一种外部元素，不是从大地或天空中汲取的能量。它是<strong>灵魂活动产生的现实干涉力</strong>——更接近于：
+      <br><br>
+      · 精神燃料 · 意志流动 · 灵魂热量
+      <br><br>
+      这意味着，魔法消耗的本质更接近于<strong>精神疲劳</strong>，而非体力透支。一个施法者在大量施法后，更像是"神经高度紧张后的力竭状态"，而非肌肉酸痛。
+    </div>
+    <div class="entry-sub">
+      实际表现：头重、思维迟缓、注意力无法集中、情绪变得迟钝。高阶施法者通常对这些信号有丰富的经验，知道何时该停下来。
+    </div>
+  </div>
+
+  <p class="b">因此，在写这个世界的魔法时，请始终牢记：魔法与施法者的精神状态是密不可分的。一个情绪极度不稳定的人，很难精准施法；一个精神高度集中的人，哪怕魔力所剩无几，也可能完成一次细腻的小魔法。</p>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 1.5 · 无法归类的现象
+══════════════════════════════════════ -->
+<div class="section" id="s1-5">
+  <div class="sec-head">
+    <div class="sec-num" style="font-size:52px;letter-spacing:-1px;line-height:0.9;">一·五</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK ONE · ADDENDUM · 附录</div>
+      <div class="sec-title">无法归类的现象</div>
+      <div class="sec-subtitle">Phenomena Beyond the Known Framework</div>
+    </div>
+  </div>
+
+  <p class="b">以下现象被施法者社区记录在案，但无法被归入六大体系中的任何一个。它们不服从已知的魔法理论框架，也不表现出持续的规律性。</p>
+
+  <ul class="anomaly-list">
+    <li class="anomaly-item">
+      <span class="ai-num">01</span>
+      <span>某条街的路灯在雨天会自行改变颜色，颜色与当天第一个路过者的心情有关。持续三小时后恢复。无法复现。</span>
+    </li>
+    <li class="anomaly-item">
+      <span class="ai-num">02</span>
+      <span>一只总出现在同一个屋檐下的黑猫。有人认为它是封印物，但任何检测手段都无法确认它身上有任何魔法残留。</span>
+    </li>
+    <li class="anomaly-item">
+      <span class="ai-num">03</span>
+      <span>某些封印物在修复完成后，会在一段不确定的时间后"自行恢复"到修复前的状态，仿佛修复从未发生。被修复过的结构会原样重现，包括修复师留下的痕迹。</span>
+    </li>
+    <li class="anomaly-item">
+      <span class="ai-num">04</span>
+      <span>极少数人在深度睡眠中会说出一段不属于任何已知语言的句子。醒来后完全不记得。这些句子被记录过，但无法翻译，也无法与任何已知的 Corruption 或封印物关联。</span>
+    </li>
+  </ul>
+
+  <div class="anomaly-note">
+    本卷不试图解释这些现象。它们被记录在这里，仅作为提醒：魔法体系是人对世界的理解框架，而非世界本身的全部。总有一些东西在框架之外。
+    <span class="anomaly-note-attr">—— 本卷编注</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 2 · 代价体系
+══════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="sec-head">
+    <div class="sec-num">二</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK TWO · THE COST SYSTEM</div>
+      <div class="sec-title">魔法代价体系</div>
+      <div class="sec-subtitle">What It Takes to Shape Reality</div>
+    </div>
+  </div>
+
+  <p class="b">所有魔法都有代价，但这个世界的代价不是血和痛苦，而是更内敛、更日常的东西：注意力、精力、精神清晰度。这让代价本身也带有一种生活感——施法之后需要好好睡一觉，或者坐下来发一会儿呆，而不是倒地不起、鲜血淋漓。</p>
+
+  <div class="entry" data-tag="主代价">
+    <div class="entry-term">精神消耗（Mental Drain）</div>
+    <div class="entry-body">世界中施法的主要代价类型，表现形式如同"蓝条型精神消耗"——不直接减损体力，而是消耗意识的清晰度与稳定性。</div>
+    <div class="entry-sub">
+      常见表现：疲惫感、注意力下降、轻微头痛、情绪迟钝、感知轻微过载、思维变慢。<br>
+      恢复方式：睡眠、休息、与他人的普通对话、熟悉的环境、简单的体力劳动。
+    </div>
+  </div>
+
+  <div class="hr"><span>✦</span></div>
+
+  <p class="b">若施法者在精神消耗尚未恢复时继续高强度施法，会进入过载状态。以下是已记录的过载表现：</p>
+
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="sc-label">过载状态 · 01</div>
+      <div class="sc-name">灵魂疲劳</div>
+      <div class="sc-desc">长时间失眠，难以进入深层休息状态。施法者描述为"脑子停不下来"，但又什么都想不清楚。</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">过载状态 · 02</div>
+      <div class="sc-name">感知异常</div>
+      <div class="sc-desc">听觉或视觉出现偏差——声音听起来像从水下传来，颜色稍微不对，边缘模糊。通常数小时后自行恢复。</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">过载状态 · 03</div>
+      <div class="sc-name">现实迟滞感</div>
+      <div class="sc-desc">感觉外部世界运作比正常慢半拍，自己的反应也慢了。有时伴随一种奇怪的"旁观感"，好像在看别人的身体在移动。</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">过载状态 · 04</div>
+      <div class="sc-name">情绪空洞</div>
+      <div class="sc-desc">暂时失去情感波动的能力，对原本有感觉的事物无感。并非冷静，而是一种空白感。通常持续数小时到一天。</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">过载状态 · 05</div>
+      <div class="sc-name">魔力震颤</div>
+      <div class="sc-desc">无意识地、随机地泄露小规模魔法效果，本人无法控制。可能导致周围物品轻微移动、温度波动或光线抖动。</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">过载状态 · 06（极少数）</div>
+      <div class="sc-name">灵魂结构不稳</div>
+      <div class="sc-desc">仅在长期过载的极高阶施法者身上出现。精神结构开始出现裂隙，对 Corruption 的敏感度显著提升。这是一个需要格外关注的边界。</div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">场景示例 · 代价的日常表现</div>
+    <div class="scene-text">
+      他花了四个小时处理那个封印物。收工时，羽砾把工具放回原位，然后在椅子上坐着发了很长时间的呆。<br>
+      不是在想什么，只是坐着。<br>
+      另一人格沉默地陪着，没有说话。这种时候不需要说话。<br>
+      窗外雨声还在，茶凉了也没有去热。
+    </div>
+  </div>
+
+  <div class="entry" data-tag="注意事项">
+    <div class="entry-term">写作时请避免</div>
+    <div class="entry-body">
+      · 动不动就精神崩溃、人格分裂<br>
+      · 过载后立刻变成疯狂杀人状态<br>
+      · 代价与施法强度完全不成比例的戏剧性呈现
+    </div>
+    <div class="entry-sub">
+      这个世界的整体基调偏"日常感"。过载更多是"需要好好睡一觉"的程度，而不是"即将灵魂爆炸"的危机。请保持这一温度。
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 3 · 神术
+══════════════════════════════════════ -->
+<div class="section" id="s3" data-school="faith">
+  <div class="sec-head">
+    <div class="sec-num">三</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK THREE · FAITH ARTS</div>
+      <div class="sec-title">神术体系</div>
+      <div class="sec-subtitle">Magic Through Belief and Divine Resonance</div>
+    </div>
+    <div class="school-badge" style="background:var(--faith);">FAITH ARTS</div>
+  </div>
+
+  <div class="school-card">
+    <div class="school-card-head faith-head">
+      <div>
+        <div class="sch-name-zh">神术 · Faith Arts</div>
+        <div class="sch-name-en">Magic of belief, prayer and spiritual resonance</div>
+      </div>
+      <div class="sch-tag faith-tag">最稳定 · 最安全</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--faith)">
+        <strong>核心机制：</strong>通过稳定的信仰状态与祈祷行为，将施法者的意识锚定在一个高度稳定的认知框架内，从而降低施法时的不确定性，使意识对现实的干涉更平稳、更持久。神明本身是否存在并不影响施法——起作用的是<em>信仰本身带来的意识稳定性</em>。
+      </div>
+      <div>
+        <div class="scb-section-title">常见用途</div>
+        <div class="scb-item">治疗轻伤与疾病</div>
+        <div class="scb-item">净化低级异常残留</div>
+        <div class="scb-item">稳定他人情绪状态</div>
+        <div class="scb-item">驱散低级异常干扰</div>
+        <div class="scb-item">维持长期封印稳定</div>
+        <div class="scb-item">临终安慰与灵魂稳定</div>
+      </div>
+      <div>
+        <div class="scb-section-title">局限性</div>
+        <div class="scb-item">极端威力上限较低</div>
+        <div class="scb-item">强依赖施法者信念稳定性</div>
+        <div class="scb-item">内心产生怀疑时效果骤降</div>
+        <div class="scb-item">对灵魂层面干涉能力弱</div>
+        <div class="scb-item">仪式感强，难以应急施法</div>
+      </div>
+      <div>
+        <div class="scb-section-title">典型施法者</div>
+        <div class="scb-item">神职人员与修士</div>
+        <div class="scb-item">民间信仰者（低阶）</div>
+        <div class="scb-item">教廷认证治愈师</div>
+      </div>
+      <div>
+        <div class="scb-section-title">与其他体系关系</div>
+        <div class="scb-item">与咒文术结合：强化封印稳定性</div>
+        <div class="scb-item">与仪式术结合：大型教廷仪式主流</div>
+        <div class="scb-item">与灵魂术相斥：信仰的封闭性限制灵魂感知</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phenom-box">
+    <div class="phenom-title">典型施法现象 · 你会观察到</div>
+    <ul class="phenom-list">
+      <li>环境逐渐变安静</li>
+      <li>光线变得柔和</li>
+      <li>空气温度微升</li>
+      <li>在场者情绪被轻微稳定</li>
+      <li>低声祷文或者静默</li>
+    </ul>
+  </div>
+
+  <div class="entry" data-tag="重要说明">
+    <div class="entry-term">神术不是"圣光爆炸"</div>
+    <div class="entry-body">高级神术的标志不是炫目的光效，而是一种"环境整体变得不同"的感觉。圣光并非不存在，但它更多是一种微弱的、如同清晨阳光的柔和发亮，而不是满天飞的爆炸效果。</div>
+    <div class="entry-sub">参考意象：烛光突然变得很稳 · 雨声消失一瞬 · 房间里的尘埃停止飘动</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 4 · 咒文术
+══════════════════════════════════════ -->
+<div class="section" id="s4" data-school="word">
+  <div class="sec-head">
+    <div class="sec-num">四</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK FOUR · WORD ARTS</div>
+      <div class="sec-title">咒文体系</div>
+      <div class="sec-subtitle">Magic Through Language, Name, and Definition</div>
+    </div>
+    <div class="school-badge" style="background:var(--word);">WORD ARTS</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-text">被正确描述的事物，更容易被现实接受。</div>
+    <span class="pq-attr">—— 咒文体系 · 世界观基本信念</span>
+  </div>
+
+  <p class="b">咒文体系建立在一个核心信念之上：语言不只是描述现实的工具，它本身就是影响现实的手段。当你用足够精确的语言命名一件事物、定义一个状态，你就在某种程度上重塑了现实对这件事物的"认知"，从而使其更容易被改变。</p>
+
+  <div class="school-card">
+    <div class="school-card-head word-head">
+      <div>
+        <div class="sch-name-zh">咒文术 · Word Arts</div>
+        <div class="sch-name-en">Magic through precise language, inscription and naming</div>
+      </div>
+      <div class="sch-tag word-tag">最精细 · 学术化</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--word)">
+        <strong>核心机制：</strong>通过语言、文字、名称与定义，改变现实对目标对象的"认知框架"，从而在框架内施加改变。语言越精确，干涉越细腻；命名越完整，控制越稳定。
+      </div>
+      <div>
+        <div class="scb-section-title">常见用途</div>
+        <div class="scb-item">封印与解封</div>
+        <div class="scb-item">修复物品结构</div>
+        <div class="scb-item">精准记录与存档</div>
+        <div class="scb-item">构建魔法阵列</div>
+        <div class="scb-item">稳定封印物的残响</div>
+        <div class="scb-item">传达跨越空间的信息</div>
+      </div>
+      <div>
+        <div class="scb-section-title">局限性</div>
+        <div class="scb-item">学习周期极长</div>
+        <div class="scb-item">需要高度专注，不宜情绪波动时施法</div>
+        <div class="scb-item">用词不当可能导致法术偏转</div>
+        <div class="scb-item">对"无法命名"的事物效果有限</div>
+      </div>
+      <div>
+        <div class="scb-section-title">典型施法者</div>
+        <div class="scb-item">学者与研究者</div>
+        <div class="scb-item">抄写员与档案师</div>
+        <div class="scb-item">封印物修复师（核心体系之一）</div>
+      </div>
+      <div>
+        <div class="scb-section-title">与其他体系关系</div>
+        <div class="scb-item">与神术结合：精准封印</div>
+        <div class="scb-item">与灵魂术结合：高级封印物修复</div>
+        <div class="scb-item">与炼金术结合：将咒文固化进材料</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phenom-box">
+    <div class="phenom-title">典型施法现象 · 你会观察到</div>
+    <ul class="phenom-list">
+      <li>空气中短暂出现文字残影</li>
+      <li>施法者低声重复某个词语</li>
+      <li>纸张自动记录内容</li>
+      <li>被命名的物体发出轻微共鸣</li>
+      <li>封印物边缘出现规律纹路</li>
+    </ul>
+  </div>
+
+  <div class="mn">咒文术失败时通常不是爆炸，而是：什么都没发生，或者发生了一个轻微的意外。</div>
+
+  <p class="b">咒文术的使用者在日常生活中往往话不多，但用词极为准确。他们对模糊的表达有本能的不适——不只是职业习惯，而是一种深入意识层面的敏感性。他们倾向于在说一件事之前先在脑子里把它"命名清楚"。</p>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 5 · 灵魂术
+══════════════════════════════════════ -->
+<div class="section" id="s5" data-school="soul">
+  <div class="sec-head">
+    <div class="sec-num">五</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK FIVE · SOUL ARTS</div>
+      <div class="sec-title">灵魂体系</div>
+      <div class="sec-subtitle">Direct Contact with Consciousness and Memory</div>
+    </div>
+    <div class="school-badge" style="background:var(--soul);">SOUL ARTS</div>
+  </div>
+
+  <p class="b">灵魂体系是所有施法流派中最接近魔法底层原理的一种——它直接操作意识与灵魂结构本身，而非通过语言、信仰或仪式等中介进行干涉。这使它既是最强大的，也是最危险的。</p>
+
+  <div class="school-card">
+    <div class="school-card-head soul-head">
+      <div>
+        <div class="sch-name-zh">灵魂术 · Soul Arts</div>
+        <div class="sch-name-en">Direct manipulation of consciousness, memory and soul structure</div>
+      </div>
+      <div class="sch-tag soul-tag">最敏感 · 极高风险</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--soul)">
+        <strong>核心机制：</strong>施法者直接以自身意识接触目标的灵魂层面，在意识之间建立直接的感知与干涉通道。效果精准，但边界模糊——施法者很难保证自己不会在接触过程中受到对方灵魂状态的反向影响。
+      </div>
+      <div>
+        <div class="scb-section-title">常见用途</div>
+        <div class="scb-item">精神状态沟通</div>
+        <div class="scb-item">记忆读取（有限度）</div>
+        <div class="scb-item">情绪安抚与稳定</div>
+        <div class="scb-item">梦境接触</div>
+        <div class="scb-item">灵魂结构修复</div>
+        <div class="scb-item">进入他人精神世界（高阶，极危险）</div>
+      </div>
+      <div>
+        <div class="scb-section-title">局限性</div>
+        <div class="scb-item">精神负荷极高，过载风险最大</div>
+        <div class="scb-item">长期使用导致情绪迟钝</div>
+        <div class="scb-item">使用者对 Corruption 的敏感度最高</div>
+        <div class="scb-item">无法有效处理"无意识"的存在</div>
+      </div>
+      <div>
+        <div class="scb-section-title">典型施法者</div>
+        <div class="scb-item">极少数高阶灵魂医师</div>
+        <div class="scb-item">部分封印物修复师</div>
+        <div class="scb-item">羽砾（天然适配，双人格结构提供特殊感知维度）</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Corruption 关联</div>
+        <div class="scb-item">灵魂术与 Corruption 的运作机制最接近</div>
+        <div class="scb-item">灵魂术使用者是 Corruption 最感兴趣的容器类型</div>
+        <div class="scb-item">精神世界的进入与救援必须借助此体系</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry" data-tag="羽砾专项">
+    <div class="entry-term">羽砾与灵魂体系的特殊关系</div>
+    <div class="entry-body">
+      羽砾的双人格并列结构，在灵魂术层面赋予了他一种极为罕见的特质：他能同时从两个意识角度感知对方的灵魂状态，类似于"双声道接收"。这让他对封印物残响的读取比普通修复师更细腻，但也意味着他承受的精神负荷更重。
+    </div>
+    <div class="entry-sub">
+      注：这不代表他是"最强灵魂术士"。他只是以一种别人做不到的方式去感受，而这种感受有时是他不愿意有的。
+    </div>
+  </div>
+
+  <div class="phenom-box">
+    <div class="phenom-title">典型施法现象 · 你会观察到</div>
+    <ul class="phenom-list">
+      <li>施法者眼神变得"不在这里"</li>
+      <li>对方可能进入浅层恍惚</li>
+      <li>周围空气温度略降</li>
+      <li>施法者之后需要很长的沉默</li>
+      <li>有时无法立刻说清自己看到了什么</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 6 · 元素术
+══════════════════════════════════════ -->
+<div class="section" id="s6" data-school="elem">
+  <div class="sec-head">
+    <div class="sec-num">六</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK SIX · ELEMENT ARTS</div>
+      <div class="sec-title">元素体系</div>
+      <div class="sec-subtitle">Resonance With the Natural World</div>
+    </div>
+    <div class="school-badge" style="background:var(--elem);">ELEMENT ARTS</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-text">元素术不是"创造元素"，而是"与自然现象建立共鸣"。</div>
+    <span class="pq-attr">—— 元素体系 · 核心误解纠正</span>
+  </div>
+
+  <p class="b">元素术是这个世界中学习门槛最低、普及率最高的施法流派。大多数普通人所掌握的魔法，都来自于这一体系的基础层级——不是因为它简单，而是因为它的引导路径最直觉化：你不需要理解复杂的灵魂结构，只需要对一个自然现象产生真实的感知共鸣。</p>
+
+  <div class="school-card">
+    <div class="school-card-head elem-head">
+      <div>
+        <div class="sch-name-zh">元素术 · Element Arts</div>
+        <div class="sch-name-en">Resonance with natural phenomena — fire, water, wind, earth</div>
+      </div>
+      <div class="sch-tag elem-tag">最直觉 · 最普遍</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--elem)">
+        <strong>核心机制：</strong>施法者将某种自然现象（热量、流动、重力、震动等）"人格化"——即在意识层面与之建立一种类似沟通的关系，然后通过这种关系对该现象施加影响。共鸣越深，可影响的范围与精细度越大。
+      </div>
+      <div>
+        <div class="scb-section-title">常见用途</div>
+        <div class="scb-item">点火 · 控制热量</div>
+        <div class="scb-item">调节水流方向</div>
+        <div class="scb-item">加热食物与环境</div>
+        <div class="scb-item">防风防寒</div>
+        <div class="scb-item">农业灌溉辅助</div>
+        <div class="scb-item">建筑加固</div>
+      </div>
+      <div>
+        <div class="scb-section-title">局限性</div>
+        <div class="scb-item">高阶精准控制难度极大</div>
+        <div class="scb-item">强烈依赖当前环境状态</div>
+        <div class="scb-item">对灵魂层面无干涉能力</div>
+        <div class="scb-item">情绪激动时容易失控</div>
+      </div>
+      <div>
+        <div class="scb-section-title">典型施法者</div>
+        <div class="scb-item">农夫 · 渔夫 · 牧人</div>
+        <div class="scb-item">厨师（热量精准控制）</div>
+        <div class="scb-item">建筑工人</div>
+        <div class="scb-item">大多数普通市民（低阶）</div>
+      </div>
+      <div>
+        <div class="scb-section-title">典型日常场景</div>
+        <div class="scb-item">顺手点亮壁炉</div>
+        <div class="scb-item">用指尖让茶保持温度</div>
+        <div class="scb-item">让晾衣绳上的衣服快速干燥</div>
+        <div class="scb-item">雨天保持某区域不被淋湿</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">场景示例 · 元素术的日常感</div>
+    <div class="scene-text">
+      集市的面包师傅把手放在烤炉旁，闭了一下眼。炉温稳了——不高不低，刚好。<br>
+      她没有说什么特别的话，也没有摆什么姿势。就是感觉了一下，然后调整了一下。<br>
+      这是她每天早上做的第一件事，比祈祷还早。
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 7 · 仪式术
+══════════════════════════════════════ -->
+<div class="section" id="s7" data-school="ritual">
+  <div class="sec-head">
+    <div class="sec-num">七</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK SEVEN · RITUAL ARTS</div>
+      <div class="sec-title">仪式体系</div>
+      <div class="sec-subtitle">Amplification Through Process and Collective Will</div>
+    </div>
+    <div class="school-badge" style="background:var(--ritual);">RITUAL ARTS</div>
+  </div>
+
+  <p class="b">仪式体系的核心逻辑是"放大"，而非"创造"。单个施法者的意识干涉力有限，但通过精密设计的流程、象征系统与群体意志的汇聚，这种力量可以被成倍地增幅。这也使得仪式体系成为所有单次威力最大的施法方式。</p>
+
+  <div class="school-card">
+    <div class="school-card-head ritual-head">
+      <div>
+        <div class="sch-name-zh">仪式术 · Ritual Arts</div>
+        <div class="sch-name-en">Amplification through structured process and collective consciousness</div>
+      </div>
+      <div class="sch-tag ritual-tag">最强大 · 最复杂</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--ritual)">
+        <strong>核心机制：</strong>通过预先设计的流程（步骤、时间节点、象征物、阵式排列）将参与者的意识导向同一个目标，形成合力。流程本身成为意识引导的容器，减少个人施法时的不稳定性。
+      </div>
+      <div>
+        <div class="scb-section-title">常见用途</div>
+        <div class="scb-item">大型封印构建与维持</div>
+        <div class="scb-item">城市级别防护工程</div>
+        <div class="scb-item">教廷重要仪式</div>
+        <div class="scb-item">转生祈祷与灵魂安置</div>
+        <div class="scb-item">季节性农业仪式</div>
+        <div class="scb-item">重大誓约的魔法见证</div>
+      </div>
+      <div>
+        <div class="scb-section-title">局限性</div>
+        <div class="scb-item">准备耗时，无法应急</div>
+        <div class="scb-item">通常需要多人参与</div>
+        <div class="scb-item">流程中任一环节被干扰则失败</div>
+        <div class="scb-item">失败代价往往远超普通施法</div>
+      </div>
+      <div>
+        <div class="scb-section-title">典型施法者</div>
+        <div class="scb-item">仪式主持者（专职）</div>
+        <div class="scb-item">教廷高阶神职人员</div>
+        <div class="scb-item">大型封印工程负责人</div>
+      </div>
+      <div>
+        <div class="scb-section-title">民间形式</div>
+        <div class="scb-item">节日庆典中的集体祈祷</div>
+        <div class="scb-item">婚礼与葬礼中的魔法见证</div>
+        <div class="scb-item">村落季节仪式（低阶，效果温和）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry" data-tag="重要说明">
+    <div class="entry-term">仪式术的"重量感"</div>
+    <div class="entry-body">一个真正的高阶仪式开始时，现场不会有爆炸和光效。它更像是：<strong>整个空间的性质发生了变化</strong>。声音的传播方式轻微改变，光线角度有些奇怪，在场的人会下意识地降低音量，甚至忘记自己原本想说什么。</div>
+    <div class="entry-sub">一旦你在场景里写到"大家都忽然安静下来，不知道为什么"——这很可能就是仪式正在进行。</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 8 · 炼金术
+══════════════════════════════════════ -->
+<div class="section" id="s8" data-school="alch">
+  <div class="sec-head">
+    <div class="sec-num">八</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK EIGHT · ALCHEMY</div>
+      <div class="sec-title">炼金体系</div>
+      <div class="sec-subtitle">Magic Fixed in Matter and Craft</div>
+    </div>
+    <div class="school-badge" style="background:var(--alch);">ALCHEMY</div>
+  </div>
+
+  <p class="b">炼金体系是与日常生活联系最深的施法流派——不是因为它的效果最温和，而是因为它的成果以物质形态留存在世界里，成为人们每天接触的器物。那把会记住温度的茶壶，那面在雨天会变朦胧的镜子，那枚总是找不到放在哪里的戒指——都可能是炼金体系的产物。</p>
+
+  <div class="school-card">
+    <div class="school-card-head alch-head">
+      <div>
+        <div class="sch-name-zh">炼金术 · Alchemy</div>
+        <div class="sch-name-en">Inscription of magic into physical matter and craft objects</div>
+      </div>
+      <div class="sch-tag alch-tag">最持久 · 最工匠化</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--alch)">
+        <strong>核心机制：</strong>通过特定的工艺流程、材料选择与施法者意识的注入，将魔法效果固化进物质结构。物品成为魔法的容器，在施法者离开甚至死亡后继续发挥效果，有时甚至演变出原本未曾设计的性格。
+      </div>
+      <div>
+        <div class="scb-section-title">常见用途</div>
+        <div class="scb-item">魔法日常工具制作</div>
+        <div class="scb-item">封印容器构建</div>
+        <div class="scb-item">保存药剂与制剂</div>
+        <div class="scb-item">封印物修复材料</div>
+        <div class="scb-item">通信器物</div>
+        <div class="scb-item">建筑加固与魔法内嵌</div>
+      </div>
+      <div>
+        <div class="scb-section-title">局限性</div>
+        <div class="scb-item">成本高，材料限制大</div>
+        <div class="scb-item">制作耗时，无法即时使用</div>
+        <div class="scb-item">产品质量高度依赖施法者状态</div>
+        <div class="scb-item">长年使用后的"性格偏移"难以预测</div>
+      </div>
+      <div>
+        <div class="scb-section-title">典型施法者</div>
+        <div class="scb-item">工坊师与器物师</div>
+        <div class="scb-item">封印物修复师（核心技能）</div>
+        <div class="scb-item">专业药剂师</div>
+        <div class="scb-item">部分建筑师（结构魔法内嵌）</div>
+      </div>
+      <div>
+        <div class="scb-section-title">封印物与炼金术</div>
+        <div class="scb-item">大多数封印物都含有炼金术成分</div>
+        <div class="scb-item">修复封印物必须了解其炼金结构</div>
+        <div class="scb-item">羽砾日常工作的核心体系之一</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">场景示例 · 炼金术的工坊感</div>
+    <div class="scene-text">
+      工作台上摆着三种材料，一支细笔，一小瓶封印液。<br>
+      羽砾没有急着开始，先绕着那个器物看了一圈，像是在听它说话。<br>
+      "这一段咒文是后来加上去的，"他说，"加的时候那个人心思不在这里。"<br>
+      他拿起细笔，开始拆那段咒文。动作很慢，很稳。
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 9 · 混合应用
+══════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="sec-head">
+    <div class="sec-num">九</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK NINE · COMBINED APPLICATIONS</div>
+      <div class="sec-title">混合应用与化学反应</div>
+      <div class="sec-subtitle">What Happens When Schools Work Together</div>
+    </div>
+  </div>
+
+  <p class="b">这个世界的施法者几乎从不只用一种体系。主修某一流派并不意味着对其他流派一无所知，更多情况下，高阶施法者会根据实际需求在不同体系之间自然切换，或者有意识地结合多种体系产生新的效果。这种"化学反应"往往是最有趣的部分。</p>
+
+  <div class="combo-grid">
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--faith)">神术</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--word)">咒文术</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">精准封印构建</div>
+        <div class="cr-desc">信仰提供稳定底座，咒文提供精准结构。结合后的封印比单纯咒文封印更难被侵蚀，比单纯神术封印更细腻可控。</div>
+        <div class="cr-yuli">教廷正式封印的标准方法。</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--soul)">灵魂术</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--alch)">炼金术</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">记忆储存器</div>
+        <div class="cr-desc">将特定记忆或情绪印记封存进物质容器中，使其在施法者离开后仍可被具有灵魂术感知的人读取。</div>
+        <div class="cr-yuli">现存记忆储存器极少，大多来自古代。羽砾偶尔接触此类遗物。</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--elem)">元素术</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--ritual)">仪式术</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">城市供暖系统</div>
+        <div class="cr-desc">通过仪式放大元素共鸣，在城市范围内建立持续的热量分配网络。需要定期维护仪式。</div>
+        <div class="cr-yuli">部分中型城镇在冬季依赖此系统，是基础设施的一部分。</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--word)">咒文术</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--soul)">灵魂术</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">高级封印物修复</div>
+        <div class="cr-desc">咒文术提供结构框架，灵魂术提供与封印物残响的直接沟通。比单一体系修复更精细，但对施法者的精神消耗成倍增加。</div>
+        <div class="cr-yuli">羽砾的核心工作方法。他经常使用这个组合。</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--faith)">神术</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--ritual)">仪式术</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">教廷大型仪式</div>
+        <div class="cr-desc">教廷最主流的高阶施法形式。群体信仰通过仪式结构放大，可实现单个施法者无法企及的规模效果。</div>
+        <div class="cr-yuli">城市级结界、历史重要封印均通过此组合完成。</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--alch)">炼金术</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--word)">咒文术</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">咒文固化材料</div>
+        <div class="cr-desc">将特定咒文结构直接写入材料的物质结构中，使其在无需施法者在场的情况下持续发挥特定效果。</div>
+        <div class="cr-yuli">封印物容器、魔法工具的制作基础。修复师必备技能。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 10 · 施法者分类
+══════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="sec-head">
+    <div class="sec-num">十</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK TEN · SOCIAL TAXONOMY</div>
+      <div class="sec-title">施法者社会分类</div>
+      <div class="sec-subtitle">How Mages Are Understood in the World</div>
+    </div>
+  </div>
+
+  <p class="b">这个世界没有"法师"这个词所带来的那种刻板印象。施法者在社会中的定位，更接近于各行各业中的专业人士——他们首先是修士、学者、工匠、医者或研究者，其次才是施法者。魔法是职业工具，不是身份标签。</p>
+
+  <table class="prac-table">
+    <thead>
+      <tr>
+        <th>社会类型</th>
+        <th>主要体系</th>
+        <th>社会定位</th>
+        <th>典型日常</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="type-col">修士</td>
+        <td>
+          <span class="prac-school-tag faith-tag">神术</span>
+          <span class="prac-school-tag ritual-tag">仪式术</span>
+        </td>
+        <td>教廷体系内，负责布道、治愈与仪式。最受普通人信任的施法者群体。</td>
+        <td>早课、治疗、维持教廷封印、协助民间仪式</td>
+      </tr>
+      <tr>
+        <td class="type-col">学者</td>
+        <td>
+          <span class="prac-school-tag word-tag">咒文术</span>
+          <span class="prac-school-tag" style="color:var(--soul);border-color:var(--violet-pale)">灵魂术</span>
+        </td>
+        <td>专注研究魔法机制与异常现象。往往与教廷有合作关系，但保持一定的独立性。</td>
+        <td>文献研究、咒文分析、异常理论构建</td>
+      </tr>
+      <tr>
+        <td class="type-col">灵魂医师</td>
+        <td>
+          <span class="prac-school-tag" style="color:var(--soul);border-color:var(--violet-pale)">灵魂术</span>
+          <span class="prac-school-tag faith-tag">神术</span>
+        </td>
+        <td>极少数，专门处理精神创伤、灵魂受损与精神感染案例。职业声望两极化。</td>
+        <td>接诊精神异常者、梦境治疗、灵魂结构修复</td>
+      </tr>
+      <tr>
+        <td class="type-col">工坊师</td>
+        <td>
+          <span class="prac-school-tag alch-tag">炼金术</span>
+          <span class="prac-school-tag" style="color:var(--elem);border-color:var(--sage-pale)">元素术</span>
+        </td>
+        <td>魔法工具与日常用品的制作者。社会地位稳定，需求持续，但鲜少受到关注。</td>
+        <td>制作与维修魔法器物、接受定制委托</td>
+      </tr>
+      <tr>
+        <td class="type-col">封印物修复师</td>
+        <td>
+          <span class="prac-school-tag word-tag">咒文术</span>
+          <span class="prac-school-tag" style="color:var(--soul);border-color:var(--violet-pale)">灵魂术</span>
+          <span class="prac-school-tag alch-tag">炼金术</span>
+          <span class="prac-school-tag faith-tag">神术(基础)</span>
+        </td>
+        <td>高危险高收入的独立职业。接单制，无固定雇主。社交需求低，专业壁垒高。<br><strong>羽砾的职业。</strong></td>
+        <td>封印修复、异常遗物鉴定、残响处理、结构研究</td>
+      </tr>
+      <tr>
+        <td class="type-col">仪式主持者</td>
+        <td>
+          <span class="prac-school-tag ritual-tag">仪式术</span>
+          <span class="prac-school-tag faith-tag">神术</span>
+        </td>
+        <td>专门承接大型仪式的专职人员。工作频率低但单次规模大，通常有固定的工作团队。</td>
+        <td>仪式设计与主持、团队协调、场地准备</td>
+      </tr>
+      <tr>
+        <td class="type-col">游历术士</td>
+        <td><span style="font-style:italic;color:var(--ink-faded);font-size:12px;">混合型，因人而异</span></td>
+        <td>没有固定职业定位的自由施法者。被视为不稳定因素，也是发现异常的重要情报来源。</td>
+        <td>不定，四处接活，偶尔带回奇怪的消息</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="entry" data-tag="重要说明">
+    <div class="entry-term">不存在的职业分类</div>
+    <div class="entry-body">这个世界里没有"火法师"、"冰法师"、"奶妈"、"刺客法师"这类以单一魔法属性定义的职业。施法者的身份由社会功能决定，而非技能树位置。</div>
+    <div class="entry-sub">请避免用游戏RPG的职业逻辑来描述这个世界里的施法者。他们更像各种各样的匠人、学者与医者。</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 11 · 写作风格
+══════════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="sec-head">
+    <div class="sec-num">十一</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK ELEVEN · WRITING STYLE GUIDE</div>
+      <div class="sec-title">世界风格总则</div>
+      <div class="sec-subtitle">The Texture and Temperature of This World</div>
+    </div>
+  </div>
+
+  <p class="b">魔法体系的规则固然重要，但更重要的是让这个世界在读者感知里"是真实存在过的"。一个世界的真实感，往往不来自宏大的设定，而来自无数个微小的、让人觉得"对，就是这样"的细节。</p>
+
+  <div class="pq">
+    <div class="pq-text">魔法不是超能力，不是为了变强。<br>它是"灵魂与世界沟通的方法"。</div>
+    <span class="pq-attr">—— 《Corruption》魔法体系 · 最终总结</span>
+  </div>
+
+  <div class="entry" data-tag="风格关键词">
+    <div class="entry-term">世界的底色</div>
+    <div class="entry-body">
+      <div class="kw-row">
+        <span class="kw g">安静</span>
+        <span class="kw g">生活感</span>
+        <span class="kw g">工坊气息</span>
+        <span class="kw g">旧城区</span>
+        <span class="kw o">温和神秘</span>
+        <span class="kw o">灵魂感</span>
+        <span class="kw o">轻微怪异</span>
+        <span class="kw">中世纪日常</span>
+        <span class="kw">慢节奏</span>
+        <span class="kw">雨天与灯光</span>
+        <span class="kw r">偶尔异常</span>
+        <span class="kw r">身份真实性</span>
+        <span class="kw">情感导向</span>
+        <span class="kw">日常魔法</span>
+      </div>
+    </div>
+    <div class="entry-sub">
+      不是热血升级 · 不是黑暗绝望 · 不是全程高压恐怖 · 不是炫技型世界观。
+    </div>
+  </div>
+
+  <div class="entry" data-tag="写作检查清单">
+    <div class="entry-term">写这个世界时，每次都问自己</div>
+    <div class="entry-body">
+      · 这个场景里的魔法，是不是"背景音"而不是主角？<br>
+      · 这里有没有一个让世界"活着"的小细节（会记住温度的茶壶 / 雨天发光的路牌 / 扫帚跟着人走）？<br>
+      · 恐怖感的浓度是否合适？异常是"有点奇怪"，还是"立刻崩溃"？<br>
+      · 羽砾有没有被写成"随时在受苦的主角"？他只是在奇怪的世界里，以自己的方式安静活着。<br>
+      · 这个场景的节奏够慢吗？
+    </div>
+  </div>
+
+  <div class="entry" data-tag="世界已运行了很久">
+    <div class="entry-term">让世界"像已经运行几百年"的方法</div>
+    <div class="entry-body">
+      · 每个物品都有历史：那把椅子磨损的方式，那扇门的合页声，那条街道的石板缝里长出来的草。<br>
+      · 每个职业都有不成文的规矩：修复师之间互相知道某些话不用说，因为这些话已经变成了行业内的空气。<br>
+      · 每个异常都有故事：那面镜子讨厌雨天，一定是有原因的，哪怕没有人记得了。<br>
+      · 人们对魔法的态度是习以为常的，不是惊叹的：用魔法点灯，和用手划火柴，情感重量相当。
+    </div>
+  </div>
+</div>
+
+
+<!-- FINAL -->
+<div class="final-block">
+  <div class="fb-label">FINAL SUMMARY · 魔法体系核心思想</div>
+  <div class="fb-quote">
+    在《Corruption》的世界里，魔法不是为了变强，<br>
+    不是为了打败什么，不是为了成为谁。<br>
+    <span class="fb-highlight">它是人们与世界相处的方式。</span>
+  </div>
+  <div class="fb-tags">
+    <div class="fb-tag">BOOK ONE · 魔法本质</div>
+    <div class="fb-tag">BOOK TWO · 代价体系</div>
+    <div class="fb-tag">BOOK THREE · 神术</div>
+    <div class="fb-tag">BOOK FOUR · 咒文术</div>
+    <div class="fb-tag">BOOK FIVE · 灵魂术</div>
+    <div class="fb-tag">BOOK SIX · 元素术</div>
+    <div class="fb-tag">BOOK SEVEN · 仪式术</div>
+    <div class="fb-tag">BOOK EIGHT · 炼金术</div>
+    <div class="fb-tag">BOOK NINE · 混合应用</div>
+    <div class="fb-tag">BOOK TEN · 施法者分类</div>
+    <div class="fb-tag">BOOK ELEVEN · 写作风格</div>
+  </div>
+</div>
+
+</div><!-- book-inner -->
+</div><!-- book -->
+</div><!-- outer -->
+</body>
+</html>

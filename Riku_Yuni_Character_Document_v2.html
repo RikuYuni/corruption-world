@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>羽砾 · 作者内部档案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Inconsolata:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════
+   ROOT
+══════════════════════ */
+:root {
+  --paper:       #f3ede0;
+  --paper-warm:  #ece3cc;
+  --paper-mid:   #ddd4bb;
+  --paper-cool:  #eceae4;
+  --ink:         #1c1a12;
+  --ink-mid:     #38341e;
+  --ink-light:   #645e42;
+  --ink-faded:   #968e6e;
+  --ink-ghost:   #c4bca0;
+  --line:        rgba(100,90,58,0.18);
+  --line-strong: rgba(100,90,58,0.32);
+
+  /* Accent — 羽 (feminine) */
+  --yu:          #3e4e68;
+  --yu-mid:      #5a6e8a;
+  --yu-pale:     #c8d4e4;
+  --yu-wash:     rgba(62,78,104,0.07);
+
+  /* Accent — 砾 (masculine) */
+  --li:          #5a3a1a;
+  --li-mid:      #7a5228;
+  --li-pale:     #e0ccaa;
+  --li-wash:     rgba(90,58,26,0.07);
+
+  /* Corruption resonance */
+  --crpt:        #4a1e4e;
+  --crpt-mid:    #6a3270;
+  --crpt-pale:   #d8b8e0;
+  --crpt-wash:   rgba(74,30,78,0.06);
+
+  /* Warning / mystery */
+  --warn:        #6e2010;
+  --warn-pale:   #e8c8c0;
+
+  /* Annotation ink */
+  --ann:         #3a3060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #18140c;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--ink);
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 40% 30%, #221c10 0%, #18140c 70%);
+  pointer-events: none;
+}
+
+/* ══════════════════════
+   OUTER
+══════════════════════ */
+.outer {
+  position: relative; z-index: 1;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 44px 16px 80px;
+}
+
+/* ══════════════════════
+   BOOK
+══════════════════════ */
+.book {
+  position: relative;
+  box-shadow:
+    -8px 4px 20px rgba(0,0,0,0.55),
+    8px 4px 20px rgba(0,0,0,0.35),
+    0 12px 55px rgba(0,0,0,0.65);
+}
+
+.book::after {
+  content: '';
+  position: absolute;
+  right: -4px; top: 3px; bottom: -3px; width: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--paper) 0px, var(--paper-mid) 1px,
+    var(--paper) 2px, var(--paper-warm) 3px
+  );
+  opacity: 0.6;
+}
+
+.grain {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.66' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+.ruled {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 29px,
+    var(--line) 29px, var(--line) 30px
+  );
+  background-position: 0 90px;
+  pointer-events: none; z-index: 0;
+}
+
+.book-body {
+  background: var(--paper);
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+
+/* ══════════════════════
+   NAV
+══════════════════════ */
+.nav-bar {
+  position: sticky; top: 0;
+  background: var(--ink);
+  display: flex; overflow-x: auto;
+  scrollbar-width: none; z-index: 200;
+  border-bottom: 2px solid var(--li);
+}
+.nav-bar::-webkit-scrollbar { display: none; }
+.nav-item {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9.5px; letter-spacing: 1.5px;
+  color: var(--ink-faded); padding: 11px 16px;
+  white-space: nowrap; text-decoration: none;
+  display: block; border-right: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.15s; text-transform: uppercase;
+}
+.nav-item:hover { background: rgba(255,255,255,0.05); color: var(--paper); }
+.nav-yu { color: var(--yu-mid) !important; }
+.nav-li { color: var(--li-pale) !important; }
+.nav-crpt { color: var(--crpt-pale) !important; }
+
+/* ══════════════════════
+   COVER
+══════════════════════ */
+.cover {
+  background: var(--ink);
+  padding: 0;
+  position: relative; overflow: hidden;
+}
+
+.cover-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 64px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.cb-left {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-faded); text-transform: uppercase;
+}
+.cb-right {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--li-pale); opacity: 0.6;
+  border: 1px solid rgba(200,160,90,0.25);
+  padding: 3px 12px; text-transform: uppercase;
+}
+
+.cover-main {
+  padding: 68px 64px 60px;
+  position: relative; z-index: 1;
+}
+
+/* Faint ruled lines on cover */
+.cover-main::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 30px,
+    rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px
+  );
+  pointer-events: none;
+}
+
+.cover-eyebrow {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px; letter-spacing: 4px;
+  color: var(--ink-faded); margin-bottom: 28px;
+  text-transform: uppercase;
+}
+
+/* Character name — split color */
+.cover-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 72px; font-weight: 300;
+  line-height: 1; margin-bottom: 10px;
+  letter-spacing: 20px;
+}
+.name-yu { color: var(--yu-pale); }
+.name-li { color: var(--li-pale); }
+
+.cover-pinyin {
+  font-family: 'Inconsolata', monospace;
+  font-size: 11px; letter-spacing: 6px;
+  color: var(--ink-faded); margin-bottom: 36px;
+  text-transform: uppercase;
+}
+
+.cover-rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, var(--yu-mid), var(--li-mid), transparent);
+  margin-bottom: 28px; opacity: 0.5;
+}
+
+.cover-desc {
+  font-family: 'Lora', serif;
+  font-style: italic; font-size: 13.5px;
+  color: var(--ink-faded); line-height: 2;
+  max-width: 520px; margin-bottom: 48px;
+}
+
+.cover-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.c-tag {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  padding: 5px 14px; text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--ink-ghost);
+}
+.c-tag.t-yu { border-color: rgba(90,110,138,0.4); color: var(--yu-pale); }
+.c-tag.t-li { border-color: rgba(122,82,40,0.4); color: var(--li-pale); }
+.c-tag.t-crpt { border-color: rgba(106,50,112,0.4); color: var(--crpt-pale); }
+
+/* ══════════════════════
+   SECTION
+══════════════════════ */
+.section {
+  padding: 52px 64px 60px;
+  border-bottom: 1px solid var(--line-strong);
+  position: relative;
+}
+.section:nth-child(even) {
+  background: linear-gradient(to bottom right, var(--paper), var(--paper-cool));
+}
+
+/* Colored left accent */
+.section[data-accent]::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--accent-color, var(--ink-light));
+  opacity: 0.7;
+}
+.section[data-accent="yu"] { --accent-color: var(--yu-mid); }
+.section[data-accent="li"] { --accent-color: var(--li-mid); }
+.section[data-accent="both"] {
+  --accent-color: transparent;
+}
+.section[data-accent="both"]::before {
+  background: linear-gradient(to bottom, var(--yu-mid) 50%, var(--li-mid) 50%);
+}
+.section[data-accent="crpt"] { --accent-color: var(--crpt-mid); }
+.section[data-accent="warn"] { --accent-color: var(--warn); }
+
+/* Section header */
+.sec-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 28px; padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+}
+.sec-code {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-faded); text-transform: uppercase;
+}
+.sec-flag {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--paper);
+  padding: 3px 12px;
+  text-transform: uppercase;
+}
+.sec-flag.yu { background: var(--yu); }
+.sec-flag.li { background: var(--li); }
+.sec-flag.both { background: linear-gradient(to right, var(--yu) 50%, var(--li) 50%); }
+.sec-flag.crpt { background: var(--crpt); }
+.sec-flag.neutral { background: var(--ink-light); }
+
+.sec-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px; font-weight: 300;
+  color: var(--ink-faded); letter-spacing: 4px;
+  margin-bottom: 4px; text-transform: uppercase;
+}
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px; font-weight: 600;
+  color: var(--ink); letter-spacing: 1px; line-height: 1.2;
+}
+.sec-title-en {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 13px; color: var(--ink-light);
+  margin-top: 4px; letter-spacing: 0.3px;
+}
+
+/* Body text */
+p.b {
+  font-size: 13.5px; color: var(--ink-mid);
+  line-height: 2.1; text-align: justify;
+  margin-bottom: 16px; text-indent: 2em;
+}
+p.b:first-of-type { text-indent: 0; }
+
+/* ══════════════════════
+   DUAL PERSONA — two-column block
+══════════════════════ */
+.persona-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 22px 0;
+  border: 1px solid var(--line-strong);
+  overflow: hidden;
+}
+
+.persona-col {
+  padding: 22px 22px 24px;
+}
+.persona-col.col-yu {
+  background: var(--yu-wash);
+  border-right: 1px solid var(--line-strong);
+}
+.persona-col.col-li { background: var(--li-wash); }
+
+.pc-head {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pc-name-zh {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 600; line-height: 1;
+}
+.col-yu .pc-name-zh { color: var(--yu); }
+.col-li .pc-name-zh { color: var(--li); }
+
+.pc-name-en {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.col-yu .pc-name-en { color: var(--yu-mid); }
+.col-li .pc-name-en { color: var(--li-mid); }
+
+.pc-body {
+  font-size: 13px; color: var(--ink-mid);
+  line-height: 1.9;
+}
+
+.pc-item {
+  display: flex; gap: 10px;
+  margin: 8px 0; align-items: flex-start;
+  font-size: 13px; line-height: 1.8;
+}
+.pc-item::before {
+  content: '·'; color: var(--ink-ghost);
+  flex-shrink: 0; margin-top: 1px;
+}
+
+.pc-tag {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  padding: 2px 8px; text-transform: uppercase;
+  display: inline-block; margin-top: 12px;
+}
+.col-yu .pc-tag { border: 1px solid var(--yu-pale); color: var(--yu-mid); }
+.col-li .pc-tag { border: 1px solid var(--li-pale); color: var(--li-mid); }
+
+/* ══════════════════════
+   SHARED STATE — middle row below persona split
+══════════════════════ */
+.shared-bar {
+  background: linear-gradient(to right, var(--yu-wash), var(--li-wash));
+  border: 1px solid var(--line-strong);
+  border-top: none;
+  padding: 16px 22px;
+  font-size: 13px; color: var(--ink-mid);
+  line-height: 1.9;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+
+.sb-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--ink-faded); text-transform: uppercase;
+  grid-column: 1 / -1; margin-bottom: 4px;
+}
+
+.sb-item {
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.sb-key {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13.5px; font-weight: 600;
+  color: var(--ink); white-space: nowrap; min-width: 80px;
+}
+.sb-val { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+/* ══════════════════════
+   ENTRY BLOCK
+══════════════════════ */
+.entry {
+  margin: 20px 0;
+  border: 1px solid var(--line-strong);
+  overflow: hidden;
+}
+
+.entry-head {
+  background: var(--ink);
+  padding: 10px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.eh-code {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  color: var(--ink-faded); text-transform: uppercase;
+}
+.eh-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--paper-warm); letter-spacing: 0.5px;
+}
+
+.entry-body {
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.25);
+}
+.entry-body p {
+  font-size: 13.5px; color: var(--ink-mid);
+  line-height: 1.9; margin-bottom: 10px;
+}
+.entry-body p:last-child { margin-bottom: 0; }
+.entry-body strong { color: var(--ink); font-weight: 600; }
+
+.entry-note {
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px dashed var(--line-strong);
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 12px; color: var(--ink-light); line-height: 1.75;
+}
+
+/* ══════════════════════
+   ANNOTATION — handwritten-style
+══════════════════════ */
+.ann-block {
+  margin: 18px 0;
+  padding: 14px 18px;
+  background: rgba(58,48,96,0.06);
+  border-left: 3px solid var(--ann);
+  position: relative;
+}
+.ann-block::before {
+  content: '✎';
+  position: absolute; top: 12px; right: 14px;
+  font-size: 13px; color: var(--ann); opacity: 0.4;
+}
+.ann-text {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 13px; color: var(--ann);
+  line-height: 1.85;
+}
+
+/* ══════════════════════
+   CORRUPTION RESONANCE SPECIAL BLOCK
+══════════════════════ */
+.crpt-block {
+  margin: 20px 0;
+  border: 1px solid rgba(106,50,112,0.3);
+  border-top: 3px solid var(--crpt);
+  background: var(--crpt-wash);
+  overflow: hidden;
+}
+.crpt-head {
+  padding: 10px 18px;
+  background: var(--crpt);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ch-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  color: var(--crpt-pale); text-transform: uppercase;
+}
+.ch-badge {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 2px 8px; text-transform: uppercase;
+}
+.crpt-body {
+  padding: 16px 20px;
+}
+.crpt-body p {
+  font-size: 13.5px; color: var(--ink-mid);
+  line-height: 1.9; margin-bottom: 10px;
+}
+.crpt-body p:last-child { margin-bottom: 0; }
+.crpt-body strong { color: var(--crpt); font-weight: 600; }
+
+/* ══════════════════════
+   ABILITY TABLE
+══════════════════════ */
+.ability-table {
+  width: 100%; border-collapse: collapse;
+  margin: 18px 0; font-size: 13px;
+}
+.ability-table thead th {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  color: var(--paper); background: var(--ink);
+  padding: 9px 14px; text-align: left;
+  text-transform: uppercase; font-weight: 500;
+}
+.ability-table tbody td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top; line-height: 1.85;
+  color: var(--ink-mid);
+}
+.ability-table tr:hover td { background: rgba(0,0,0,0.03); }
+.ability-table .a-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--ink); width: 160px;
+}
+.a-tag {
+  display: inline-block;
+  font-family: 'Inconsolata', monospace;
+  font-size: 8px; letter-spacing: 1px;
+  padding: 2px 7px; text-transform: uppercase;
+  border: 1px solid; margin-right: 4px;
+}
+.a-tag.yu { color: var(--yu-mid); border-color: var(--yu-pale); }
+.a-tag.li { color: var(--li-mid); border-color: var(--li-pale); }
+.a-tag.both { color: var(--ink-light); border-color: var(--line-strong); }
+.a-tag.crpt { color: var(--crpt-mid); border-color: var(--crpt-pale); }
+
+/* ══════════════════════
+   BEHAVIOR LIST
+══════════════════════ */
+.behavior-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px; margin: 16px 0;
+}
+.bv-card {
+  border: 1px solid var(--line-strong);
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.2);
+  transition: box-shadow 0.15s;
+}
+.bv-card:hover { box-shadow: 0 3px 14px rgba(0,0,0,0.08); }
+.bv-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--ink-faded); text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.bv-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--ink); margin-bottom: 7px; line-height: 1.3;
+}
+.bv-desc {
+  font-size: 12.5px; color: var(--ink-light);
+  line-height: 1.75;
+}
+
+/* ══════════════════════
+   MYSTERY / OPEN QUESTIONS
+══════════════════════ */
+.mystery-item {
+  display: flex; gap: 16px;
+  margin: 14px 0; align-items: flex-start;
+}
+.my-num {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px; font-weight: 600;
+  color: var(--paper); background: var(--warn);
+  min-width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.my-body { flex: 1; }
+.my-q {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--ink); margin-bottom: 5px; line-height: 1.3;
+}
+.my-desc {
+  font-size: 13px; color: var(--ink-mid); line-height: 1.85;
+}
+
+/* ══════════════════════
+   PULL QUOTE
+══════════════════════ */
+.pq {
+  margin: 22px 0; padding: 16px 0 16px 22px;
+  border-left: 3px solid var(--ink-light);
+}
+.pq-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 16.5px;
+  color: var(--ink); line-height: 1.7; letter-spacing: 0.2px;
+}
+.pq-attr {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9.5px; letter-spacing: 2px;
+  color: var(--ink-faded); margin-top: 10px;
+  display: block; text-transform: uppercase;
+}
+
+/* H-rule */
+.h-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-strong), transparent);
+  margin: 24px 0;
+}
+
+/* Margin note */
+.mn {
+  float: right; clear: right;
+  width: 150px; margin: 2px -22px 14px 18px;
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 11px; color: var(--ink-light);
+  line-height: 1.7; border-left: 1px solid var(--line-strong);
+  padding-left: 10px;
+}
+
+/* Scene box */
+.scene {
+  margin: 18px 0; padding: 17px 20px;
+  background: rgba(240,232,210,0.4);
+  border: 1px solid var(--paper-mid);
+  border-top: 2px solid var(--ink-light);
+}
+.scene-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-faded); text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.scene p {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 13px; color: var(--ink-mid); line-height: 1.95;
+}
+
+/* Footnotes */
+.footnotes {
+  margin-top: 32px; padding-top: 14px;
+  border-top: 1px solid var(--line-strong);
+}
+.fn-title {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-faded); margin-bottom: 8px; text-transform: uppercase;
+}
+.fn-item {
+  display: flex; gap: 10px; margin: 5px 0;
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 11.5px; color: var(--ink-light); line-height: 1.7;
+}
+.fn-num {
+  font-family: 'Inconsolata', monospace;
+  font-style: normal; font-size: 10px;
+  color: var(--ink-faded); flex-shrink: 0; min-width: 18px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .section { padding: 40px 30px 44px; }
+  .cover-main { padding: 48px 30px 44px; }
+  .cover-bar { padding: 11px 30px; }
+  .persona-split { grid-template-columns: 1fr; }
+  .persona-col.col-yu { border-right: none; border-bottom: 1px solid var(--line-strong); }
+  .shared-bar { grid-template-columns: 1fr; }
+  .behavior-grid { grid-template-columns: 1fr; }
+  .cover-name { font-size: 52px; letter-spacing: 12px; }
+  .mn { float: none; width: auto; margin: 12px 0; }
+}
+</style>
+</head>
+<body>
+<div class="outer">
+<div class="book">
+<div class="grain"></div>
+<div class="ruled"></div>
+<div class="book-body">
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <a class="nav-item" href="#cover">封面</a>
+  <a class="nav-item nav-both" href="#s1">§1 · 基础档案</a>
+  <a class="nav-item nav-yu" href="#s2">§2 · 羽</a>
+  <a class="nav-item nav-li" href="#s3">§3 · 砾</a>
+  <a class="nav-item" href="#s4">§4 · 双人格运作</a>
+  <a class="nav-item" href="#s5">§5 · 能力</a>
+  <a class="nav-item nav-crpt" href="#s6">§6 · Corruption残响</a>
+  <a class="nav-item" href="#s7">§7 · 行为细节</a>
+  <a class="nav-item" href="#s8">§8 · 内心状态</a>
+  <a class="nav-item" href="#s9">§9 · 与世界的关系</a>
+  <a class="nav-item nav-warn" href="#s10">§10 · 未解谜题</a>
+</nav>
+
+
+<!-- ═══════ COVER ═══════ -->
+<div class="cover" id="cover">
+  <div class="cover-bar">
+    <div class="cb-left">作者内部档案 · Character Reference · Internal Use Only</div>
+    <div class="cb-right">非公开 · 创作专用</div>
+  </div>
+  <div class="cover-main">
+    <div class="cover-eyebrow">《Corruption》主角档案 · Primary Character File</div>
+    <div class="cover-name">
+      <span class="name-yu">羽</span><span class="name-li">砾</span>
+    </div>
+    <div class="cover-pinyin">Yǔ &nbsp;·&nbsp; Lì</div>
+    <div class="cover-rule"></div>
+    <div class="cover-desc">
+      他的名字由两个人格共同构成。<br>
+      对外是一个人，对内是两个。<br>
+      这不是分裂，而是一种罕见的并列存在。<br>
+      他住在旧城区，修复别人放不下的东西，<br>
+      自己体内也带着一块还没弄清楚的残片。
+    </div>
+    <div class="cover-tags">
+      <span class="c-tag">封印物修复师</span>
+      <span class="c-tag t-yu">羽 · 女性人格</span>
+      <span class="c-tag t-li">砾 · 男性人格</span>
+      <span class="c-tag t-crpt">Corruption 残响携带者</span>
+      <span class="c-tag">双感知 · 高精神负荷</span>
+      <span class="c-tag">旧城区独居</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §1 · 基础档案 ═══════ -->
+<div class="section" id="s1" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 1 · Basic Profile</div>
+    <div class="sec-flag both">两人格共有</div>
+  </div>
+  <div class="sec-num">第一章</div>
+  <div class="sec-title">基础档案</div>
+  <div class="sec-title-en">Core Identity & Situation</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <div class="shared-bar" style="border:1px solid var(--line-strong); border-top:1px solid var(--line-strong);">
+    <div class="sb-label">基础信息</div>
+    <div class="sb-item">
+      <div class="sb-key">对外称呼</div>
+      <div class="sb-val">羽砾。大多数委托人不知道他的真名，以外号称之。</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">内部名称</div>
+      <div class="sb-val">两人格仅在彼此之间使用：羽（女性人格）/ 砾（男性人格）</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">生理性别</div>
+      <div class="sb-val">男性</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">职业</div>
+      <div class="sb-val">封印物修复师 / 异常遗物鉴定者（独立接单制）</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">居所</div>
+      <div class="sb-val">旧城区边缘。独居。工坊在地下室，地面层几乎不设访客空间。</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">特殊标注</div>
+      <div class="sb-val">体内携带 Corruption 残响（幼年意外导致，详见§6）</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;"></div>
+
+  <p class="b">羽砾的对外形象是统一的——一个沉默、专业、轻易不让人靠近的修复师。他的客人大多只见过他一面，拿走修好的东西，留下不多的钱，之后不再联系。</p>
+
+  <p class="b">他通常被人叫作"封印匠"或"静物修士"，极少数常打交道的人知道他叫羽砾，但没有人知道这个名字的内部含义。</p>
+
+  <div class="ann-block">
+    <div class="ann-text">
+      写作提示：外部世界只看到"羽砾"这个整体。两个人格的名字是内部设定，在叙事中通常不会被提及，除非涉及他们之间的内部对话或精神世界场景。
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §2 · 羽 ═══════ -->
+<div class="section" id="s2" data-accent="yu">
+  <div class="sec-top">
+    <div class="sec-code">§ 2 · Persona — Yǔ</div>
+    <div class="sec-flag yu">羽 · 女性人格</div>
+  </div>
+  <div class="sec-num">第二章</div>
+  <div class="sec-title" style="color:var(--yu);">羽</div>
+  <div class="sec-title-en">The Feminine Persona — Observer, Analyst</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">羽是两个人格中感知导向更强的那一个。她不一定是"更安静"的，但她更习惯先观察、先理解，然后再决定要不要开口。</p>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 2.1 · Core Personality</div>
+      <div class="eh-title">核心性格</div>
+    </div>
+    <div class="entry-body">
+      <p>· <strong>观察者本能</strong> — 习惯先把一件事看完再说话。不是因为犹豫，而是因为她对"不完整的判断"有天然的抵触。</p>
+      <p>· <strong>精准但克制</strong> — 说话往往比砾少，但每次开口都有分量。不说废话，偶尔一句话会让对方沉默很久。</p>
+      <p>· <strong>情感不外露</strong> — 有情绪，但很少主动表达。更倾向于用行动或沉默回应，而非语言。</p>
+      <p>· <strong>对封印物的感知更细腻</strong> — 在接触封印物时，羽更容易感受到残响中的"情绪层"，尤其是悲伤、执念类的信号。</p>
+      <div class="entry-note">她不是冷漠的。她只是把大部分感受留在内部，不觉得有必要让别人知道。</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 2.2 · Sensory Experience</div>
+      <div class="eh-title">感知特点</div>
+    </div>
+    <div class="entry-body">
+      <p>羽主导感知时，对外部世界的接收更像是"全频段开放"——细节捕捉能力强，但同时也更容易在嘈杂环境中感到不适。</p>
+      <p>对于封印物残响，她能在砾做不到的层面上感受到"情绪的质地"——不只是知道这件东西有残响，而是能感受到那种情绪当时的温度。</p>
+      <div class="entry-note">这种能力让她在修复工作上极有价值，但也是让她更容易疲劳的原因之一。</div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">场景参考 · 羽主导时的氛围</div>
+    <p>她把手放在那枚戒指上，没有动。停了很长时间。<br>
+    砾在后面等着，没问。<br>
+    "它想找一个地方，"她最后说，"不是什么具体的地方。就是……想停下来。"<br>
+    砾沉默了一会儿。"那我们能帮它吗？"<br>
+    "也许。先看看。"</p>
+  </div>
+</div>
+
+
+<!-- ═══════ §3 · 砾 ═══════ -->
+<div class="section" id="s3" data-accent="li">
+  <div class="sec-top">
+    <div class="sec-code">§ 3 · Persona — Lì</div>
+    <div class="sec-flag li">砾 · 男性人格</div>
+  </div>
+  <div class="sec-num">第三章</div>
+  <div class="sec-title" style="color:var(--li);">砾</div>
+  <div class="sec-title-en">The Masculine Persona — Executor, Analyst</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">砾是两个人格中行动导向更强的那一个。他不是莽撞的，但他更倾向于"先做起来，边做边想"，而不是等到完全理解了再动。</p>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 3.1 · Core Personality</div>
+      <div class="eh-title">核心性格</div>
+    </div>
+    <div class="entry-body">
+      <p>· <strong>执行者本能</strong> — 事情摆在面前，他倾向于先建立一个"够用的理解"然后开始操作。不会因为还没完全想清楚就停着不动。</p>
+      <p>· <strong>直接</strong> — 说话比羽多，也更直接。有时候会在羽还在观察的时候就已经开口了。偶尔会被羽在内部轻轻拦一下。</p>
+      <p>· <strong>好奇心更外向</strong> — 对"这东西到底是什么机制"有强烈的探索欲。他研究封印物，部分原因纯粹是因为觉得好玩。</p>
+      <p>· <strong>对封印物的感知更结构化</strong> — 他接触封印物时，更容易读到"术式层"和"结构层"，适合判断封印物的机制和危险等级。</p>
+      <div class="entry-note">砾不是莽，他只是比羽更愿意接受"先踏进去再说"的逻辑。这一点在修复工作上是优势，在面对危险的封印物时偶尔是风险。</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 3.2 · Sensory Experience</div>
+      <div class="eh-title">感知特点</div>
+    </div>
+    <div class="entry-body">
+      <p>砾主导感知时，对外部世界的接收更具方向性——他会本能地过滤掉"不相关"的信息，专注在当前任务的核心上。</p>
+      <p>这让他在处理复杂封印物时效率更高，但也意味着他有时会忽略旁枝末节——而那些旁枝末节偶尔恰好是羽捕捉到的关键。</p>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">场景参考 · 砾主导时的氛围</div>
+    <p>他把封印物翻了个面，手指沿着边缘摸了一圈。<br>
+    "这里。"他说，"这段咒文是后加的，而且加的时候心不在焉。"<br>
+    羽在后面问：那个人当时怎么了？<br>
+    "不知道。管它呢，先把这段拆了再说。"<br>
+    羽没再说话，但记下来了。</p>
+  </div>
+</div>
+
+
+<!-- ═══════ §4 · 双人格运作 ═══════ -->
+<div class="section" id="s4" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 4 · Dual Persona Mechanics</div>
+    <div class="sec-flag both">两人格共有</div>
+  </div>
+  <div class="sec-num">第四章</div>
+  <div class="sec-title">双人格运作机制</div>
+  <div class="sec-title-en">How Yu and Li Coexist</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">羽与砾的共存方式不是轮流使用身体，而是真正意义上的并列存在。他们可以同时在线，可以自由切换主导权，也可以在"不完全切换"状态下各自负责不同的感知或行为通道。</p>
+
+  <p class="b">但并列存在不等于步调一致。在涉及核心判断时——是否接某个危险的委托、是否信任某个人、是否触碰某件封印物——两人格可能产生严重分歧。这不是性格互补的摩擦，而是真实的、有时无法快速化解的对立。</p>
+
+  <p class="b"><strong>冲突的外部表现：</strong>当分歧达到阈值时，可能出现"左右手互搏"——左手做一个动作，右手做相反动作；走到门口又停下，反复两次；说话时突然切换语气，像两个人在轮流使用嘴。这不是常态，但在高压状态下可能发生。</p>
+
+  <p class="b"><strong>身体掌控权的"让渡"：</strong>在需要快速行动或直接判断的场合，羽会更倾向于"暂时把身体让给砾"——她退到感知层，不输出动作指令，由砾完全主导。此时外部表现为羽砾"变了"：说话更快、动作更直接、更少犹豫。在需要细腻感知的场合，砾也会让给羽。</p>
+
+  <p class="b"><strong>砾的性格外向化：</strong>砾的说话方式比羽更直接、更随意。他会在工坊里对工具或封印物自言自语；走在街上步速更快、目光更直；偶尔会主动跟陌生人搭话（羽在内部翻白眼）。他有冷幽默倾向——不是为了让对方笑，而是"自己觉得好笑所以说了"。</p>
+
+  <div class="persona-split">
+    <div class="persona-col col-yu">
+      <div class="pc-head">
+        <div class="pc-name-zh">羽</div>
+        <div class="pc-name-en">感知主导</div>
+      </div>
+      <div class="pc-item">情绪层 · 残响感知</div>
+      <div class="pc-item">细节捕捉 · 全频段感知</div>
+      <div class="pc-item">观察先行 · 后作判断</div>
+      <div class="pc-item">语言克制 · 精准表达</div>
+      <span class="pc-tag">感知 · 情绪层</span>
+    </div>
+    <div class="persona-col col-li">
+      <div class="pc-head">
+        <div class="pc-name-zh">砾</div>
+        <div class="pc-name-en">执行主导</div>
+      </div>
+      <div class="pc-item">术式层 · 结构感知</div>
+      <div class="pc-item">方向性专注 · 过滤干扰</div>
+      <div class="pc-item">行动先行 · 边做边想</div>
+      <div class="pc-item">语言直接 · 偶尔被拦</div>
+      <span class="pc-tag">执行 · 结构层</span>
+    </div>
+  </div>
+
+  <div class="shared-bar">
+    <div class="sb-label">两人格共同特征</div>
+    <div class="sb-item">
+      <div class="sb-key">不争夺</div>
+      <div class="sb-val">从不争夺身体主导权。切换发生自然，没有冲突，没有内耗。</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">精神沟通</div>
+      <div class="sb-val">可进行内部对话，无需外部语言。日常大量使用。</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">不完全切换</div>
+      <div class="sb-val">两人格可同时运行——一人格主导语言，另一人格主导感知，意识并行。这是最常见的工作状态。</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">精神负荷</div>
+      <div class="sb-val">双人格高强度同时运行时，精神消耗大幅增加。长时间维持会导致严重疲劳积累。</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">不理解孤独</div>
+      <div class="sb-val">由于从未独处，两人格都不理解"孤独"一词的真实重量。羽曾尝试"假装孤独"但失败，砾对此完全不感兴趣。</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 4.1 · Fatigue Dynamics</div>
+      <div class="eh-title">疲劳机制</div>
+    </div>
+    <div class="entry-body">
+      <p>双人格结构在体能上具有一种特殊的补偿能力：当其中一个人格进入疲劳状态时，另一个人格可以接管，维持行动能力。两个人格在常态下不争夺身体主导权，但冲突是存在的可能性——高压或高争议情境下，这种补偿机制可能反而加剧两者之间的张力。</p>
+      <p>然而这并不是真正的"休息"。接管的人格同样在消耗精神资源，总体疲劳依然在积累，只是被推迟了感知。</p>
+      <p>结果是：<strong>羽砾可以在单次事件中维持比普通人更长的行动时间，但总体疲劳债更难被察觉，也更难及时清算。</strong></p>
+      <div class="entry-note">他有时会在没有明显预警的情况下突然极度疲惫，让周围人感到困惑。他自己对此已经习惯，但并不总能准确预判时间节点。</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 4.2 · External Presentation</div>
+      <div class="eh-title">外部呈现方式</div>
+    </div>
+    <div class="entry-body">
+      <p>由于两人格频繁并行运作，羽砾在外人眼中往往带有一种<strong>难以定义的气质叠加感</strong>：某些时候他说话的方式很克制、很精准；某些时候又突然变得更直接、更有驱动力；有时两种风格在同一句话里同时出现。</p>
+      <p>没有接触过双人格现象的人通常不会意识到这是什么——他们只是觉得这个人"有点奇怪"，或者"感觉像两个人"，但说不清具体哪里不对。</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §5 · 能力 ═══════ -->
+<div class="section" id="s5" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 5 · Abilities</div>
+    <div class="sec-flag neutral">职业与特殊能力</div>
+  </div>
+  <div class="sec-num">第五章</div>
+  <div class="sec-title">能力</div>
+  <div class="sec-title-en">Professional Skills & Innate Abilities</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <table class="ability-table">
+    <thead>
+      <tr>
+        <th>能力</th>
+        <th>性质</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="a-name">封印修复</td>
+        <td><span class="a-tag both">职业技能</span></td>
+        <td>核心职业能力。修复、重建或稳定封印物上衰减的封印结构。综合使用咒文术、炼金术与灵魂术。精准度极高。</td>
+      </tr>
+      <tr>
+        <td class="a-name">异常遗物鉴定</td>
+        <td><span class="a-tag both">职业技能</span></td>
+        <td>判断封印物的等级、性质、危险模式与残响类型。砾主导术式结构判断，羽主导情绪残响读取，两者配合效率显著优于单一施法者。</td>
+      </tr>
+      <tr>
+        <td class="a-name">精神残响处理</td>
+        <td><span class="a-tag both">职业技能</span></td>
+        <td>对含灵魂残响的封印物执行"残响消解"或"残响隔离"操作。高精神负荷，操作后需要较长恢复期。</td>
+      </tr>
+      <tr>
+        <td class="a-name">双重感知接收</td>
+        <td><span class="a-tag crpt">特殊能力</span></td>
+        <td>触觉、痛觉、魔力波动感知均存在双重接收现象。对封印物的感知信号更强、更细腻，但同时感知过载风险也更高。</td>
+      </tr>
+      <tr>
+        <td class="a-name">灵魂术（中阶）</td>
+        <td><span class="a-tag yu">羽主导</span></td>
+        <td>羽天然适配灵魂术体系。可进行精神沟通、情绪感知与浅层残响读取。是修复工作的核心感知工具。</td>
+      </tr>
+      <tr>
+        <td class="a-name">咒文术（高阶）</td>
+        <td><span class="a-tag li">砾主导</span></td>
+        <td>砾在咒文结构分析与封印构建方面能力突出。熟悉大量封印物相关咒文体系，是鉴定工作的核心工具。</td>
+      </tr>
+      <tr>
+        <td class="a-name">炼金术（实用级）</td>
+        <td><span class="a-tag both">两人格共有</span></td>
+        <td>以修复和封印为目的的炼金操作。工坊地下室备有常用封印材料与工具套件。</td>
+      </tr>
+      <tr>
+        <td class="a-name">Corruption 残响感知</td>
+        <td><span class="a-tag crpt">被动 / 被动异常</span></td>
+        <td>因体内携带残响，可在极近距离内感知到 Corruption 的存在信号——但无法准确分辨来源。偶尔会误将强烈封印物残响读为类似信号。（详见§6）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="ann-block">
+    <div class="ann-text">
+      写作提示：羽砾的能力强项在于"感知与理解"，而非"对抗与破坏"。他能比任何人更准确地读懂一件封印物，但如果场景需要他正面对抗一个威胁，那不是他的强项，他更可能的反应是先观察、找结构性弱点，而非直接硬上。
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §6 · Corruption 残响 ═══════ -->
+<div class="section" id="s6" data-accent="crpt">
+  <div class="sec-top">
+    <div class="sec-code">§ 6 · Corruption Resonance</div>
+    <div class="sec-flag crpt">核心设定 · 作者内部</div>
+  </div>
+  <div class="sec-num">第六章</div>
+  <div class="sec-title">Corruption 残响</div>
+  <div class="sec-title-en">The Resonance Within — Origin & Implications</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <div class="crpt-block">
+    <div class="crpt-head">
+      <div class="ch-label">起源事件 · Origin Incident</div>
+      <div class="ch-badge">作者内部设定</div>
+    </div>
+    <div class="crpt-body">
+      <p>羽砾年幼时，因对封印物的强烈好奇心，意外接触了一件等级超出当时处理能力的封印物。该封印物内含 <strong>Corruption 痕迹</strong>——不是完整的 Corruption 个体，而是某次侵蚀事件后残留在物品内的意识碎片级别残留物。</p>
+      <p>接触过程中，残留物的部分结构渗入了羽砾的精神层，形成了<strong>永久性的 Corruption 残响</strong>。这不是被 Corruption 侵蚀，也不是宿主化的前兆，而是一种更接近"印记"的状态——残响存在于他的精神结构中，但没有意识，没有主动性，也不会主动扩张。</p>
+      <p>此事件没有被教廷记录（当时无人在场），也从未被系统性诊断。羽砾本人对残响的存在有感知，但对其具体性质和来源并不完全清楚。</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 6.1 · Effect on Corruption Perception</div>
+      <div class="eh-title">对 Corruption 识别的影响</div>
+    </div>
+    <div class="entry-body">
+      <p>由于体内存在 Corruption 残响，羽砾的精神结构对 Corruption 会发出一种特殊的信号——类似于"同频共鸣"。</p>
+      <p>对于真正的 Corruption 个体而言，这个信号极为罕见，会引发识别混乱：<strong>它们无法立刻判断羽砾是人类还是某种特殊的同类存在。</strong></p>
+      <p>这就是为何某个 Corruption 个体对羽砾产生了特别关注——<strong>不是盯上他，而是困惑。</strong>那个信号让它一再接近，试图弄清楚这个存在到底是什么。</p>
+      <div class="entry-note">这是目前唯一已知的"Corruption 主动定向关注特定人类"案例，其根本原因并非羽砾有什么特殊价值，而是他体内的残响让 Corruption 的识别机制产生了误判。</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 6.2 · Effect on Yu Li's Abilities</div>
+      <div class="eh-title">对自身能力的影响</div>
+    </div>
+    <div class="entry-body">
+      <p>残响的存在让羽砾的灵魂术感知在某些特定情境下出现增幅——尤其是在接触与 Corruption 相关的封印物时。他能读到普通修复师完全无法触及的信息层。</p>
+      <p>然而这同时也意味着他的精神结构对 Corruption 的干涉更为开放，防御性更弱。这是一个他自己模糊意识到、但尚未完全理解的风险。</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 6.3 · What Yu Li Knows</div>
+      <div class="eh-title">羽砾本人的认知程度</div>
+    </div>
+    <div class="entry-body">
+      <p>羽砾知道自己体内有"某种异常的东西"——他能感知到它在接触特定封印物时的共鸣反应。但他从未能准确定性这是什么。</p>
+      <p>他倾向于将其理解为"幼年意外留下的某种感知偏差"，而非"Corruption 残响"，因为他从未有过完整的知识框架来做出这个诊断。</p>
+      <p>他对此的态度更接近"习以为常的存在"而非"需要解决的问题"——它一直在，也没有让他变成别的什么，所以他选择了与之共存。</p>
+      <div class="entry-note">这种"习以为常"本身是一个潜在的叙事张力点：当他真正理解这个东西是什么的时候，他会怎么想？</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §7 · 行为细节 ═══════ -->
+<div class="section" id="s7" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 7 · Behavioral Details</div>
+    <div class="sec-flag both">两人格共有呈现</div>
+  </div>
+  <div class="sec-num">第七章</div>
+  <div class="sec-title">行为细节</div>
+  <div class="sec-title-en">How He Acts in the World</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">以下是写作时可以参考的具体行为模式——不是性格标签，而是他在日常中实际会怎么做的细节。</p>
+
+  <div class="behavior-grid">
+    <div class="bv-card">
+      <div class="bv-label">人群与社交</div>
+      <div class="bv-title">主动回避密集接触</div>
+      <div class="bv-desc">双重感知让他在人群中承受更高的感知负荷。他走路贴边，在人多的地方下意识加快通过速度，不喜欢被人从后面靠近。不是社恐，是感知过载的本能规避。</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">身体接触</div>
+      <div class="bv-title">下意识闪避</div>
+      <div class="bv-desc">对突发的身体接触有本能的闪避反应。痛觉更强——他受伤时会比看起来更痛，但通常不会表现出来，因为他已经习惯管理这个反应了。</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">工作状态</div>
+      <div class="bv-title">极度专注，极难打断</div>
+      <div class="bv-desc">进入工作状态后，外部世界对他来说几乎消失。叫他名字可能需要叫三次。他不是在无视，他只是完全在里面。</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">封印物态度</div>
+      <div class="bv-title">先听，再做</div>
+      <div class="bv-desc">接触新封印物时，他通常会先什么都不做，只是放着感知一段时间。有时候好几分钟。这不是迟疑，是他在"听"。</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">疲劳表现</div>
+      <div class="bv-title">安静且不动</div>
+      <div class="bv-desc">极度疲劳时，他会在最近的地方坐下来，什么都不做，发呆。不一定看起来很严重，但内部两个人格都在安静着。这是他最接近"关机"的状态。</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">语言习惯</div>
+      <div class="bv-title">话少，但准</div>
+      <div class="bv-desc">不说废话，不解释自己的每个判断。如果他说"这个有问题"，通常就是有问题，哪怕他当时说不清楚问题在哪里。他的直觉读数是可以信赖的。</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">好奇心</div>
+      <div class="bv-title">越奇怪越感兴趣</div>
+      <div class="bv-desc">对"不寻常的东西"有超出职业要求的个人兴趣。越难解释的封印物，他越想搞清楚。这是砾更明显的特质，但羽也有，只是表达方式更克制。</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">居家状态</div>
+      <div class="bv-title">宅且不乱</div>
+      <div class="bv-desc">工坊保持功能性整洁——工具都在固定位置，因为乱了会影响工作。地面层的生活区域则是另一回事：没有刻意整理，但也没到"脏乱"，只是"不太在意"。</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §8 · 内心状态 ═══════ -->
+<div class="section" id="s8" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 8 · Inner State</div>
+    <div class="sec-flag neutral">内心状态</div>
+  </div>
+  <div class="sec-num">第八章</div>
+  <div class="sec-title">内心状态</div>
+  <div class="sec-title-en">What It's Like to Be Yu Li</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <div class="pq">
+    <div class="pq-text">他的痛苦不是主旋律。<br>他的日常也不是持续的挣扎。<br>他只是以一种很特殊的方式活着，<br>并且已经大致接受了这件事。</div>
+    <span class="pq-attr">—— 角色基调说明</span>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 8.1 · Relationship with the Dual State</div>
+      <div class="eh-title">与双人格状态的关系</div>
+    </div>
+    <div class="entry-body">
+      <p>羽与砾之间没有持续的冲突，但在关键判断上可能产生分歧。他们是两个真实存在的人格，有各自的偏好和判断，有时会在核心问题上产生真实的对立——而非只是观点差异。</p>
+      <p>他们处理分歧的方式通常是内部对话——快速、简短，有时候不需要结论，只是互相知道对方怎么想。大多数时候，他们能找到一个都接受的做法。但当找不到时，就是找不到。沉默也是一种处理方式。</p>
+      <p><strong>这种共存状态对羽砾来说是"正常"的。</strong>他没有经历过只有一个人格的生活，所以他没有参照系来说这是"不正常的"。它只是他的存在方式——包括其中的摩擦与偶发的互不相让。</p>
+      <div class="entry-note">唯一让他偶尔停下来想的是：外部世界在描述"一个人"时，默认那个人是单一的。他有时候不确定那个默认对他适不适用。</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 8.2 · Relationship with Anomaly</div>
+      <div class="eh-title">与"异常"的关系</div>
+    </div>
+    <div class="entry-body">
+      <p>羽砾从小接触封印物，从小感知到"正常框架之外的东西"。他的世界里，"异常"不是恐怖的例外，而是另一种存在方式的常态。</p>
+      <p>这让他在面对奇怪事物时，第一反应通常不是恐惧或排斥，而是<strong>好奇</strong>，然后是<strong>想理解</strong>。他没有办法对一件奇怪的东西漠然走开——他会想知道它是什么，它为什么是这样的。</p>
+      <p>这种好奇心是他走上修复师这条路的真正原因，不只是赚钱。</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 8.3 · Core Emotional Texture</div>
+      <div class="eh-title">核心情感质地</div>
+    </div>
+    <div class="entry-body">
+      <p>· <strong>他不快乐，但也不痛苦。</strong>他的基础情绪状态更接近"稳定的平静"，偶尔被某些东西打动，但不容易被长期困住。</p>
+      <p>· <strong>他警惕，但不是不信任所有人。</strong>他只是需要更长的时间来建立信任，因为他能感知到的"人"比别人多——别人话里没说的那层，他有时候也能感觉到。</p>
+      <p>· <strong>他对"结束"有特别的敏感性。</strong>修复封印物的工作本质上是在处理"没能放下"的东西——他对这件事有比普通人更深的理解，也因此有时候会在完成一个修复之后沉默很长时间。不是伤感，只是在感受那件事的重量。</p>
+      <div class="entry-note">他不需要被人理解，但他偶尔会希望有人在旁边，不说话，只是在。</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 8.4 · Relationship with Loneliness</div>
+      <div class="eh-title">与孤独的关系</div>
+    </div>
+    <div class="entry-body">
+      <p>羽砾从出生起就拥有双人格并列存在，从未真正体验过"独自一人"的状态。因此，他对"孤独"这件事的理解，永远停留在知识层面而非感受层面。</p>
+      <p>· <strong>他无法理解"孤独"作为一种情感体验。</strong>别人说"我觉得好孤独"时，他可以在知识层面知道这个词的意思，但无法在感受层面共鸣。他知道那应该是一种痛苦，但那种痛苦对他来说像是一种理论上的颜色——能描述，无法看见。</p>
+      <p>· <strong>他曾尝试"假装自己是孤独的"。</strong>故意不让砾说话、假装砾不存在，试图让自己进入"只有一个人"的状态。每次持续约三分钟，然后放弃。不是因为他做不到，而是因为他没有参照系来确认"只有一个人"应该是什么感觉——他始终不知道那三分钟里他"应该"感受到什么。</p>
+      <p>· <strong>他对"孤独"抱有旁观式的好奇。</strong>它到底是什么感觉？一个人真的会因为没有别人在场而感到痛苦吗？他偶尔会观察那些独处的人——坐在长椅上的人、在窗边发呆的人——试图从外部理解这件事。他看得很认真，但他自己也知道这件事可能永远无法被理解，因为他缺少的不是信息，而是对比。</p>
+      <div class="entry-note">砾对这个问题完全不感兴趣。他的反应是："就是没有别人在，然后呢？"</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §9 · 与世界的关系 ═══════ -->
+<div class="section" id="s9" data-accent="li">
+  <div class="sec-top">
+    <div class="sec-code">§ 9 · Relations with the World</div>
+    <div class="sec-flag neutral">外部关系</div>
+  </div>
+  <div class="sec-num">第九章</div>
+  <div class="sec-title">与世界的关系</div>
+  <div class="sec-title-en">How Yu Li Exists in the World Around Him</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 9.1 · With the Church</div>
+      <div class="eh-title">与教廷</div>
+    </div>
+    <div class="entry-body">
+      <p>羽砾不属于教廷，也不受其管辖——他是独立接单制修复师，游走在官方体系的边缘。教廷知道他的存在，但目前选择了"默许"而非主动管控，因为他处理的封印物有相当一部分是教廷不愿意公开处理的类型。</p>
+      <p>他对教廷的态度是<strong>有意识的距离感</strong>：他知道教廷掌握着很多他不知道的东西，他也知道教廷不会把那些东西告诉他。他接受这个现实，但这不代表他信任教廷。</p>
+      <div class="entry-note">如果教廷某天需要他做某件事，他会先问"为什么"，而不是直接答应。</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 9.2 · With Clients</div>
+      <div class="eh-title">与委托人</div>
+    </div>
+    <div class="entry-body">
+      <p>他的委托人关系极为薄浅——大多数人来一次，拿回处理完的东西，然后消失。他不主动维系，客人也大多不知道如何与他建立更长期的联系。</p>
+      <p>偶尔有例外：某些委托人因为带来了真正让他感兴趣的东西，会被他多问几个问题，这对他来说已经是相当程度的主动接触了。</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 9.3 · With Sealed Objects</div>
+      <div class="eh-title">与封印物</div>
+    </div>
+    <div class="entry-body">
+      <p>这是他真正意义上最长期、最深入的"关系"。他的地下室里有他多年来积累的各种封印物，有些是委托完成后留下来研究的，有些是他自己找来的。</p>
+      <p>他对封印物的态度不是"工具"，更接近<strong>"需要被理解的存在"</strong>。他会在一件封印物旁边坐几个小时，不做任何操作，只是感知。这不是低效，这是他理解它们的方式。</p>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">场景参考 · 他与世界的日常距离</div>
+    <p>有时候他会在深夜走到地面层，坐在窗边，听外面的雨声。<br>
+    城里的声音离他很远——灯光、人声、集市收摊的动静。<br>
+    他不觉得孤独，也不觉得不孤独。<br>
+    他只是在那里，两个人都是，然后过一会儿下去继续工作。</p>
+  </div>
+</div>
+
+
+<!-- ═══════ §10 · 未解谜题 ═══════ -->
+<div class="section" id="s10" data-accent="warn">
+  <div class="sec-top">
+    <div class="sec-code">§ 10 · Open Questions</div>
+    <div class="sec-flag" style="background:var(--warn);">未解谜题</div>
+  </div>
+  <div class="sec-num">第十章</div>
+  <div class="sec-title">未解谜题</div>
+  <div class="sec-title-en">What Remains Unknown — Even to the Author</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">以下是关于羽砾目前仍未有明确答案的核心叙事节点，供创作推进时参考。</p>
+
+  <div class="mystery-item">
+    <div class="my-num">Q1</div>
+    <div class="my-body">
+      <div class="my-q">那件封印物到底是什么？</div>
+      <div class="my-desc">幼年事件的核心。那件让他体内留下 Corruption 残响的封印物，它是怎么流入民间的？它本身是什么来历？它是否还存在？他有没有可能在某天再次接触到它，并从它那里得到更多关于残响的信息？</div>
+    </div>
+  </div>
+
+  <div class="mystery-item">
+    <div class="my-num">Q2</div>
+    <div class="my-body">
+      <div class="my-q">那个 Corruption 会不会弄清楚他是什么？</div>
+      <div class="my-desc">那个因识别误判而关注他的 Corruption，在持续接近的过程中，它对羽砾的认知会如何演变？当它最终弄清楚他是人类而非同类时，它会怎么做？失去兴趣，还是产生更复杂的关系？</div>
+    </div>
+  </div>
+
+  <div class="mystery-item">
+    <div class="my-num">Q3</div>
+    <div class="my-body">
+      <div class="my-q">残响会一直是残响吗？</div>
+      <div class="my-desc">目前的设定是残响没有意识、没有主动性、不会扩张。但"目前"是关键词。随着羽砾持续接触高等级封印物和 Corruption 相关遗物，残响的状态是否会有变化？这是一个开放的叙事可能性。</div>
+    </div>
+  </div>
+
+  <div class="mystery-item">
+    <div class="my-num">Q4</div>
+    <div class="my-body">
+      <div class="my-q">双人格的起源</div>
+      <div class="my-desc">目前设定中没有解释羽砾为何生来就是双人格。这是一个可以保留为谜题的设定，也可以在叙事中途给出解释。如果有解释，它与 Corruption 残响有关联吗？还是纯粹独立的存在？</div>
+    </div>
+  </div>
+
+  <div class="mystery-item">
+    <div class="my-num">Q5</div>
+    <div class="my-body">
+      <div class="my-q">羽砾会怎么看待 Corruption 的情感问题？</div>
+      <div class="my-desc">他每天处理的封印物是"没能放下的灵魂留下的执念"。他比任何人都更理解"想继续存在"这件事的重量。如果有一天他真正了解 Corruption 的起源和情感议题，他会站在哪里？这是他与其他所有人的根本性不同。</div>
+    </div>
+  </div>
+
+  <div class="footnotes">
+    <div class="fn-title">创作备注</div>
+    <div class="fn-item"><span class="fn-num">·</span><span>上述谜题不必全部解答。保留谜题本身也是叙事策略的一部分。</span></div>
+    <div class="fn-item"><span class="fn-num">·</span><span>Q5 是目前所有谜题中叙事潜力最大的一个。羽砾的独特性不在于他有多强，而在于他看事物的角度与所有人都不同。</span></div>
+  </div>
+</div>
+
+
+</div><!-- book-body -->
+</div><!-- book -->
+</div><!-- outer -->
+</body>
+</html>

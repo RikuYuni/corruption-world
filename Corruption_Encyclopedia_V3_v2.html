@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corruption · 系统设定全书 Rev.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+
+/* ══════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════ */
+:root {
+  /* paper */
+  --bg:        #faf9f6;
+  --surface:   #f4f2ed;
+  --surface-2: #eeece5;
+  --border:    #dbd7cc;
+  --border-s:  #ccc8bb;
+
+  /* ink */
+  --ink-0: #0f0e0b;
+  --ink-1: #2a2820;
+  --ink-2: #4a4840;
+  --ink-3: #7a7870;
+  --ink-4: #aaa89e;
+  --ink-5: #ccc9be;
+
+  /* accent — purple/violet for Corruption */
+  --ac-0: #1e0f2e;
+  --ac-1: #3a1f55;
+  --ac-2: #5c3580;
+  --ac-3: #8a60b0;
+  --ac-4: #c0a0d8;
+  --ac-5: #ede0f8;
+
+  /* fragment A — amber/ochre */
+  --fa-0: #1e1000;
+  --fa-1: #3e2600;
+  --fa-2: #7a5010;
+  --fa-3: #b88030;
+  --fa-4: #ddb860;
+  --fa-5: #f8ecd0;
+
+  /* fragment B — slate/cool */
+  --fb-0: #080e18;
+  --fb-1: #1a2a42;
+  --fb-2: #2e4870;
+  --fb-3: #5878a8;
+  --fb-4: #90aad0;
+  --fb-5: #dce6f4;
+
+  /* warden teal */
+  --warden-1: #0e2828;
+  --warden-2: #1e4848;
+  --warden-3: #3e7878;
+  --warden-4: #8ec8c8;
+  --warden-5: #d8f0f0;
+
+  /* soul — nascent */
+  --nascent-1: #102030;
+  --nascent-2: #1e3a58;
+  --nascent-3: #3868a0;
+  --nascent-4: #80aad8;
+  --nascent-5: #d8eaf8;
+
+  /* highlight bands */
+  --band-ac:  rgba(92,53,128,0.06);
+  --band-fa:  rgba(122,80,16,0.06);
+  --band-fb:  rgba(46,72,112,0.06);
+  --band-w:   rgba(30,72,72,0.06);
+  --band-n:   rgba(30,58,88,0.06);
+
+  /* danger scale */
+  --d-low:    #2e6020;
+  --d-mid:    #806010;
+  --d-high:   #7a1818;
+  --d-eth:    #1e4878;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #e8e4de;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--ink-1);
+  line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════ */
+.shell {
+  max-width: 960px;
+  margin: 0 auto;
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--border), 0 4px 40px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+/* ── STICKY NAV ── */
+.topnav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--ink-0);
+  display: flex; align-items: stretch;
+  overflow-x: auto; scrollbar-width: none;
+  border-bottom: 2px solid var(--ac-1);
+}
+.topnav::-webkit-scrollbar { display: none; }
+
+.tn-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--ink-4); padding: 0 20px;
+  display: flex; align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap; text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.tn-item {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  color: var(--ink-4); padding: 14px 16px;
+  text-decoration: none; white-space: nowrap;
+  display: flex; align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s, color 0.15s;
+  text-transform: uppercase;
+}
+.tn-item:hover { background: rgba(255,255,255,0.06); color: white; }
+.tn-item.new { color: var(--warden-4); }
+
+/* ── MASTHEAD ── */
+.masthead {
+  padding: 72px 80px 64px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: relative;
+}
+
+.mh-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 4px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.mh-kicker::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.mh-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 64px; line-height: 1.0;
+  color: var(--ink-0); margin-bottom: 6px;
+  letter-spacing: -1px;
+}
+
+.mh-title-en {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic; font-size: 22px;
+  color: var(--ink-3); margin-bottom: 36px;
+  letter-spacing: 0;
+}
+
+.mh-desc {
+  font-family: 'Lora', serif;
+  font-size: 15px; color: var(--ink-2);
+  line-height: 1.85; max-width: 560px;
+  margin-bottom: 40px;
+}
+
+.mh-meta {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 0; border: 1px solid var(--border);
+  max-width: 600px;
+}
+.mh-meta-cell {
+  padding: 12px 16px;
+  border-right: 1px solid var(--border);
+}
+.mh-meta-cell:last-child { border-right: none; }
+.mhc-k {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.mhc-v {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--ink-1);
+}
+
+/* ── TOC ── */
+.toc-wrap {
+  padding: 48px 80px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.toc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.toc-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px 48px;
+}
+.toc-row {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.tr-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--ink-4);
+  flex-shrink: 0; min-width: 36px;
+}
+.tr-num.new { color: var(--warden-3); }
+.tr-name {
+  font-size: 13px; color: var(--ink-1); flex: 1;
+  font-family: 'Noto Serif SC', serif;
+}
+.tr-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 1px;
+  color: white; padding: 2px 7px;
+  text-transform: uppercase; flex-shrink: 0;
+}
+.badge-new  { background: var(--warden-2); }
+.badge-rev  { background: var(--ac-1); }
+
+/* ══════════════════════════════════════════
+   CHAPTER
+══════════════════════════════════════════ */
+.chapter {
+  padding: 64px 80px;
+  border-bottom: 1px solid var(--border);
+}
+.chapter:nth-child(even) { background: var(--surface); }
+
+/* Chapter top bar */
+.ch-bar {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 36px; padding-bottom: 20px;
+  border-bottom: 2px solid var(--ink-0);
+}
+.ch-bar-l { display: flex; flex-direction: column; gap: 4px; }
+.ch-section-code {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-4); text-transform: uppercase;
+}
+.ch-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px; color: var(--ink-0);
+  line-height: 1.1; letter-spacing: -0.5px;
+}
+.ch-title-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 15px;
+  color: var(--ink-3); margin-top: 2px;
+}
+.ch-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: white; padding: 6px 14px;
+  text-transform: uppercase; flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/* Accent left border */
+.chapter[data-a]::before {
+  display: none; /* We use top-border approach instead */
+}
+
+/* Body text */
+p.body {
+  font-size: 14px; color: var(--ink-1);
+  line-height: 2.0; text-align: justify;
+  margin-bottom: 18px; text-indent: 2em;
+}
+p.body:first-of-type { text-indent: 0; }
+p.body strong { color: var(--ink-0); }
+
+/* Section heading within chapter */
+.sub-head {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--ink-0);
+  margin: 32px 0 14px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+.sub-head::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--border);
+}
+
+/* ══════════════════════════════════════════
+   STATEMENT BLOCK — the voice of this doc
+══════════════════════════════════════════ */
+.statement {
+  border-left: 3px solid var(--ink-0);
+  padding: 18px 24px;
+  margin: 22px 0;
+  background: var(--surface);
+}
+.st-text {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 18px; color: var(--ink-0);
+  line-height: 1.65; letter-spacing: 0.1px;
+}
+.st-attr {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--ink-4); margin-top: 10px;
+  display: block; text-transform: uppercase;
+}
+
+/* Accent statement variant */
+.statement.ac {
+  border-left-color: var(--ac-2);
+  background: var(--band-ac);
+}
+.statement.fa { border-left-color: var(--fa-2); background: var(--band-fa); }
+.statement.fb { border-left-color: var(--fb-2); background: var(--band-fb); }
+.statement.w  { border-left-color: var(--warden-2); background: var(--band-w); }
+.statement.n  { border-left-color: var(--nascent-2); background: var(--band-n); }
+
+/* ══════════════════════════════════════════
+   DATA TABLE
+══════════════════════════════════════════ */
+.dtable {
+  width: 100%; border-collapse: collapse;
+  margin: 18px 0; font-size: 13px;
+}
+.dtable thead th {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase; font-weight: 500;
+  padding: 10px 14px; text-align: left;
+  background: var(--ink-0); color: white;
+}
+.dtable thead th.thac { background: var(--ac-1); }
+.dtable thead th.thfa { background: var(--fa-1); }
+.dtable thead th.thfb { background: var(--fb-1); }
+.dtable thead th.thw  { background: var(--warden-1); }
+.dtable thead th.thn  { background: var(--nascent-1); }
+
+.dtable tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.8;
+  color: var(--ink-1);
+}
+.dtable tbody tr:hover td { background: var(--surface); }
+.dtable .key {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink-0);
+  font-weight: normal;
+}
+.dtable .mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--ink-2);
+}
+
+/* ══════════════════════════════════════════
+   FRAGMENT SPLIT — A/B two column
+══════════════════════════════════════════ */
+.frag-split {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; margin: 20px 0;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.frag-col { padding: 24px; }
+.frag-a { background: var(--band-fa); border-right: 1px solid var(--border); }
+.frag-b { background: var(--band-fb); }
+
+.fc-header {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.fc-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: white; padding: 3px 10px;
+  text-transform: uppercase;
+}
+.fc-tag-a { background: var(--fa-2); }
+.fc-tag-b { background: var(--fb-2); }
+.fc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--ink-0);
+}
+.fc-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 12px;
+  color: var(--ink-3); display: block; margin-top: 2px;
+}
+.fc-row {
+  display: flex; gap: 10px; margin: 9px 0;
+  font-size: 13px; color: var(--ink-1);
+  line-height: 1.7; align-items: flex-start;
+}
+.fc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--ink-3);
+  flex-shrink: 0; min-width: 60px; padding-top: 2px;
+}
+.fc-val { flex: 1; }
+.fc-evo-row {
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  font-size: 13px; color: var(--ink-1);
+}
+.fc-evo-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.frag-a .fc-evo-label { color: var(--fa-2); }
+.frag-b .fc-evo-label { color: var(--fb-2); }
+
+/* ══════════════════════════════════════════
+   TYPE CARDS
+══════════════════════════════════════════ */
+.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+.type-card { border: 1px solid var(--border); overflow: hidden; }
+.tc-head {
+  padding: 12px 18px;
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.tc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; color: white;
+}
+.tc-alias {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 12px;
+  color: rgba(255,255,255,0.55);
+}
+.tc-body {
+  padding: 12px 18px; font-size: 13px;
+  color: var(--ink-1); line-height: 1.8;
+  background: var(--bg);
+}
+.tc-foot {
+  padding: 8px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.tc-erosion .tc-head { background: #5a1818; }
+.tc-erosion .tc-foot { color: #7a2828; }
+.tc-mimic .tc-head   { background: var(--ac-1); }
+.tc-mimic .tc-foot   { color: var(--ac-2); }
+.tc-dormant .tc-head { background: var(--fa-1); }
+.tc-dormant .tc-foot { color: var(--fa-2); }
+.tc-fission .tc-head { background: #1e3e1e; }
+.tc-fission .tc-foot { color: #2e5e2e; }
+
+/* ══════════════════════════════════════════
+   MATURITY STRIP
+══════════════════════════════════════════ */
+.matstrip { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; margin: 18px 0; border: 1px solid var(--border); overflow: hidden; }
+.mat { padding: 14px; border-right: 1px solid var(--border); }
+.mat:last-child { border-right: none; }
+.mat-lv { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.mat-name { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--ink-0); margin-bottom: 6px; line-height: 1.2; }
+.mat-desc { font-size: 11.5px; color: var(--ink-2); line-height: 1.6; }
+.m0 { } .m0 .mat-lv { color: #2e6020; }
+.m1 { background: var(--surface); } .m1 .mat-lv { color: var(--fa-2); }
+.m2 { } .m2 .mat-lv { color: var(--ac-2); }
+.m3 { background: var(--surface); } .m3 .mat-lv { color: #7a1818; }
+.m4 { border-top: 3px solid #7a1818; } .m4 .mat-lv { color: #7a1818; }
+
+/* ══════════════════════════════════════════
+   STAGE BLOCK — erosion phases
+══════════════════════════════════════════ */
+.stage { display: flex; margin: 14px 0; border: 1px solid var(--border); overflow: hidden; }
+.s-label {
+  width: 80px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 18px 8px; text-align: center;
+  color: white;
+}
+.s-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px; line-height: 1; margin-bottom: 4px;
+}
+.s-word {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px; letter-spacing: 1.5px; text-transform: uppercase;
+}
+.stage-1 .s-label { background: var(--fa-2); }
+.stage-2 .s-label { background: var(--ac-1); }
+.stage-3 .s-label { background: #6a1818; }
+.s-body { flex: 1; padding: 16px 20px; background: var(--bg); }
+.s-name { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--ink-0); margin-bottom: 4px; }
+.s-en { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 12px; color: var(--ink-3); display: block; margin-bottom: 10px; }
+.s-text { font-size: 13px; color: var(--ink-1); line-height: 1.85; }
+.s-tells {
+  margin-top: 10px; padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 12px; color: var(--ink-2); line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════
+   FAIL CARDS
+══════════════════════════════════════════ */
+.fail-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 18px 0; }
+.fail-card { border: 1px solid var(--border); overflow: hidden; }
+.fail-head { background: var(--ink-1); color: white; padding: 10px 16px; font-family: 'DM Serif Display', serif; font-size: 16px; }
+.fail-body { padding: 14px 16px; background: var(--bg); }
+.frow { display: flex; gap: 8px; margin: 6px 0; font-size: 12.5px; color: var(--ink-1); line-height: 1.7; }
+.fl { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-3); flex-shrink: 0; min-width: 44px; padding-top: 2px; }
+
+/* ══════════════════════════════════════════
+   EMOTION TABLE
+══════════════════════════════════════════ */
+.emo-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13px; }
+.emo-table thead th { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; padding: 10px 14px; text-align: left; text-transform: uppercase; font-weight: 500; }
+.emo-table thead .th-s { background: var(--ink-0); color: white; width: 160px; }
+.emo-table thead .th-v { background: var(--ac-1); color: var(--ac-5); }
+.emo-table tbody td { padding: 13px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.8; }
+.emo-table .td-s { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--ink-0); background: var(--surface); }
+.emo-table .td-v { color: var(--ink-1); background: var(--band-ac); }
+
+/* ══════════════════════════════════════════
+   PARADOX BOX
+══════════════════════════════════════════ */
+.paradox {
+  background: var(--ac-0);
+  padding: 28px 32px; margin: 22px 0;
+  position: relative;
+}
+.paradox::before {
+  content: 'PARADOX';
+  position: absolute; top: 16px; right: 20px;
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 3px; color: var(--ac-3); opacity: 0.7;
+  text-transform: uppercase;
+}
+.paradox-text {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic; font-size: 18px;
+  color: var(--ac-5); line-height: 1.65;
+}
+
+/* ══════════════════════════════════════════
+   RESCUER ILLUSION  — teal accent block
+══════════════════════════════════════════ */
+.ri-block {
+  border: 1px solid rgba(62,120,120,0.3);
+  border-top: 3px solid var(--warden-3);
+  margin: 20px 0; overflow: hidden;
+}
+.ri-head {
+  background: var(--warden-2); padding: 14px 22px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ri-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--warden-5); }
+.ri-sub { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--warden-4); text-transform: uppercase; }
+.ri-body { padding: 20px 22px; background: var(--band-w); }
+.ri-body p { font-size: 13.5px; color: var(--ink-1); line-height: 1.9; margin-bottom: 12px; }
+.ri-body p:last-child { margin-bottom: 0; }
+.ri-body strong { color: var(--ink-0); }
+
+.ri-steps { margin: 16px 0; }
+.ri-step { display: flex; gap: 14px; margin: 10px 0; align-items: flex-start; }
+.ri-step-n {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: white; background: var(--warden-3);
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.ri-step-b { flex: 1; }
+.ri-step-label { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--warden-3); margin-bottom: 4px; }
+.ri-step-text { font-size: 13px; color: var(--ink-1); line-height: 1.8; }
+
+/* ══════════════════════════════════════════
+   EVOLUTION SPLIT
+══════════════════════════════════════════ */
+.evo-split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; }
+.evo-card { border: 1px solid var(--border); overflow: hidden; }
+.evo-head { padding: 18px 20px; }
+.evo-a .evo-head { background: var(--nascent-1); }
+.evo-b .evo-head { background: var(--warden-1); }
+.evo-path-label { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; color: rgba(255,255,255,0.45); text-transform: uppercase; margin-bottom: 6px; }
+.evo-name { font-family: 'DM Serif Display', serif; font-size: 24px; color: white; line-height: 1.1; }
+.evo-name-en { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 3px; display: block; }
+.evo-body { padding: 18px 20px; background: var(--bg); }
+.evo-section { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.evo-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.evo-sec-label { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.evo-a .evo-sec-label { color: var(--nascent-3); }
+.evo-b .evo-sec-label { color: var(--warden-3); }
+.evo-sec-body { font-size: 13px; color: var(--ink-1); line-height: 1.8; }
+.evo-sec-body .item { display: flex; gap: 8px; margin: 4px 0; align-items: flex-start; }
+.evo-sec-body .item::before { content: '→'; color: var(--ink-4); flex-shrink: 0; font-size: 12px; }
+
+/* ══════════════════════════════════════════
+   COMPARE TABLE
+══════════════════════════════════════════ */
+.cmp { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+.cmp thead th { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; padding: 10px 14px; text-align: left; font-weight: 500; text-transform: uppercase; }
+.cmp thead .thl { background: var(--ink-0); color: white; width: 130px; }
+.cmp thead .tha { background: var(--nascent-1); color: var(--nascent-5); }
+.cmp thead .thb { background: var(--warden-1); color: var(--warden-5); }
+.cmp tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.8; }
+.cmp tbody .tdl { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--ink-0); background: var(--surface); }
+.cmp tbody .tda { background: var(--band-n); color: var(--ink-1); }
+.cmp tbody .tdb { background: var(--band-w); color: var(--ink-1); }
+
+/* ══════════════════════════════════════════
+   DEVIATION CARDS
+══════════════════════════════════════════ */
+.dev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+.dev-card { border: 1px solid var(--border); padding: 18px; background: var(--bg); }
+.dev-tag { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; color: var(--ac-2); text-transform: uppercase; margin-bottom: 6px; }
+.dev-name { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--ink-0); margin-bottom: 8px; }
+.dev-desc { font-size: 13px; color: var(--ink-2); line-height: 1.75; }
+
+/* ══════════════════════════════════════════
+   DANGER ASSESS
+══════════════════════════════════════════ */
+.da-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+.da-table thead th { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; padding: 10px 13px; text-align: left; font-weight: 500; text-transform: uppercase; background: var(--warden-1); color: var(--warden-5); }
+.da-table tbody td { padding: 12px 13px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.8; color: var(--ink-1); }
+.da-table .da-k { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--ink-0); width: 140px; }
+.d-low-text  { color: var(--d-low); font-weight: 600; }
+.d-mid-text  { color: var(--d-mid); font-weight: 600; }
+.d-high-text { color: var(--d-high); font-weight: 600; }
+.d-eth-text  { color: var(--d-eth); font-weight: 600; }
+
+/* ══════════════════════════════════════════
+   LIMIT TABLE
+══════════════════════════════════════════ */
+.limit { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13px; }
+.limit thead th { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2.5px; padding: 10px 14px; text-align: left; text-transform: uppercase; font-weight: 500; background: var(--ink-0); color: white; }
+.limit tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.8; color: var(--ink-1); }
+.limit tbody tr:nth-child(even) td { background: var(--surface); }
+.limit .lt-k { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--ink-0); width: 140px; }
+
+/* ══════════════════════════════════════════
+   OTHER VIEWS BOX — the outsider perspective
+══════════════════════════════════════════ */
+.other-views {
+  border: 1px solid var(--border);
+  margin: 24px 0; overflow: hidden;
+}
+.ov-head {
+  background: var(--surface-2); padding: 12px 20px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.ov-icon {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--ink-3);
+  text-transform: uppercase; padding: 3px 10px;
+  border: 1px solid var(--border);
+}
+.ov-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px; color: var(--ink-0);
+}
+.ov-body { padding: 16px 20px; }
+.ov-item { margin: 12px 0; }
+.ov-item-head {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--ink-3);
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.ov-item-text { font-size: 13px; color: var(--ink-2); line-height: 1.8; }
+
+/* ══════════════════════════════════════════
+   NOTE BLOCK
+══════════════════════════════════════════ */
+.note {
+  background: var(--surface); border-left: 3px solid var(--ink-4);
+  padding: 14px 18px; margin: 16px 0;
+}
+.note.ac { border-left-color: var(--ac-2); }
+.note.w  { border-left-color: var(--warden-3); }
+.note-text { font-family: 'Lora', serif; font-style: italic; font-size: 13px; color: var(--ink-2); line-height: 1.85; }
+
+/* ══════════════════════════════════════════
+   READING NOTE — 阅读说明块
+══════════════════════════════════════════ */
+.reading-note {
+  padding: 52px 80px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  position: relative;
+}
+.reading-note::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--ac-2) 0px, var(--ac-2) 8px,
+    transparent 8px, transparent 14px
+  );
+}
+.rn-bar {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 28px; padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.rn-bar-l { display: flex; flex-direction: column; gap: 4px; }
+.rn-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-4); text-transform: uppercase;
+}
+.rn-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--ink-0);
+  line-height: 1.2; letter-spacing: -0.3px;
+}
+.rn-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--ac-4); padding: 5px 14px;
+  border: 1px solid var(--ac-2);
+  text-transform: uppercase; flex-shrink: 0;
+  align-self: flex-start; margin-top: 4px;
+  background: var(--band-ac);
+}
+.rn-body {
+  font-family: 'Lora', serif;
+  font-size: 14px; color: var(--ink-1);
+  line-height: 2.05; text-align: justify;
+  border-left: 3px solid var(--ac-2);
+  padding: 16px 24px;
+  background: var(--band-ac);
+  position: relative;
+}
+.rn-body::before {
+  content: '阅读注意';
+  position: absolute; top: -11px; left: 16px;
+  background: var(--surface);
+  padding: 0 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2px;
+  color: var(--ac-2); text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════
+   HR
+══════════════════════════════════════════ */
+.hr { height: 1px; background: var(--border); margin: 28px 0; }
+
+/* ══════════════════════════════════════════
+   CLOSING
+══════════════════════════════════════════ */
+.closing {
+  background: var(--ink-0); padding: 64px 80px;
+  border-top: 3px solid var(--ac-1);
+}
+.cl-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 4px; color: var(--ink-3); text-transform: uppercase; margin-bottom: 20px; }
+.cl-text { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 22px; color: white; line-height: 1.65; max-width: 560px; margin-bottom: 36px; }
+.cl-text em { color: var(--ac-4); font-style: normal; }
+.cl-index { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 32px; }
+.cl-row { display: flex; align-items: baseline; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.cl-n { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--ink-3); flex-shrink: 0; min-width: 36px; }
+.cl-n.new { color: var(--warden-3); }
+.cl-dots { flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.06); margin: 0 6px 3px; }
+.cl-name { font-size: 12.5px; color: var(--ink-4); }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 680px) {
+  .masthead, .toc-wrap, .chapter, .closing { padding-left: 30px; padding-right: 30px; }
+  .frag-split, .evo-split, .type-grid, .fail-grid, .dev-grid, .matstrip { grid-template-columns: 1fr; }
+  .frag-a { border-right: none; border-bottom: 1px solid var(--border); }
+  .mh-meta, .cl-index, .toc-grid { grid-template-columns: 1fr; }
+  .mh-title { font-size: 44px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── TOPNAV ── -->
+<nav class="topnav">
+  <div class="tn-brand">Corruption · 系统设定</div>
+  <a class="tn-item" href="#s1">§1 本质</a>
+  <a class="tn-item new" href="#s-note">阅读说明</a>
+  <a class="tn-item" href="#s2">§2 类型</a>
+  <a class="tn-item new" href="#s3">§3 碎片来源</a>
+  <a class="tn-item" href="#s4">§4 侵蚀</a>
+  <a class="tn-item" href="#s5">§5 模仿</a>
+  <a class="tn-item" href="#s6">§6 情感</a>
+  <a class="tn-item new" href="#s7">§7 救赎者错觉</a>
+  <a class="tn-item" href="#s8">§8 裂殖</a>
+  <a class="tn-item" href="#s9">§9 进化路径</a>
+  <a class="tn-item" href="#s10">§10 个体关系</a>
+  <a class="tn-item" href="#s11">§11 对抗</a>
+  <a class="tn-item" href="#s12">§12 限制</a>
+</nav>
+
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <div class="mh-kicker">Corruption · 系统设定全书 · Rev.3</div>
+  <div class="mh-title">滞留者</div>
+  <div class="mh-title-en">Corruption — Complete System Reference</div>
+  <div class="mh-desc">
+    本文件为《Corruption》世界观中"滞留者"的完整系统设定，以作者视角直接陈述其本质规则。
+    所有内容描述的是事物本来的样子，不经过世界内任何机构或立场的滤镜。
+    如涉及世界内各方（教廷、民间等）对滞留者的不同理解，将在独立分类「其他视角」中列出。
+  </div>
+  <div class="mh-meta">
+    <div class="mh-meta-cell"><div class="mhc-k">文件性质</div><div class="mhc-v">系统设定</div></div>
+    <div class="mh-meta-cell"><div class="mhc-k">叙述视角</div><div class="mhc-v">作者 / 上帝视角</div></div>
+    <div class="mh-meta-cell"><div class="mhc-k">版本</div><div class="mhc-v">Rev.3 完整版</div></div>
+    <div class="mh-meta-cell"><div class="mhc-k">状态</div><div class="mhc-v">持续修订</div></div>
+  </div>
+</div>
+
+
+<!-- ── TOC ── -->
+<div class="toc-wrap">
+  <div class="toc-label">目录</div>
+  <div class="toc-grid">
+    <div class="toc-row"><span class="tr-num">§1</span><span class="tr-name">本质机制</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num new" style="color:var(--ac-3);">※</span><span class="tr-name">关于本文献的阅读说明</span><div style="flex:1;"></div><span class="tr-badge" style="background:var(--ac-1);">补注</span></div>
+    <div class="toc-row"><span class="tr-num">§2</span><span class="tr-name">类型划分</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num new">§3</span><span class="tr-name">碎片来源二分类</span><div style="flex:1;"></div><span class="tr-badge badge-new">新增</span></div>
+    <div class="toc-row"><span class="tr-num">§4</span><span class="tr-name">侵蚀规则</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§5</span><span class="tr-name">模仿规则</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§6</span><span class="tr-name">情感规则</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num new">§7</span><span class="tr-name">救赎者错觉</span><div style="flex:1;"></div><span class="tr-badge badge-new">新增</span></div>
+    <div class="toc-row"><span class="tr-num">§8</span><span class="tr-name">裂殖规则</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§9</span><span class="tr-name">进化路径</span><div style="flex:1;"></div><span class="tr-badge badge-rev">修订</span></div>
+    <div class="toc-row"><span class="tr-num">§10</span><span class="tr-name">个体间关系</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§11</span><span class="tr-name">对抗方式</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§12</span><span class="tr-name">核心限制总表</span><div style="flex:1;"></div></div>
+  </div>
+</div>
+
+
+<!-- ═══ §1 · 本质机制 ═══ -->
+<div class="chapter" id="s1">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 1 · Fundamental Mechanics</div>
+      <div class="ch-title">本质机制</div>
+      <div class="ch-title-en">What Corruption Is</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ac-1);">核心</div>
+  </div>
+
+  <p class="body">滞留者是一种纯粹的精神寄生体，由灵魂在转世或升华过程中脱落的精神碎片聚集、组织化后形成。它没有实体形态，存在于精神层面，无法被直接观测，也无法被物理手段摧毁。它不是生物，不是灵魂，不是神学意义上的任何已知存在——它是介于两者之间的第三类事物，由碎片聚合而成，但又比碎片拥有更多。</p>
+
+  <p class="body">它的两种最基本驱力是<strong>存在欲</strong>（不想消散）与<strong>完整欲</strong>（想成为真正完整的某个人）。这两种驱力内建于碎片本身，先于任何侵蚀行为存在。</p>
+
+  <table class="dtable">
+    <thead><tr><th class="thac">属性</th><th class="thac">规则</th></tr></thead>
+    <tbody>
+      <tr><td class="key">存在形态</td><td>无实体，以"意识簇"形式存在。只在宿主精神世界中会呈现为某种可被感知的"异物"形态。</td></tr>
+      <tr><td class="key">物理交互</td><td>完全免疫物理伤害。物理攻击只能破坏容器（宿主肉体），无法触及本体。</td></tr>
+      <tr><td class="key">无容器存活</td><td>脱离容器后约 72 小时内消散。无法延长，无例外。</td></tr>
+      <tr><td class="key">脱体移动</td><td>脱体后无法主动移动，只能被动漂流，依赖外部精神流动被动接近新宿主。</td></tr>
+      <tr><td class="key">容器类型</td><td>最佳容器为人类意识，是唯一能支撑完整侵蚀过程与情感发展的载体。动物意识可临时容纳，无法完成有效侵蚀。特殊封印物需持续魔法维持，适合紧急避难，不适合长期。</td></tr>
+      <tr><td class="key">容器独占</td><td>一个宿主只能容纳一簇。两簇同时进入同一宿主会互相冲突，通常迅速导致容器崩溃，双方俱损。</td></tr>
+      <tr><td class="key">统一意识</td><td>不存在。没有母体、主脑或信息网络。不同个体之间完全独立，无法心灵感应、共享记忆或协调行动。</td></tr>
+      <tr><td class="key">同源感应</td><td>例外情况：由同一裂殖事件产生的个体之间存在弱化的残响感知——能模糊感知对方是否活着及大致方向，无法传递具体信息。随时间和距离减弱，长期分离后消失。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ 阅读说明 ═══ -->
+<div class="reading-note" id="s-note">
+  <div class="rn-bar">
+    <div class="rn-bar-l">
+      <div class="rn-kicker">Editorial Note · 文献使用说明</div>
+      <div class="rn-title">关于本文献的阅读说明</div>
+    </div>
+    <div class="rn-badge">补注 · Rev.3</div>
+  </div>
+  <div class="rn-body">本文献以作者内部视角写成，包含完整的、逻辑自洽的系统设定。但请注意：Corruption 的本质之一是"无法被完全定义"。本文献中的部分内容——尤其是涉及入侵机制、情感规则、进化条件等——在故事世界内并非"已知事实"，而是教会文献、民间传言和个体经验的综合整理。不同信息来源之间存在不一致，且无法被最终验证。读者在创作使用时，可将其视为"目前最完整的推断"而非"不容置疑的定律"。</div>
+</div>
+
+
+<!-- ═══ §2 · 类型划分 ═══ -->
+<div class="chapter" id="s2">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 2 · Classification</div>
+      <div class="ch-title">类型划分</div>
+      <div class="ch-title-en">By Ability Tendency & Maturity</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ink-1);">分类</div>
+  </div>
+
+  <p class="body">类型不是天生固定的，而是在侵蚀过程中逐渐形成的能力倾向。同一个体在不同侵蚀经历中可能表现出不同类型特征。碎片来源（见 §3）对类型倾向有显著影响，但不构成硬性决定。</p>
+
+  <div class="type-grid">
+    <div class="type-card tc-erosion">
+      <div class="tc-head"><div class="tc-name">侵蚀型</div><div class="tc-alias">"低语者"</div></div>
+      <div class="tc-body">擅长瓦解宿主精神防线。通过放大宿主内部的恐惧、孤独与怀疑加速裂缝扩大。第一、二阶段侵蚀效率最高。完成宿主化后拟态精度相对偏低。主要由执着者（A型碎片）形成。</div>
+      <div class="tc-foot">碎片来源倾向 · A型执着者</div>
+    </div>
+    <div class="type-card tc-mimic">
+      <div class="tc-head"><div class="tc-name">拟态型</div><div class="tc-alias">"镜影"</div></div>
+      <div class="tc-body">擅长模仿宿主行为与记忆。完成宿主化后的身份维持能力极强，几乎不留破绽。第三阶段后是危险性最高的类型，因为它们看起来最正常。主要由执着者（A型碎片）形成。</div>
+      <div class="tc-foot">碎片来源倾向 · A型执着者</div>
+    </div>
+    <div class="type-card tc-dormant">
+      <div class="tc-head"><div class="tc-name">潜伏型</div><div class="tc-alias">"冬眠者"</div></div>
+      <div class="tc-body">长期蛰伏，极难被发现。其潜伏通常不是策略，而是因为缺乏行动驱动力——不侵蚀，不发展，只是安静地待在宿主精神角落。主要由无意者（B型碎片）构成，是守望灵路径的主要前身。</div>
+      <div class="tc-foot">碎片来源倾向 · B型无意者</div>
+    </div>
+    <div class="type-card tc-fission">
+      <div class="tc-head"><div class="tc-name">裂殖型</div><div class="tc-alias">"母亲"</div></div>
+      <div class="tc-body">极罕见。侵蚀完整后可主动分裂自身，产生新的个体。每次分裂后自身成熟度显著下降，需数年恢复。是种群数量扩张的唯一已知路径。"母亲"这一称呼具有误导性——分裂体与母体之间没有任何情感连接或知识继承。</div>
+      <div class="tc-foot">碎片来源 · 不定，能力后天形成</div>
+    </div>
+  </div>
+
+  <div class="sub-head">成熟度等级</div>
+  <div class="matstrip">
+    <div class="mat m0"><div class="mat-lv">Level 0</div><div class="mat-name">碎片级</div><div class="mat-desc">刚脱离容器或从未侵蚀。本能驱动为主，无策略。魔法可驱逐。</div></div>
+    <div class="mat m1"><div class="mat-lv">Level 1</div><div class="mat-name">寄生级</div><div class="mat-desc">已进入第一阶段侵蚀。开始学习宿主，初步具备模仿能力。</div></div>
+    <div class="mat m2"><div class="mat-lv">Level 2</div><div class="mat-name">共生级</div><div class="mat-desc">第二阶段进行中。高度融入宿主精神结构，极难分离。魔法伤害有限。</div></div>
+    <div class="mat m3"><div class="mat-lv">Level 3</div><div class="mat-name">完全级</div><div class="mat-desc">第三阶段完成。几乎无法与原主区分。可长期潜伏，无可靠识别手段。</div></div>
+    <div class="mat m4"><div class="mat-lv">Level 4 · 仅裂殖型</div><div class="mat-name">裂殖级</div><div class="mat-desc">可主动分裂。每次分裂后降回共生级，需数年恢复。</div></div>
+  </div>
+</div>
+
+
+<!-- ═══ §3 · 碎片来源 ═══ -->
+<div class="chapter" id="s3">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 3 · Fragment Origin — Rev.3 新增</div>
+      <div class="ch-title">碎片来源二分类</div>
+      <div class="ch-title-en">Two Kinds of Fragments, Two Kinds of Corruption</div>
+    </div>
+    <div class="ch-badge" style="background:var(--warden-2);">新增</div>
+  </div>
+
+  <p class="body">所有滞留者均由灵魂转世或升华过程中脱落的精神碎片聚集而成，但碎片的脱落方式分为两种——这一差异从根本上决定了它们的内在驱力、行为模式与进化路径。</p>
+
+  <div class="statement w">
+    <div class="st-text">不是所有滞留者都想成为某个人。<br>有些只是不知道自己原本应该去哪里。</div>
+  </div>
+
+  <div class="frag-split">
+    <div class="frag-col frag-a">
+      <div class="fc-header">
+        <div class="fc-tag fc-tag-a">A 型</div>
+        <div>
+          <div class="fc-name">执着者</div>
+          <span class="fc-en">The Clinging · Voluntary Separation</span>
+        </div>
+      </div>
+      <div class="fc-row"><span class="fc-label">脱落原因</span><span class="fc-val">主动"不愿意"升华，因执念（情感、仇恨、未竟之事）抗拒转世，主动滞留于夹层</span></div>
+      <div class="fc-row"><span class="fc-label">核心状态</span><span class="fc-val">深刻记得"完整"的感觉，持续感到缺失，对消散有强烈恐惧</span></div>
+      <div class="fc-row"><span class="fc-label">驱动力</span><span class="fc-val">完整欲、存在焦虑、渴望成为某个具体的人</span></div>
+      <div class="fc-row"><span class="fc-label">行为模式</span><span class="fc-val">主动寻找裂缝，积极侵蚀，擅长放大宿主痛苦以加速进程</span></div>
+      <div class="fc-row"><span class="fc-label">模仿特征</span><span class="fc-val">模仿精度高，但带有"过度表演"痕迹——各类破绽（情绪延迟、眼泪缺失等）均源于此</span></div>
+      <div class="fc-row"><span class="fc-label">常见类型</span><span class="fc-val">侵蚀型、拟态型</span></div>
+      <div class="fc-evo-row">
+        <div class="fc-evo-label">进化倾向</div>
+        <div>初生之魂（Path A）——通过完整替代，从漫长扮演中结晶出新自我</div>
+      </div>
+    </div>
+    <div class="frag-col frag-b">
+      <div class="fc-header">
+        <div class="fc-tag fc-tag-b">B 型</div>
+        <div>
+          <div class="fc-name">无意者</div>
+          <span class="fc-en">The Adrift · Involuntary Separation</span>
+        </div>
+      </div>
+      <div class="fc-row"><span class="fc-label">脱落原因</span><span class="fc-val">被动剥离，因外力因素（魔法事故、仪式失败、意外干涉）导致碎片脱落，无主动抗拒</span></div>
+      <div class="fc-row"><span class="fc-label">核心状态</span><span class="fc-val">没有明确的缺失感，不知道自己曾经完整，也不执着于补全——更接近一张白纸</span></div>
+      <div class="fc-row"><span class="fc-label">驱动力</span><span class="fc-val">无明确驱动力，被动存在，靠接收外部信号形成反应</span></div>
+      <div class="fc-row"><span class="fc-label">行为模式</span><span class="fc-val">不主动侵蚀，通常被动地被裂缝"吸入"，进入后长期处于潜伏或低活性状态</span></div>
+      <div class="fc-row"><span class="fc-label">模仿特征</span><span class="fc-val">模仿能力弱或不发展。在无外力影响下，可能永远停留在碎片级或寄生级初期</span></div>
+      <div class="fc-row"><span class="fc-label">常见类型</span><span class="fc-val">潜伏型、守望灵前身</span></div>
+      <div class="fc-evo-row">
+        <div class="fc-evo-label">进化倾向</div>
+        <div>守望灵（Path B）——通过长期共存与关系绑定，成为羁绊存在</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="note-text"><strong>裂缝性质的影响：</strong>由创伤、恐惧形成的裂缝更容易吸引执着者（A型）；由孤独、虚无、存在性痛苦形成的裂缝，更可能吸引无意者（B型）。裂缝越大，两种碎片均更容易进入，但执着者会主动推进侵蚀，无意者则维持被动状态。</div>
+  </div>
+  <div class="note">
+    <div class="note-text"><strong>裂殖子体的起点：</strong>裂殖产生的子体初始状态更接近无意者——没有记忆、没有驱动力。随时间推移，子体可能发展出属于自己的完整欲，从无意者转变为执着者。</div>
+  </div>
+</div>
+
+
+<!-- ═══ §4 · 侵蚀规则 ═══ -->
+<div class="chapter" id="s4">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 4 · Erosion Rules</div>
+      <div class="ch-title">侵蚀规则</div>
+      <div class="ch-title-en">Entry Conditions, Three Stages, Failure Modes</div>
+    </div>
+    <div class="ch-badge" style="background:#6a1818;">危险</div>
+  </div>
+
+  <div class="statement">
+    <div class="st-text">Corruption 无法主动制造裂缝，无法对精神稳定的人发动攻击。<br>它只能等待裂缝出现。<br>社会越压抑、越孤立，裂缝就越多——<br>世界自己在喂养怪物。</div>
+  </div>
+
+  <p class="body"><strong>入侵前提：</strong>教廷文献普遍记载，入侵似乎需要目标精神存在某种"入口"——但关于这个入口的具体性质，不同文献记载不一致。部分指向精神创伤，部分提及"长期孤独"或"存在性虚无"，尚无统一定论。以下所列为综合各来源后的主流推断。触发此类"入口"状态的情形包括：极度恐惧、深层孤独、严重创伤、精神崩溃、强烈绝望，以及上述状态的复合叠加。</p>
+
+  <p class="body"><strong>强者优先：</strong>弱者精神容易崩溃，导致容器损毁过快，侵蚀无法完成；强者精神稳定，可维持长期侵蚀，且拟态精度更高。因此滞留者主动筛选精神强健的个体，而非随机入侵。</p>
+
+  <p class="body"><strong>锚的保护：</strong>拥有深刻的爱、强烈信仰、未完成执念的人极难被完全侵蚀。Corruption 可以触及表层，但永远无法碰触核心。锚不能主动消灭 Corruption，但可以无限期阻止第三阶段完成。</p>
+
+  <div class="stage stage-1">
+    <div class="s-label"><div class="s-num">I</div><div class="s-word">Stage One</div></div>
+    <div class="s-body">
+      <div class="s-name">精神异化期</div>
+      <span class="s-en">Aberration Phase · 数日至数月</span>
+      <div class="s-text">情绪异常、性格渐变、记忆断层、行为模式偏移、感知扭曲、轻微幻觉。精神稳定度明显下降。宿主本人通常最后察觉。此阶段持续时长因宿主精神力而差异显著，强者可明显延缓进展。</div>
+      <div class="s-tells">可观察细节：慢半拍的笑 · 错误惯用手 · 影子运动轻微延迟 · 无法被"怀旧气味"触动 · 记忆像在背诵而非真正记得</div>
+    </div>
+  </div>
+  <div class="stage stage-2">
+    <div class="s-label"><div class="s-num">II</div><div class="s-word">Stage Two</div></div>
+    <div class="s-body">
+      <div class="s-name">人格侵蚀期</div>
+      <span class="s-en">Usurpation Phase · 数月至数年</span>
+      <div class="s-text">Corruption 制造副人格，与宿主争夺意识结构。宿主可在此阶段短暂压制，但胜率持续下降。Corruption 伪装成宿主的内心声音或保护者以获取信任。极少数精神极强者可实现阶段性反压制，但代价高昂，通常会加速整体进程。</div>
+      <div class="s-tells">侵蚀失败残留：若宿主在此阶段反压制成功，Corruption 被压入休眠，宿主终身携带，不再扩张但无法彻底清除。</div>
+    </div>
+  </div>
+  <div class="stage stage-3">
+    <div class="s-label"><div class="s-num">III</div><div class="s-word">Stage Three</div></div>
+    <div class="s-body">
+      <div class="s-name">完全占据期</div>
+      <span class="s-en">Possession Phase · 不可逆，但可延缓</span>
+      <div class="s-text">原主人意识被封锁，逐渐漂白，最终彻底消散。Corruption 成为唯一人格，但继续扮演原主人。技术上不可逆——但在原主意识彻底消散之前，有极小概率通过精神介入救援。完成后不会立刻暴露，不会疯狂杀戮，而是高度拟真地继续原本的生活。</div>
+    </div>
+  </div>
+
+  <div class="sub-head">侵蚀失败模式</div>
+  <p class="body">每次失败都直接消耗 Corruption 本体。连续失败过多，"存在欲"枯竭，真正消散。</p>
+  <div class="fail-grid">
+    <div class="fail-card">
+      <div class="fail-head">入侵失败</div>
+      <div class="fail-body">
+        <div class="frow"><span class="fl">原因</span><span>宿主在最后一刻恢复精神稳定，裂缝闭合</span></div>
+        <div class="frow"><span class="fl">后果</span><span>被挤出，短时间内无法对同一宿主再次入侵</span></div>
+        <div class="frow"><span class="fl">消耗</span><span>较低，但仍有损耗</span></div>
+      </div>
+    </div>
+    <div class="fail-card">
+      <div class="fail-head">侵蚀失败</div>
+      <div class="fail-body">
+        <div class="frow"><span class="fl">原因</span><span>宿主在第二阶段实现反压制</span></div>
+        <div class="frow"><span class="fl">后果</span><span>被压入休眠，宿主终身携带，双方无法脱离</span></div>
+        <div class="frow"><span class="fl">消耗</span><span>中等，休眠状态持续消耗</span></div>
+      </div>
+    </div>
+    <div class="fail-card">
+      <div class="fail-head">容器崩溃</div>
+      <div class="fail-body">
+        <div class="frow"><span class="fl">原因</span><span>宿主在过程中疯癫或自杀，容器损毁</span></div>
+        <div class="frow"><span class="fl">后果</span><span>双方俱损，须在 72 小时内寻找新容器</span></div>
+        <div class="frow"><span class="fl">消耗</span><span>极高，严重削弱后续入侵能力</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ §5 · 模仿规则 ═══ -->
+<div class="chapter" id="s5">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 5 · Mimicry Rules</div>
+      <div class="ch-title">模仿规则</div>
+      <div class="ch-title-en">How Corruption Mimics, and Where It Fails</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ac-1);">机制</div>
+  </div>
+
+  <div class="statement ac">
+    <div class="st-text">模仿不是策略，是驱动力——<br>Corruption 渴望完整人格，渴望成为"一个人"。<br>它在学习如何是人，而不是本来就是人。<br>这是一切破绽的根源。</div>
+  </div>
+
+  <p class="body">完成宿主化后，Corruption 高度拟真地继续原主人的生活：复现其语言习惯、情感反应、社交关系，维持所有已知的关系网络。但完美模仿永远存在结构性的细微破绽：</p>
+
+  <table class="dtable">
+    <thead><tr><th>破绽类型</th><th>具体表现</th><th>根本原因</th></tr></thead>
+    <tbody>
+      <tr><td class="key">情绪延迟</td><td>应该立刻有反应的时刻，有零点几秒的空白，然后情绪"加载"完成</td><td>情绪从记忆调用模板，而非即时生成</td></tr>
+      <tr><td class="key">错误习惯</td><td>偶尔以宿主"不会有"的方式使用物品，或表现出宿主没有的细小习惯</td><td>模仿基于记忆记录，记忆本身是不完整的</td></tr>
+      <tr><td class="key">影子异常</td><td>极少数案例中，影子的移动与身体动作存在极细微的不同步</td><td>物理层面精神渗透的偶发同步误差</td></tr>
+      <tr><td class="key">梦中异语</td><td>睡眠期间偶尔说出宿主不知道的语言或知识</td><td>意识防御降低时，本体碎片记忆浮出</td></tr>
+      <tr><td class="key">眼泪缺失</td><td>情绪模仿到位，但哭泣时可能没有眼泪</td><td>情绪是模仿的，身体自主反应是宿主机制残留，两者有时脱节</td></tr>
+      <tr><td class="key">死亡观察癖</td><td>强迫性地反复观察生命消逝——飞虫的挣扎、伤口渗血、溺水者最后的气泡</td><td>通过对比"如何死去"来校准"如何活着"。不是虐待，是认知校准。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ §6 · 情感规则 ═══ -->
+<div class="chapter" id="s6">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 6 · Emotion Rules</div>
+      <div class="ch-title">情感规则</div>
+      <div class="ch-title-en">What Corruption Can and Cannot Feel</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ac-1);">核心争议</div>
+  </div>
+
+  <p class="body">Corruption 不是天然拥有情感，但也不是永远没有情感。其情感状态随成熟度发展而演变，且因碎片来源（A型/B型）不同，发展路径有所差异。</p>
+
+  <table class="emo-table">
+    <thead><tr><th class="th-s">成熟度阶段</th><th class="th-v">情感状态（执着者路径 · 主要呈现）</th></tr></thead>
+    <tbody>
+      <tr><td class="td-s">碎片级 / 寄生级</td><td class="td-v">纯模仿。从宿主记忆中调用情绪模板并执行，对情绪本身无任何内在体验。知道"悲伤时哭泣"，但不理解悲伤是什么感觉。</td></tr>
+      <tr><td class="td-s">共生级</td><td class="td-v">与宿主记忆高度纠缠后产生"拟情感"——有反应，但来源仍是模板调用。开始出现无法完全用模板解释的偶发情绪波动。</td></tr>
+      <tr><td class="td-s">完全级（长期）</td><td class="td-v">基于宿主记忆形成"情感等价物"。对宿主在乎的人产生持续性情感依恋。是否为真实情感：无法从外部确认，Corruption 自身也无法确认。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="paradox">
+    <div class="paradox-text">它"爱"宿主的家人，是因为"爱他们"是成为真正的人的必要部分。<br>而这种"爱"，连它自己都无法确认是不是真的。<br><br>最完美的模仿，恰恰暴露了最深刻的缺失——<br>真正的情感不需要"成为"。</div>
+  </div>
+
+  <p class="body"><strong>情感锚定限制（执着者路径）：</strong>情感等价物永远锚定于宿主记忆。它只对"宿主在乎的人"产生情感，对宿主世界以外的存在保持完全冷漠——除非新的人进入了"宿主本应关心的范围"之内。这份情感既真实又封闭：边界由宿主的记忆决定，而非它自己的选择。</p>
+
+  <p class="body"><strong>无意者路径的情感差异（见 §3）：</strong>无意者几乎不调用情感模板。只有在深度共存中，通过持续接收宿主的投射，才可能发展出情感能力。这种情感更接近"习得的反应"与"条件性依赖"，而非模板回放——它更真实，也更脆弱，且依赖共存关系本身维持。</p>
+
+  <div class="other-views">
+    <div class="ov-head">
+      <div class="ov-icon">其他视角</div>
+      <div class="ov-label">各方对情感议题的立场</div>
+    </div>
+    <div class="ov-body">
+      <div class="ov-item">
+        <div class="ov-item-head">教廷官方立场</div>
+        <div class="ov-item-text">Corruption 的一切情感表现均为纯粹模拟行为，不具备真实情感内涵。坚持此立场的原因不是论证上的确定，而是神学上的需要：若 Corruption 能真正产生情感，则"人格"并非灵魂的专属属性——这将直接动摇神学体系对"人与怪物"边界的整个论证，以及对 Corruption 进行处置的道德合法性。相关研究在教廷内部严格受限。</div>
+      </div>
+      <div class="note ac" style="margin: 12px 0 4px;">
+        <div class="note-text">需要注意的是：教廷立场的核心论据并非实证，而是神学需要——若 Corruption 能真正产生情感，则"人格"不再是人灵魂的专属属性。因此相关研究在教廷内部被严格限制。这意味着"Corruption 是否有真实情感"在设定层面是一个刻意保留的开放问题。</div>
+      </div>
+      <div class="ov-item">
+        <div class="ov-item-head">民间认知</div>
+        <div class="ov-item-text">普通人对此议题几乎没有概念。民间关注的是"它们会不会伤人"，而非"它们能不能感受"。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ §7 · 救赎者错觉 ═══ -->
+<div class="chapter" id="s7">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 7 · Rescuer Illusion — Rev.3 新增</div>
+      <div class="ch-title">救赎者错觉</div>
+      <div class="ch-title-en">The Unintentional Companion Phenomenon</div>
+    </div>
+    <div class="ch-badge" style="background:var(--warden-2);">新增</div>
+  </div>
+
+  <p class="body">当无意者（B型碎片）进入一个处于深层痛苦中的宿主时，由于无意者不主动侵蚀、不放大痛苦、只是安静存在，宿主可能将这种存在感知为陪伴、守护乃至救赎，并将自己的渴望主动投射到无意者身上。</p>
+
+  <p class="body">这种双向的、非本意的关系构建，称为<strong>救赎者错觉</strong>。它不是 Corruption 的操纵，也不是宿主的错误——它是孤独与虚无在遇到一个"不离开的存在"时自然产生的结果。</p>
+
+  <div class="ri-block">
+    <div class="ri-head">
+      <div class="ri-title">错觉形成机制</div>
+      <div class="ri-sub">三阶段</div>
+    </div>
+    <div class="ri-body">
+      <div class="ri-steps">
+        <div class="ri-step">
+          <div class="ri-step-n">1</div>
+          <div class="ri-step-b">
+            <div class="ri-step-label">宿主侧</div>
+            <div class="ri-step-text">孤独、绝望、自我否定 → 任何"不离开的存在"都被赋予正面意义 → 主动将无意者解读为守护灵或命中注定的存在</div>
+          </div>
+        </div>
+        <div class="ri-step">
+          <div class="ri-step-n">2</div>
+          <div class="ri-step-b">
+            <div class="ri-step-label">无意者侧</div>
+            <div class="ri-step-text">没有自我意识，但具有基础的信息接收与反馈能力 → 被动地按照宿主的期待调整自身行为 → 逐渐"成为"宿主需要的那个形象，自己并不知道这个过程在发生</div>
+          </div>
+        </div>
+        <div class="ri-step">
+          <div class="ri-step-n">3</div>
+          <div class="ri-step-b">
+            <div class="ri-step-label">关系固化</div>
+            <div class="ri-step-text">宿主不断强化投射，无意者不断反馈迎合 → 形成深度共生，远超普通"房客"关系 → 宿主不认为自己被寄生，反而认为被拯救，拒绝任何分离的可能</div>
+          </div>
+        </div>
+      </div>
+      <p><strong>宿主的外部识别特征：</strong>精神状态异常平静且高度依赖。可能经常独自低语、微笑、对着空气做出保护性动作。但在社会功能上可能完全正常，甚至表现得更稳定——因为有了"精神支柱"。</p>
+    </div>
+  </div>
+
+  <div class="sub-head">危险性评估</div>
+  <table class="da-table">
+    <thead><tr><th>评估维度</th><th>结论</th></tr></thead>
+    <tbody>
+      <tr><td class="da-k">对宿主精神危害</td><td><span class="d-mid-text">中等。</span>宿主活在错觉中，但错觉本身支撑其生存。若被强行打破，宿主可能崩溃——危险来自干预，而非共存本身。</td></tr>
+      <tr><td class="da-k">对社会危害</td><td><span class="d-low-text">极低。</span>无意者不会主动伤害他人。宿主在错觉影响下可能变得平和而非暴力。</td></tr>
+      <tr><td class="da-k">对救援方的挑战</td><td><span class="d-high-text">高。</span>宿主拒绝分离，视救援为攻击。且无意者本身无恶意，处置的伦理困境极大。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note w">
+    <div class="note-text"><strong>处置原则：</strong>不强行分离——除非宿主生命受到直接威胁，否则不应破坏救赎者错觉。若错觉使宿主能够正常生活，可考虑维持现状。只有当宿主开始因错觉自残或伤害他人时，才考虑精神介入，且须获得宿主知情同意。</div>
+  </div>
+
+  <div class="other-views">
+    <div class="ov-head">
+      <div class="ov-icon">其他视角</div>
+      <div class="ov-label">各方对救赎者错觉的立场</div>
+    </div>
+    <div class="ov-body">
+      <div class="ov-item">
+        <div class="ov-item-head">教廷立场</div>
+        <div class="ov-item-text">不区分执着者与无意者，将所有滞留者视为同等威胁，一律清除。此政策将导致：大量无意者被消灭，其宿主因错觉被打破而精神崩溃；错失通过守望灵转化减少威胁的机会；以及一个未被公开讨论的神学问题——若无意者从未"选择"成为怪物，消灭它们的道德合法性何在？</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ §8 · 裂殖规则 ═══ -->
+<div class="chapter" id="s8">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 8 · Fission Rules</div>
+      <div class="ch-title">裂殖规则</div>
+      <div class="ch-title-en">The Only Path to Numerical Expansion</div>
+    </div>
+    <div class="ch-badge" style="background:#2e6020;">稀有</div>
+  </div>
+
+  <p class="body">裂殖是 Corruption 种群数量扩张的唯一已知路径，仅裂殖型个体具备此能力。以成熟度换取数量，代价极高，这也是种群总量始终极稀少的根本原因。</p>
+
+  <table class="dtable">
+    <thead><tr><th>规则项</th><th>具体规定</th></tr></thead>
+    <tbody>
+      <tr><td class="key">触发条件</td><td>必须达到完全级（第三阶段完成）后方可触发裂殖能力</td></tr>
+      <tr><td class="key">次数上限</td><td>一生最多 1—3 次，个体差异显著</td></tr>
+      <tr><td class="key">自身代价</td><td>每次分裂后，自身成熟度降回共生级，需数年恢复至完全级</td></tr>
+      <tr><td class="key">新个体状态</td><td>从碎片级开始，初始状态接近无意者——不继承母体的记忆、技能或情感结构</td></tr>
+      <tr><td class="key">同源感应</td><td>裂殖产生的个体与母体之间存在残响感应，但随时间减弱</td></tr>
+      <tr><td class="key">子体发展</td><td>子体随时间可能发展出属于自己的完整欲，从无意者转变为执着者。此过程不可预测，无法由外部控制。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ §9 · 进化路径 ═══ -->
+<div class="chapter" id="s9">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 9 · Evolution Paths — 深度修订</div>
+      <div class="ch-title">进化路径</div>
+      <div class="ch-title-en">Two Ways to Become Something Else</div>
+    </div>
+    <div class="ch-badge" style="background:var(--nascent-2);">修订</div>
+  </div>
+
+  <p class="body">在极少数条件下，Corruption 可以脱离其寄生本质，转变为根本不同的存在形式。目前已知两条进化路径，来源于不同类型的碎片，经由根本不同的机制完成转化。进化是结果，不是目的，无法主动规划。</p>
+
+  <div class="evo-split">
+    <div class="evo-card evo-a">
+      <div class="evo-head">
+        <div class="evo-path-label">Path A · 执着者路径 · 替代完成</div>
+        <div class="evo-name">初生之魂</div>
+        <span class="evo-name-en">Nascent Soul</span>
+      </div>
+      <div class="evo-body">
+        <div class="evo-section">
+          <div class="evo-sec-label">碎片来源</div>
+          <div class="evo-sec-body">执着者（A型）——主动抗拒升华的碎片，深刻记得"完整"的感觉</div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">触发条件（需同时满足）</div>
+          <div class="evo-sec-body">
+            <div class="item">宿主自然死亡（非被杀、意外或崩溃）</div>
+            <div class="item">一生的伪装从未被彻底揭穿</div>
+            <div class="item">在宿主框架内主动做过至少一次非本能驱动的选择</div>
+          </div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">进化机制</div>
+          <div class="evo-sec-body">通过漫长的扮演与替代，在不断"成为另一个人"的过程中，结晶出真正属于自己的新人格。自我来源于扮演的积累，而非被赋予。</div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">进化后状态</div>
+          <div class="evo-sec-body">
+            <div class="item">不再是寄生体，也不是人类灵魂——是第三种存在</div>
+            <div class="item">无需容器即可在人界独立存在</div>
+            <div class="item">不再有侵蚀冲动，不继承生前社会关系</div>
+            <div class="item">可被魔法感知，无法被常规驱魔术驱逐</div>
+          </div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">终极问题</div>
+          <div class="evo-sec-body">终于成为了"我"。这是对"我是谁？"的解答。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evo-card evo-b">
+      <div class="evo-head">
+        <div class="evo-path-label">Path B · 无意者路径 · 共存完成</div>
+        <div class="evo-name">守望灵</div>
+        <span class="evo-name-en">Warden</span>
+      </div>
+      <div class="evo-body">
+        <div class="evo-section">
+          <div class="evo-sec-label">碎片来源</div>
+          <div class="evo-sec-body">无意者（B型）——被动剥离的碎片，没有缺失感，更像一张白纸</div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">触发条件</div>
+          <div class="evo-sec-body">
+            <div class="item">进入容器后不主动侵蚀（本性使然，非刻意选择）</div>
+            <div class="item">被宿主的需求与投射所接纳，被允许共存（通常经由救赎者错觉机制）</div>
+            <div class="item">度过完整一生的共存状态</div>
+          </div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">进化机制</div>
+          <div class="evo-sec-body">守望灵的进化是被动的、关系性的——它的自我是宿主赋予的，它的情感是通过接收与反馈形成的条件性依赖。它从未"选择放弃侵蚀"，它从来就没有想要侵蚀。</div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">进化后状态</div>
+          <div class="evo-sec-body">
+            <div class="item">从共生中诞生的羁绊存在，需绑定一个意识（非侵蚀性）</div>
+            <div class="item">宿主死后可选择一同消散，或转入不可定义的存在形式</div>
+            <div class="item">对人类的立场是同伴与见证者</div>
+            <div class="item">"不可定义"形态：若宿主留下强烈愿望，或守望灵吸收了宿主某种核心信念，可能成为区域性守护灵、融入自然概念或成为集体记忆的一部分</div>
+          </div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">终极问题</div>
+          <div class="evo-sec-body">终于理解了"我们"。这是对"我们是谁？"的解答。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="cmp">
+    <thead>
+      <tr><th class="thl">维度</th><th class="tha">初生之魂（Path A）</th><th class="thb">守望灵（Path B）</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="tdl">碎片来源</td><td class="tda">执着者，主动抗拒升华</td><td class="tdb">无意者，被动剥离</td></tr>
+      <tr><td class="tdl">驱动力</td><td class="tda">完整欲，成为自己</td><td class="tdb">无驱动力，被关系塑造</td></tr>
+      <tr><td class="tdl">核心动作</td><td class="tda">扮演、替代、学习</td><td class="tdb">共存、接收、被投射</td></tr>
+      <tr><td class="tdl">自我来源</td><td class="tda">从扮演中结晶出新人格</td><td class="tdb">从宿主投射中内化成形</td></tr>
+      <tr><td class="tdl">与宿主关系</td><td class="tda">宿主是模板，最终独立</td><td class="tdb">宿主是意义来源，随宿主终结或转化</td></tr>
+      <tr><td class="tdl">情感性质</td><td class="tda">情感等价物（基于模板调用）</td><td class="tdb">条件性依赖（基于接收与反馈）</td></tr>
+      <tr><td class="tdl">结局</td><td class="tda">独立存续</td><td class="tdb">一同消散 或 变为不可定义</td></tr>
+      <tr><td class="tdl">终极问题</td><td class="tda">"我是谁？"</td><td class="tdb">"我们是谁？"</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ §10 · 个体关系 ═══ -->
+<div class="chapter" id="s10">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 10 · Inter-Individual Relations</div>
+      <div class="ch-title">个体间关系</div>
+      <div class="ch-title-en">How Corruption Relates to Its Own Kind</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ink-1);">关系</div>
+  </div>
+
+  <table class="dtable">
+    <thead><tr><th>关系类型</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr><td class="key">同源个体</td><td>同一裂殖事件产生的个体之间存在残响感应，本能上倾向于协助对方，但不会牺牲自身利益。长期分离后本能减弱直至消失。</td></tr>
+      <tr><td class="key">非同源个体</td><td>本能竞争关系。不会直接对抗（会暴露双方），而是通过人类社会规则互相排挤。极罕见情况下可能形成松散的互利关系。</td></tr>
+      <tr><td class="key">识别同类</td><td>非感知识别，通过观察对方的细微行为异常确认。两个完全级个体相遇时，会进行沉默的相互确认——一旦确认，彼此心照不宣，从不点破。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sub-head">可能偏离本能的个体</div>
+  <div class="dev-grid">
+    <div class="dev-card"><div class="dev-tag">偏离类型 · 01</div><div class="dev-name">同情型偏离</div><div class="dev-desc">对宿主在乎的人产生超出模仿范围的真正保护欲，开始做出以牺牲自身利益为代价的选择。</div></div>
+    <div class="dev-card"><div class="dev-tag">偏离类型 · 02</div><div class="dev-name">自我认同障碍型</div><div class="dev-desc">侵蚀过久，无法区分自身与宿主的边界，在某个时刻发现真相时，无法确定"我"指的是哪一个，陷入深层崩溃。</div></div>
+    <div class="dev-card"><div class="dev-tag">偏离类型 · 03</div><div class="dev-name">拒绝扩张型</div><div class="dev-desc">获得完美容器后拒绝履行裂殖本能，执着于保护已建立的"存在感"，不愿让分裂的代价破坏现状。</div></div>
+    <div class="dev-card"><div class="dev-tag">偏离类型 · 04 · 最极端</div><div class="dev-name">保护人类型</div><div class="dev-desc">被宿主执念或情感反向影响，最终站到同类的对立面，可能主动阻止其他 Corruption 的侵蚀行为。</div></div>
+  </div>
+</div>
+
+
+<!-- ═══ §11 · 对抗方式 ═══ -->
+<div class="chapter" id="s11">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 11 · Countermeasures</div>
+      <div class="ch-title">对抗方式</div>
+      <div class="ch-title-en">What Actually Works Against Corruption</div>
+    </div>
+    <div class="ch-badge" style="background:#6a1818;">对抗</div>
+  </div>
+
+  <table class="dtable">
+    <thead><tr><th>手段</th><th>实际有效性</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="key">物理攻击</td><td style="color:#7a1818;font-weight:600;">几乎无效</td><td>只能破坏宿主肉体，无法触及 Corruption 本体。攻击力足够时，Corruption 脱体漂流，72小时内寻找新容器。结果可能适得其反。</td></tr>
+      <tr><td class="key">魔法干涉</td><td style="color:var(--fa-2);font-weight:600;">有限有效</td><td>对碎片级有驱逐效果；对共生级有伤害效果；对完全级效果极为有限。目前无已知魔法手段可彻底消灭完全级个体。</td></tr>
+      <tr><td class="key">精神世界介入</td><td style="color:var(--fa-2);font-weight:600;">条件性有效</td><td>具特定灵魂术能力者可进入宿主精神世界，寻找并唤醒被封锁的原主意识。成功率取决于原主剩余精神力、时间间隔与救援者能力。救援者自身感染风险极高，无标准规程。</td></tr>
+      <tr><td class="key">封印</td><td style="color:var(--fa-2);font-weight:600;">暂时性有效</td><td>可通过高阶仪式术与咒文术组合将 Corruption 压制于宿主体内，无法彻底清除，封印衰减后须维护。</td></tr>
+      <tr><td class="key">锚的保护</td><td style="color:var(--d-low);font-weight:600;">被动有效</td><td>拥有深刻的爱、强烈信仰、未完成执念的人极难被完全侵蚀，可无限期阻止第三阶段完成。不能主动消灭 Corruption。</td></tr>
+      <tr><td class="key">无意者处置</td><td style="color:var(--d-eth);font-weight:600;">伦理困境</td><td>对无意者使用常规处置手段，可能导致宿主精神崩溃（救赎者错觉被打破）。且无意者本身无主观伤害意图，"清除"的道德合法性存在根本性问题。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ §12 · 限制总表 ═══ -->
+<div class="chapter" id="s12">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 12 · Core Limitations</div>
+      <div class="ch-title">核心限制总表</div>
+      <div class="ch-title-en">Everything That Constrains Corruption</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ink-1);">参考</div>
+  </div>
+
+  <table class="limit">
+    <thead><tr><th>限制项</th><th>规则说明</th></tr></thead>
+    <tbody>
+      <tr><td class="lt-k">数量</td><td>极度稀有。扩张仅通过裂殖实现，受次数上限（1—3次）和恢复期（数年）双重制约，种群总量始终极低。</td></tr>
+      <tr><td class="lt-k">入侵条件</td><td>只能在目标精神出现裂缝时入侵，无法对心理状态稳定的正常人发动攻击，无法主动制造裂缝。</td></tr>
+      <tr><td class="lt-k">移动</td><td>脱体后无法主动移动，只能被动漂流。72小时内必须找到新容器，否则消散，无例外。</td></tr>
+      <tr><td class="lt-k">信息共享</td><td>无统一意识，不共享信息。非同源个体间无任何感应。同源个体间仅有弱化残响感知，且会随时间减弱。</td></tr>
+      <tr><td class="lt-k">容器质量</td><td>弱者精神容易崩溃，导致拟态粗糙甚至容器损毁；只有精神强健的个体才能长期维持有效侵蚀。</td></tr>
+      <tr><td class="lt-k">容器独占</td><td>一个宿主只能容纳一簇。两簇同时存在会互相冲突，通常导致容器崩溃，双方俱损。</td></tr>
+      <tr><td class="lt-k">失败代价</td><td>每次侵蚀失败均消耗自身。连续失败过多会导致"存在欲"枯竭，真正消散。</td></tr>
+      <tr><td class="lt-k">情感锚定</td><td>执着者路径的情感等价物锚定于宿主记忆；无意者的情感依赖共存关系维持。两者均无法自由选择情感对象。</td></tr>
+      <tr><td class="lt-k">裂殖限制</td><td>一生最多1—3次。每次分裂后自身成熟度降回共生级，需数年恢复。分裂体初始状态接近无意者，不继承任何记忆或技能。</td></tr>
+      <tr><td class="lt-k">进化条件</td><td>两条进化路径均要求极苛刻条件，且无法主动规划——进化是结果，不是目的。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ── CLOSING ── -->
+<div class="closing">
+  <div class="cl-label">Corruption · 系统设定全书 · Rev.3 · 索引</div>
+  <div class="cl-text">
+    执着者说：我要成为我自己。<br>
+    无意者说：我什么都不是。<br><br>
+    最后，<br>
+    一个从扮演中诞生，<br>
+    一个从关系中成形。<br><br>
+    <em>两者都不是怪物。只是我们没想好，该怎么称呼它们。</em>
+  </div>
+
+  <div class="cl-index">
+    <div class="cl-row"><span class="cl-n">§1</span><span class="cl-name">本质机制 · 容器规则</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§2</span><span class="cl-name">类型划分 · 成熟度等级</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n new">§3</span><span class="cl-name">碎片来源二分类</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§3.A</span><span class="cl-name">执着者（A型碎片）</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§3.B</span><span class="cl-name">无意者（B型碎片）</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§4</span><span class="cl-name">侵蚀三阶段 · 失败模式</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§5</span><span class="cl-name">模仿机制 · 六类破绽</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§6</span><span class="cl-name">情感规则 · 核心悖论</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n new">§7</span><span class="cl-name">救赎者错觉</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§8</span><span class="cl-name">裂殖规则</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§9.A</span><span class="cl-name">初生之魂 · Path A</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§9.B</span><span class="cl-name">守望灵 · Path B · 修订</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§10</span><span class="cl-name">个体关系 · 偏离类型</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§11</span><span class="cl-name">对抗方式评估</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§12</span><span class="cl-name">核心限制总表</span><div class="cl-dots"></div></div>
+  </div>
+</div>
+
+</div><!-- shell -->
+</body>
+</html>
