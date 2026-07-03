@@ -13,3 +13,8 @@
 5. 系统设定全书 —— 深入核心
 
 📌 所有设定为“作者内部视角”的创作参考，持续修订中。
+
+---
+
+> 📝 目前所有内容均为中文版本。英文版正在制作中，敬请期待。  
+> 📝 All content is currently in Chinese. English version is in progress and will be published here. Thank you for your patience.
