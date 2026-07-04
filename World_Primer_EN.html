@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corruption — World Primer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────
+   ROOT & RESET
+───────────────────────────────────── */
+:root {
+  --p0: #f5edd8;
+  --p1: #ede3c4;
+  --p2: #e0d4b0;
+  --p3: #cfc290;
+  --p4: #b8a870;
+  --ink0: #1a1408;
+  --ink1: #2e2410;
+  --ink2: #4a3e28;
+  --ink3: #6e5e40;
+  --ink4: #9a8868;
+  --ink5: #c4b090;
+  --red: #7a2010;
+  --red2: #a03020;
+  --red3: #c85030;
+  --sage: #3e5030;
+  --sage2: #5a6e48;
+  --line: rgba(140,110,60,0.22);
+  --drop: rgba(30,20,5,0.18);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #16100a;
+  font-family: 'Lora', 'Noto Serif SC', serif;
+  color: var(--ink1);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ambient glow */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 40%, #201808 0%, #16100a 70%);
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────
+   OUTER STAGE
+───────────────────────────────────── */
+.stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 52px 16px 80px;
+}
+
+/* ─────────────────────────────────────
+   BOOK — narrow portrait chapbook
+───────────────────────────────────── */
+.book {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  filter:
+    drop-shadow(-6px 6px 0 rgba(0,0,0,0.5))
+    drop-shadow(-3px 3px 0 rgba(0,0,0,0.3));
+}
+
+/* Spine */
+.spine {
+  position: absolute;
+  left: -14px; top: 4px; bottom: -4px;
+  width: 14px;
+  background: linear-gradient(to right, #0e0a05, #2a1e0e, #1a1208);
+  transform: skewY(-0.3deg);
+  z-index: 0;
+}
+
+.spine::after {
+  content: 'CORRUPTION';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(180deg);
+  writing-mode: vertical-lr;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: rgba(180,140,70,0.5);
+  white-space: nowrap;
+}
+
+/* Pages stack illusion */
+.pages-edge {
+  position: absolute;
+  right: -3px; top: 3px; bottom: -3px;
+  width: 8px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--p1) 0px, var(--p2) 1px,
+    var(--p1) 2px, var(--p3) 3px
+  );
+  opacity: 0.7;
+  z-index: 0;
+}
+
+/* Main paper body */
+.pages {
+  position: relative;
+  z-index: 1;
+  background: var(--p0);
+  overflow: hidden;
+}
+
+/* Paper grain */
+.pages::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ruled lines */
+.pages::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 27px,
+    var(--line) 27px, var(--line) 28px
+  );
+  background-position: 0 64px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pages-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─────────────────────────────────────
+   COVER PAGE
+───────────────────────────────────── */
+.cover {
+  background: linear-gradient(175deg, #1a1208 0%, #0e0a06 100%);
+  padding: 72px 52px 64px;
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* Cover border frame */
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(180,140,60,0.25);
+  pointer-events: none;
+}
+
+.cover::after {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border: 1px solid rgba(180,140,60,0.1);
+  pointer-events: none;
+}
+
+/* Radial center glow */
+.cover-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 45%, rgba(80,60,20,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Corner ornaments */
+.corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+}
+.corner.tl { top: 28px; left: 28px; border-top: 1px solid var(--p4); border-left: 1px solid var(--p4); }
+.corner.tr { top: 28px; right: 28px; border-top: 1px solid var(--p4); border-right: 1px solid var(--p4); }
+.corner.bl { bottom: 28px; left: 28px; border-bottom: 1px solid var(--p4); border-left: 1px solid var(--p4); }
+.corner.br { bottom: 28px; right: 28px; border-bottom: 1px solid var(--p4); border-right: 1px solid var(--p4); }
+
+.cover-top { position: relative; z-index: 1; }
+.cover-bottom { position: relative; z-index: 1; }
+
+.cover-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--p4);
+  opacity: 0.7;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.cover-fraktur {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 48px;
+  color: var(--p0);
+  letter-spacing: 2px;
+  line-height: 1.1;
+  display: block;
+  text-shadow: 0 2px 20px rgba(180,140,60,0.3);
+  margin-bottom: 6px;
+}
+
+.cover-title-zh {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--p3);
+  letter-spacing: 6px;
+  margin-bottom: 36px;
+  opacity: 0.8;
+}
+
+.cover-rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--p4), transparent);
+  margin-bottom: 28px;
+  opacity: 0.5;
+}
+
+.cover-epigraph {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--p3);
+  line-height: 1.9;
+  opacity: 0.75;
+  max-width: 300px;
+}
+
+.cover-meta {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--ink4);
+  text-align: center;
+  line-height: 2;
+}
+
+/* ─────────────────────────────────────
+   HALF-TITLE PAGE
+───────────────────────────────────── */
+.half-title {
+  padding: 80px 52px 80px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(to bottom, var(--p1), var(--p0));
+}
+
+.ht-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--ink5);
+  margin-bottom: 32px;
+  text-transform: uppercase;
+}
+
+.ht-fraktur {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 32px;
+  color: var(--ink0);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ht-subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink3);
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+}
+
+.ht-ornament {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--ink5);
+  letter-spacing: 8px;
+  opacity: 0.6;
+}
+
+/* ─────────────────────────────────────
+   CHAPTER PAGES
+───────────────────────────────────── */
+.chapter {
+  padding: 60px 52px 56px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+/* Alternating very subtle tint */
+.chapter:nth-child(even) {
+  background: linear-gradient(to bottom right, var(--p0) 60%, var(--p1));
+}
+
+/* Chapter drop cap number */
+.ch-header {
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.ch-num {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 56px;
+  color: var(--p2);
+  line-height: 1;
+  float: left;
+  margin-right: 14px;
+  margin-top: 4px;
+  user-select: none;
+  position: relative;
+  z-index: 0;
+}
+
+.ch-num::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: radial-gradient(circle, rgba(180,140,60,0.08) 0%, transparent 70%);
+}
+
+.ch-titles {
+  overflow: hidden;
+  padding-top: 4px;
+}
+
+.ch-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--ink5);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.ch-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink0);
+  line-height: 1.25;
+  letter-spacing: 0.5px;
+}
+
+.ch-title-en {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink4);
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  display: block;
+}
+
+.ch-divider {
+  clear: both;
+  height: 1px;
+  background: linear-gradient(to right, var(--ink0), transparent);
+  margin-bottom: 28px;
+  opacity: 0.15;
+}
+
+/* ─────────────────────────────────────
+   BODY TEXT
+───────────────────────────────────── */
+p.body {
+  font-family: 'Lora', serif;
+  font-size: 13.5px;
+  color: var(--ink2);
+  line-height: 2.05;
+  text-align: justify;
+  margin-bottom: 18px;
+  text-indent: 0;
+}
+p.body:first-of-type { text-indent: 0; }
+
+/* Poetic / spaced-out text blocks */
+.poetic {
+  margin: 20px 0 20px 2em;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 2.2;
+}
+
+.poetic-line {
+  display: block;
+}
+
+/* inline emphasis */
+em.w {
+  font-style: normal;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink0);
+  letter-spacing: 0.3px;
+}
+
+/* ─────────────────────────────────────
+   PULL QUOTE
+───────────────────────────────────── */
+.pq {
+  margin: 24px 0;
+  padding: 20px 24px;
+  border-left: 2px solid var(--ink0);
+  background: rgba(160,130,60,0.05);
+  position: relative;
+}
+
+.pq::before {
+  content: '"';
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 54px;
+  color: var(--p3);
+  position: absolute;
+  top: -8px; left: 10px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.pq-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink1);
+  line-height: 1.75;
+  padding-left: 18px;
+  letter-spacing: 0.2px;
+}
+
+/* ─────────────────────────────────────
+   GOD TABLE
+───────────────────────────────────── */
+.god-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 12.5px;
+}
+
+.god-table thead tr {
+  border-bottom: 1px solid var(--ink3);
+}
+
+.god-table th {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink4);
+  padding: 8px 0;
+  text-align: left;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.god-table td {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(140,110,60,0.12);
+  color: var(--ink2);
+  vertical-align: top;
+  line-height: 1.7;
+}
+
+.god-table td:first-child {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink0);
+  width: 44%;
+  padding-right: 16px;
+}
+
+/* ─────────────────────────────────────
+   LIST — poetic single items
+───────────────────────────────────── */
+.item-list {
+  list-style: none;
+  margin: 14px 0 14px 1em;
+}
+
+.item-list li {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 2;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.item-list li::before {
+  content: '—';
+  color: var(--ink5);
+  font-style: normal;
+  flex-shrink: 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Compact functional list */
+.func-list {
+  list-style: none;
+  margin: 14px 0 14px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 20px;
+}
+
+.func-list li {
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.8;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.func-list li::before {
+  content: '·';
+  color: var(--ink5);
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────
+   SCENE BOX
+───────────────────────────────────── */
+.scene {
+  margin: 20px 0;
+  padding: 18px 20px;
+  background: rgba(240,225,190,0.4);
+  border: 1px solid var(--p3);
+  position: relative;
+}
+
+.scene::before {
+  content: attr(data-loc);
+  position: absolute;
+  top: -10px; left: 14px;
+  background: var(--p0);
+  padding: 0 8px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink4);
+  text-transform: uppercase;
+}
+
+.scene p {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.95;
+}
+
+/* ─────────────────────────────────────
+   SIDEBAR / MARGIN NOTE
+───────────────────────────────────── */
+.aside {
+  float: right;
+  clear: right;
+  width: 130px;
+  margin: 2px -8px 16px 16px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink4);
+  line-height: 1.7;
+  border-left: 1px solid var(--p3);
+  padding-left: 10px;
+  opacity: 0.85;
+}
+
+/* ─────────────────────────────────────
+   DIVIDERS
+───────────────────────────────────── */
+.divider {
+  text-align: center;
+  margin: 24px 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--ink5);
+  letter-spacing: 10px;
+  opacity: 0.5;
+}
+
+.h-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--p3), transparent);
+  margin: 20px 0;
+  opacity: 0.6;
+}
+
+/* ─────────────────────────────────────
+   CHARACTER — Riku Yuni
+───────────────────────────────────── */
+.yuli-block {
+  border: 1px solid var(--p3);
+  padding: 24px 24px;
+  margin: 20px 0;
+  position: relative;
+  background: rgba(240,225,190,0.25);
+}
+
+.yuli-block::before {
+  content: 'Riku Yuni';
+  position: absolute;
+  top: -14px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--p0);
+  padding: 0 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 6px;
+  color: var(--ink3);
+}
+
+.yuli-name {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 30px;
+  color: var(--ink0);
+  text-align: center;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.yuli-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink4);
+  text-align: center;
+  display: block;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.yuli-desc {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.95;
+  text-align: justify;
+}
+
+.yuli-desc + .yuli-desc {
+  margin-top: 10px;
+}
+
+/* ─────────────────────────────────────
+   EDITORIAL NOTE — reading notes block
+───────────────────────────────────── */
+.note {
+  padding: 44px 52px 48px;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(to bottom, var(--p1), var(--p0));
+  position: relative;
+}
+
+.note-eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9.5px;
+  letter-spacing: 4.5px;
+  color: var(--ink5);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.note-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--p3), transparent);
+  opacity: 0.45;
+}
+
+.note-body {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 2.05;
+  text-align: justify;
+  border-left: 2px solid var(--p4);
+  padding-left: 20px;
+}
+
+/* ─────────────────────────────────────
+   CLOSING PAGE
+───────────────────────────────────── */
+.closing {
+  background: linear-gradient(175deg, #1c1408 0%, #100c06 100%);
+  padding: 72px 52px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.closing::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(180,140,60,0.2);
+  pointer-events: none;
+}
+
+.closing-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(80,55,15,0.4) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.closing-top {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 40px;
+}
+
+.cl-fraktur {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 28px;
+  color: var(--p3);
+  display: block;
+  margin-bottom: 6px;
+  opacity: 0.9;
+}
+
+.cl-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--p4);
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+.cl-rule {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--p4), transparent);
+  margin: 24px auto;
+  opacity: 0.4;
+}
+
+.cl-quote {
+  position: relative;
+  z-index: 1;
+  max-width: 320px;
+  margin: 0 auto 40px;
+}
+
+.cl-quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--p1);
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+  opacity: 0.85;
+}
+
+.cl-quote-attr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--p4);
+  opacity: 0.5;
+  margin-top: 14px;
+  display: block;
+}
+
+.cl-bottom {
+  position: relative;
+  z-index: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink5);
+  opacity: 0.5;
+  line-height: 2;
+}
+
+/* ─────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────── */
+@media (max-width: 560px) {
+  .chapter { padding: 48px 36px 44px; }
+  .cover { padding: 52px 36px 48px; }
+  .half-title { padding: 60px 36px; }
+  .closing { padding: 52px 36px; }
+  .note { padding: 36px 36px 40px; }
+  .func-list { grid-template-columns: 1fr; }
+  .aside { float: none; width: auto; margin: 12px 0; }
+  .cover-fraktur { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+<div class="book">
+  <div class="spine"></div>
+  <div class="pages-edge"></div>
+  <div class="pages">
+    <div class="pages-inner">
+
+    <!-- ══════════════ COVER ══════════════ -->
+    <div class="cover">
+      <div class="cover-glow"></div>
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+
+      <div class="cover-top">
+        <div class="cover-label">World Primer</div>
+        <span class="cover-fraktur">Corruption</span>
+        <div class="cover-title-zh">— World Bible · Vol. I —</div>
+        <div class="cover-rule"></div>
+        <div class="cover-epigraph">
+          Some things are simply not quite like common sense.<br>
+          Most people will never truly encounter them in their lifetime.<br>
+          And even if they did,<br>
+          they might never realize what it meant.
+        </div>
+      </div>
+
+      <div class="cover-meta">
+        World-Building Reference Text · Volume I<br>
+        For creative reference use
+      </div>
+    </div>
+
+
+    <!-- ══════════════ HALF-TITLE ══════════════ -->
+    <div class="half-title">
+      <div class="ht-num">— Prologue —</div>
+      <span class="ht-fraktur">The Tone of the World</span>
+      <div class="ht-subtitle">The Tone of This World</div>
+      <div class="ht-ornament">· · ·</div>
+    </div>
+
+
+    <!-- ══════════════ CH 1 · THE TONE OF THE WORLD ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">I</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter One</span>
+          <div class="ch-title">The Tone of the World</div>
+          <span class="ch-title-en">The Texture of Ordinary Life</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">This is a continent in the style of the medieval age. Bells, stone roads, churches, marketplaces, ink stains on old pages — these make up most people's daily lives. Magic is not a marvel here; like literacy, farming, or blacksmithing, it is simply part of civilization.</p>
+
+      <div class="poetic">
+        <span class="poetic-line">Children learn basic incantations at school.</span>
+        <span class="poetic-line">Merchants keep their goods warm with insulation charms.</span>
+        <span class="poetic-line">Doctors ease pain with calming prayers.</span>
+        <span class="poetic-line">Fishermen offer a silver coin to the sea goddess before a storm.</span>
+      </div>
+
+      <p class="body">People believe the gods truly exist. Because miracles really do happen, now and then.</p>
+
+      <p class="body">It's only that very few people know: the truly dangerous things in this world do not always have fangs.</p>
+
+      <div class="scene" data-loc="An Ordinary Morning">
+        <p>Without looking up, the baker at the market adjusted the oven's temperature with a flick of will. The streetlamp on the corner was still lit in the rain, though no one remembered who had lit it. The church bell rang seven times. Everything was perfectly normal.</p>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 2 · THE GODS AND THE LONG RIVER ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">II</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Two</span>
+          <div class="ch-title">The Gods and the Long River</div>
+          <span class="ch-title-en">The Gods and the Long River</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">Many gods exist in this world. They are not all-knowing or all-powerful — they are closer to beings who each preside over a different "order," guarding some particular law of the world rather than the whole of it.</p>
+
+      <table class="god-table">
+        <thead>
+          <tr><th>Pantheon</th><th>Domain</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ashen Sovereign</td><td>Death and Fire</td></tr>
+          <tr><td>The Ocean Empress</td><td>Sea and Dreams</td></tr>
+          <tr><td>God of Journey</td><td>Travel and Fate</td></tr>
+          <tr><td>Mother of Silence</td><td>Memory and Confession</td></tr>
+          <tr><td>The White Tree Elder</td><td>Rebirth and Reincarnation</td></tr>
+        </tbody>
+      </table>
+
+      <p class="body">One of the oldest doctrines holds that:</p>
+
+      <div class="pq">
+        <div class="pq-text">After death, the soul returns to the "Long River," and is in time carried back into the world.</div>
+      </div>
+
+      <p class="body">Most people believe this without question. Only a handful of the Church's highest ranks know:</p>
+
+      <p class="body"><em class="w">Some things refuse to return to the Long River.</em></p>
+    </div>
+
+
+    <!-- ══════════════ CH 3 · SEALED OBJECTS ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">III</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Three</span>
+          <div class="ch-title">Sealed Objects</div>
+          <span class="ch-title-en">Objects That Remember Too Much</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">There exist in this world certain things known as "sealed objects." They often take the most ordinary of forms:</p>
+
+      <ul class="item-list">
+        <li>A ring</li>
+        <li>An old key</li>
+        <li>A music box</li>
+        <li>A page that never runs out</li>
+        <li>A mirror that reflects no face</li>
+      </ul>
+
+      <p class="body">Most sealed objects are not dangerous. They have simply:</p>
+
+      <div class="pq">
+        <div class="pq-text">Kept too much of something.<br>Emotion. Obsession. Memory. Wishes. Prayers.<br>Sometimes, an inexplicable kind of "staying behind."</div>
+      </div>
+
+      <div class="aside">Some sealed objects have existed for centuries. No one knows what they are waiting for.</div>
+
+      <p class="body">Sealed objects generally carry a faint will and an emotional residue — sometimes warming up on rainy days, sometimes making the smallest sound at night, reacting to certain people, or causing their holder to dream the same scene again and again.</p>
+
+      <p class="body">A very few can truly harm someone. For this reason, the Church maintains a division dedicated entirely to handling them.</p>
+
+      <div class="scene" data-loc="A Workshop in the Old Ward">
+        <p>The ring had been sitting on the table for three days now. Every morning he came in to work, he found it had shifted a little — never more than half a foot. No one had touched it. He had grown used to it; he just glanced at it first thing each time he walked in, to make sure it was still there.</p>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 4 · THE CHURCH ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">IV</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Four</span>
+          <div class="ch-title">The Church</div>
+          <span class="ch-title-en">The Church and Its Hidden Core</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">The Church is the largest organization on the continent. On the surface, it is responsible for spreading the faith, teaching magic, holding festivals and prayers, officiating weddings and funerals, and maintaining order in the towns.</p>
+
+      <p class="body">But its true, central department is never made public.</p>
+
+      <div class="h-rule"></div>
+
+      <p class="body">Only a very small number of clergy know: the Church has, for a long time, been quietly handling the things that "should not flow into the world."</p>
+
+      <ul class="func-list">
+        <li>Dangerous sealed objects</li>
+        <li>Soul residue</li>
+        <li>Ancient rites</li>
+        <li>Certain inexplicable existences</li>
+        <li>Historical anomalies of the soul</li>
+        <li>Remnants of forbidden rituals</li>
+      </ul>
+
+      <p class="body">These things rarely appear before ordinary people. Even when they do surface, they are swiftly taken away. Most people will go their whole lives without ever learning the truth.</p>
+
+      <p class="body">The Church understands, better than anyone else in this world: <em class="w">some things are safer left unknown than known.</em></p>
+    </div>
+
+
+    <!-- ══════════════ CH 5 · CORRUPTION ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">V</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Five</span>
+          <div class="ch-title">Those Who Would Not Return</div>
+          <span class="ch-title-en">Corruption — Those Who Would Not Return</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">Within the Church, they are recorded under the name "Corruption."</p>
+
+      <div class="pq">
+        <div class="pq-text">Souls that did not return to the cycle of rebirth.</div>
+      </div>
+
+      <p class="body">They are extremely rare. Many high-ranking clergy go their entire lives without ever truly encountering one.</p>
+
+      <div class="h-rule"></div>
+
+      <p class="body">No one knows exactly what they are. Some believe they are souls that failed. Others believe they are simply —</p>
+
+      <p class="body"><em class="w">unwilling to end.</em></p>
+
+      <p class="body">They imitate, they learn, they observe, gradually drawing closer to being "human." But their presence does not always lead to destruction. Some exist quietly for years on end.</p>
+
+      <p class="body">Until, one day, someone suddenly realizes:</p>
+
+      <div class="pq">
+        <div class="pq-text">That person, when they cried, never once shed a tear.</div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 6 · CREATURES ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">VI</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Six</span>
+          <div class="ch-title">Creatures</div>
+          <span class="ch-title-en">Creatures of the World's Margins</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">Creatures live on this continent. But they are nothing like a "Demon King's army." They are closer to another ecosystem entirely — with their own habitats, migration routes, and seasonal habits.</p>
+
+      <div class="aside">Most creatures do not attack humans on purpose. They simply live at the margins of the world.</div>
+
+      <ul class="item-list">
+        <li>Grey-hided beasts that mimic birdsong</li>
+        <li>Lantern-worms that float at night</li>
+        <li>Small burrowing sprites fond of stealing metal</li>
+        <li>Herds of white-horned beasts migrating in winter</li>
+      </ul>
+
+      <p class="body">Large-scale attacks on towns are exceedingly rare. Most people regard creatures the way a hunter regards wild beasts, or a fisherman regards a storm.</p>
+
+      <div class="pq">
+        <div class="pq-text">This is not "the end of the world."<br>It's simply that the world has always been dangerous.</div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 7 · THE SHADOW MARKET ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">VII</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Seven</span>
+          <div class="ch-title">The Shadow Market</div>
+          <span class="ch-title-en">The Shadow Market</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">Beneath the Church, a vast network of hidden trade also runs through the continent's underworld. People call it the "Night Market."</p>
+
+      <ul class="func-list">
+        <li>Forbidden books</li>
+        <li>Ancient relics</li>
+        <li>Unregistered incantations</li>
+        <li>Sealed objects of unknown origin</li>
+      </ul>
+
+      <div class="h-rule"></div>
+
+      <p class="body">The Church tacitly allows it to exist. Because some things:</p>
+
+      <div class="pq">
+        <div class="pq-text">Rather than vanish completely,<br>it's better to know where they end up.</div>
+      </div>
+
+      <p class="body">This is a strange kind of understanding between the two sides. Both know exactly what's going on, but neither ever says it aloud. The people of the Night Market know that certain goods will draw the Church's attention; the Church knows that certain goods are best left to the Night Market to handle on its own.</p>
+    </div>
+
+
+    <!-- ══════════════ CH 8 · RIKU YUNI ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">VIII</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Eight</span>
+          <div class="ch-title">Riku Yuni</div>
+          <span class="ch-title-en">Riku Yuni — The Quiet Restorer</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <div class="yuli-block">
+        <span class="yuli-name">Riku Yuni</span>
+        <span class="yuli-en">Riku Yuni · Sealed-Object Restorer</span>
+        <p class="yuli-desc">Riku Yuni lives at the edge of the Old Ward. It's quiet there. The house is small, but the basement runs deep.</p>
+        <p class="yuli-desc">He belongs to no church and keeps few long-term ties with anyone. He occasionally takes on special commissions — restoring sealed objects, stabilizing runaway incantations, judging whether a relic is dangerous, dealing with things that are "a little strange." Most clients don't know his real name.</p>
+      </div>
+
+      <div class="h-rule"></div>
+
+      <p class="body">Riku Yuni has two personas. But this is not an illness.</p>
+
+      <p class="body">They do not fight for control of the body, and they do not suppress one another. They simply share the same existence — two threads of consciousness running side by side, free to switch at will, and most of the time, even online together.</p>
+
+      <p class="body">He can sense the "resonance" left inside sealed objects: emotion, memory, obsession, and sometimes even something that has never quite left. Because of this:</p>
+
+      <div class="pq">
+        <div class="pq-text">The more dangerous, the older, the stranger a thing is,<br>the more interested he becomes.</div>
+      </div>
+
+      <div class="scene" data-loc="Riku Yuni's Workshop">
+        <p>He put his tools back in their place and sat in the chair for a long while, doing nothing at all. Not thinking about anything in particular. Just sitting there. The other persona kept him quiet company, without a word. The rain was still falling outside. The tea had gone cold, and no one bothered to reheat it.</p>
+      </div>
+    </div>
+
+
+    <!-- ══════════════ CH 9 · WHAT THIS WORLD ACTUALLY FEELS LIKE ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">IX</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Nine</span>
+          <div class="ch-title">What This World Actually Feels Like</div>
+          <span class="ch-title-en">What This World Actually Feels Like</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body">This world is not always dark. Most days, in fact, are quite ordinary.</p>
+
+      <ul class="item-list">
+        <li>Going to the market for vegetables</li>
+        <li>Praying at church</li>
+        <li>Talking about the weather</li>
+        <li>Worrying over the harvest</li>
+        <li>Chatting at the tavern</li>
+      </ul>
+
+      <p class="body">It's only that, every once in a while, something a little hard to explain shows up.</p>
+
+      <div class="poetic">
+        <span class="poetic-line">A crow that always perches under the same eave</span>
+        <span class="poetic-line">A street that's always quieter than the ones around it</span>
+        <span class="poetic-line">A mirror that never reflects a tired face</span>
+        <span class="poetic-line">A sealed object that trembles softly, late at night</span>
+      </div>
+
+      <p class="body">No one knows what it means.</p>
+      <p class="body">Most of the time, no one needs to.</p>
+    </div>
+
+
+    <!-- ══════════════ CH 10 · THE HEART OF THE STORY ══════════════ -->
+    <div class="chapter">
+      <div class="ch-header">
+        <div class="ch-num">X</div>
+        <div class="ch-titles">
+          <span class="ch-label">Chapter Ten</span>
+          <div class="ch-title">The Heart of the Story</div>
+          <span class="ch-title-en">What This Story Is Actually About</span>
+        </div>
+      </div>
+      <div class="ch-divider"></div>
+
+      <p class="body"><em>Corruption</em> is not a story about "saving the world." Because most of the time, the world runs perfectly well on its own.</p>
+
+      <p class="body">What it's really trying to tell is:</p>
+
+      <div class="pq">
+        <div class="pq-text">How people keep living, in their own way.</div>
+      </div>
+
+      <p class="body">Including: people who refuse to be defined, souls that refuse to disappear, people who cannot let go of what they cling to, and those who keep on living anyway, even knowing full well the world isn't entirely normal.</p>
+
+      <div class="h-rule"></div>
+
+      <p class="body">After all, humanity's greatest skill is thinking "something's not right here" while still finishing dinner.</p>
+
+      <p class="body">Civilization has survived this long largely on the strength of that strange resilience.</p>
+
+      <div class="divider">✦ &nbsp; ✦ &nbsp; ✦</div>
+    </div>
+
+
+    <!-- ══════════════ EDITORIAL NOTE ══════════════ -->
+    <div class="note">
+      <div class="note-eyebrow">A Note on Reading</div>
+      <div class="note-body">What this primer presents is the part of the world of <em>Corruption</em> that "can be spoken aloud." The Church has its own records; the common folk have their own accounts; restorers have their own experience. These accounts do not always agree with one another. This primer has chosen a gentle, restrained way of presenting things — it does not claim to be "the whole truth," only "what is currently known." Some things are not in this book, not because they were left out, but because they have not yet been understood well enough to be written down.</div>
+    </div>
+
+
+    <!-- ══════════════ CLOSING ══════════════ -->
+    <div class="closing">
+      <div class="closing-glow"></div>
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+
+      <div class="closing-top">
+        <span class="cl-fraktur">Corruption</span>
+        <div class="cl-subtitle">World Overview Primer · Vol. I</div>
+      </div>
+
+      <div class="cl-rule"></div>
+
+      <div class="cl-quote">
+        <div class="cl-quote-text">
+          Some things are simply not quite like common sense.<br>
+          Most people will never truly encounter them in their lifetime.<br>
+          And even if they did,<br>
+          they might never realize what it meant.
+        </div>
+        <span class="cl-quote-attr">— Epigraph</span>
+      </div>
+
+      <div class="cl-rule"></div>
+
+      <div class="cl-bottom">
+        For creative reference use · Filed alongside ARCH-000 / ARCH-001 / the Encyclopaedia Magica
+      </div>
+    </div>
+
+
+    </div><!-- pages-inner -->
+  </div><!-- pages -->
+</div><!-- book -->
+</div><!-- stage -->
+
+</body>
+</html>
