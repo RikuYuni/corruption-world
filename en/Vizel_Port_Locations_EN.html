@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vizel Port — Location Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root {
+  --bg:       #faf9f6;
+  --surface:  #f3f1ea;
+  --surface2: #eceae1;
+  --border:   #ddd9cc;
+  --border-s: #ccc8bb;
+
+  --ink-0: #0f0e0b;
+  --ink-1: #2a2820;
+  --ink-2: #4a4840;
+  --ink-3: #787060;
+  --ink-4: #aaa090;
+  --ink-5: #ccc5b0;
+
+  /* District colors */
+  --high:    #5c3c00;   /* High Ward — amber */
+  --high-bg: rgba(92,60,0,0.055);
+  --high-pale: #f5e8c0;
+  --high-mid: #9a6800;
+
+  --low:     #5a3010;   /* Low Ward — warm brown */
+  --low-bg:  rgba(90,48,16,0.055);
+  --low-pale: #f2dfc0;
+  --low-mid:  #8a5020;
+
+  --old:     #2e3a50;   /* Old Ward — cool slate */
+  --old-bg:  rgba(46,58,80,0.055);
+  --old-pale: #c8d4e8;
+  --old-mid:  #4a6080;
+
+  --dock:    #103848;   /* Dockfront — deep teal */
+  --dock-bg: rgba(16,56,72,0.055);
+  --dock-pale: #b8d8e8;
+  --dock-mid:  #207898;
+
+  --out:     #1e3820;   /* Outskirts — forest */
+  --out-bg:  rgba(30,56,32,0.055);
+  --out-pale: #c0d8c0;
+  --out-mid:  #3a6840;
+
+  --night:   #3a1850;   /* Night Market / special — violet */
+  --night-bg:rgba(58,24,80,0.055);
+  --night-pale:#d0b8e8;
+  --night-mid: #6a3898;
+
+  --divine:  #6a4800;   /* Divine traces — gold */
+  --divine-bg: rgba(106,72,0,0.055);
+
+  --yuli:    #1e3850;   /* Riku Yuni — deep blue */
+  --yuli-bg: rgba(30,56,80,0.055);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #d8d4cc;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--ink-1);
+  line-height: 1.7;
+}
+
+.shell {
+  max-width: 980px;
+  margin: 0 auto;
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--border), 0 4px 40px rgba(0,0,0,0.18);
+}
+
+/* ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ */
+.topnav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--ink-0);
+  display: flex; overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 2px solid var(--high);
+}
+.topnav::-webkit-scrollbar { display: none; }
+
+.tn-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px; letter-spacing: 2px;
+  color: var(--ink-4); padding: 0 20px;
+  display: flex; align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  white-space: nowrap; flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.tn-item {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  padding: 13px 15px; text-decoration: none;
+  white-space: nowrap; display: flex;
+  align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s, color 0.15s;
+  text-transform: uppercase;
+}
+.tn-item:hover { background: rgba(255,255,255,0.06); }
+
+.tn-high  { color: #d4a840; } .tn-high:hover  { color: #f0c860; }
+.tn-low   { color: #c08060; } .tn-low:hover   { color: #e0a080; }
+.tn-old   { color: #88a0c0; } .tn-old:hover   { color: #a8c0e0; }
+.tn-dock  { color: #60b0c8; } .tn-dock:hover  { color: #80d0e8; }
+.tn-out   { color: #80b880; } .tn-out:hover   { color: #a0d8a0; }
+.tn-night { color: #b890d8; } .tn-night:hover { color: #d0b0f0; }
+
+/* ══════════════════════════════════════
+   MASTHEAD
+══════════════════════════════════════ */
+.masthead {
+  padding: 68px 80px 56px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.mh-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 4px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 12px;
+}
+.mh-kicker::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.mh-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 58px; line-height: 1; color: var(--ink-0);
+  letter-spacing: -1px; margin-bottom: 6px;
+}
+.mh-title-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 20px;
+  color: var(--ink-3); margin-bottom: 32px;
+}
+.mh-summary {
+  font-family: 'Lora', serif;
+  font-size: 14.5px; color: var(--ink-2);
+  line-height: 1.9; max-width: 580px;
+  margin-bottom: 36px;
+}
+/* District pills */
+.district-pills {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.d-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border: 1px solid; cursor: default;
+}
+.dp-high   { color: var(--high);   border-color: var(--high-pale);   background: var(--high-bg); }
+.dp-low    { color: var(--low);    border-color: var(--low-pale);    background: var(--low-bg); }
+.dp-old    { color: var(--old);    border-color: var(--old-pale);    background: var(--old-bg); }
+.dp-dock   { color: var(--dock);   border-color: var(--dock-pale);   background: var(--dock-bg); }
+.dp-out    { color: var(--out);    border-color: var(--out-pale);    background: var(--out-bg); }
+.dp-night  { color: var(--night);  border-color: var(--night-pale);  background: var(--night-bg); }
+
+/* ══════════════════════════════════════
+   TOC
+══════════════════════════════════════ */
+.toc-wrap {
+  padding: 40px 80px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.toc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.toc-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+}
+.toc-district {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.toc-dist-head {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 6px;
+}
+.tdc-stripe {
+  width: 10px; height: 10px;
+  flex-shrink: 0; margin-bottom: -1px;
+}
+.tdc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink-0);
+}
+.tdc-en {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1px;
+  color: var(--ink-4); text-transform: uppercase;
+}
+.toc-locs {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding-left: 20px;
+}
+.toc-loc {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px; color: var(--ink-3);
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════
+   DISTRICT CHAPTER
+══════════════════════════════════════ */
+.district {
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+}
+.district:nth-child(even) { background: var(--surface); }
+
+/* District banner */
+.dist-banner {
+  padding: 36px 80px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between;
+  align-items: flex-end;
+  position: sticky;
+  top: 44px;
+  z-index: 100;
+}
+.db-high  { background: var(--high-bg);  border-left: 5px solid var(--high); }
+.db-low   { background: var(--low-bg);   border-left: 5px solid var(--low); }
+.db-old   { background: var(--old-bg);   border-left: 5px solid var(--old); }
+.db-dock  { background: var(--dock-bg);  border-left: 5px solid var(--dock); }
+.db-out   { background: var(--out-bg);   border-left: 5px solid var(--out); }
+
+.dist-banner-l { }
+.dist-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.db-high .dist-num  { color: var(--high-mid); }
+.db-low .dist-num   { color: var(--low-mid); }
+.db-old .dist-num   { color: var(--old-mid); }
+.db-dock .dist-num  { color: var(--dock-mid); }
+.db-out .dist-num   { color: var(--out-mid); }
+
+.dist-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px; color: var(--ink-0);
+  letter-spacing: -0.5px; line-height: 1.1;
+}
+.dist-name-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 14px;
+  color: var(--ink-3); margin-top: 2px;
+}
+.dist-tagline {
+  font-family: 'Lora', serif;
+  font-style: italic; font-size: 13px;
+  color: var(--ink-3); max-width: 340px;
+  text-align: right; line-height: 1.6;
+}
+
+/* District body */
+.dist-body {
+  padding: 0 80px 48px;
+}
+
+/* Entry note (e.g. entry method) */
+.dist-entry-note {
+  margin: 24px 0 0;
+  padding: 12px 18px;
+  background: var(--surface2);
+  border-left: 3px solid var(--border-s);
+  font-size: 13px; color: var(--ink-2);
+  line-height: 1.8;
+  font-family: 'Noto Serif SC', serif;
+}
+.dist-entry-note strong { color: var(--ink-0); }
+
+/* ══════════════════════════════════════
+   LOCATION ENTRY
+══════════════════════════════════════ */
+.location {
+  margin-top: 40px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+
+.loc-header {
+  margin-bottom: 22px;
+}
+.loc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px; color: var(--ink-0);
+  letter-spacing: -0.3px; margin-bottom: 3px;
+}
+.loc-name-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* Two-column: buildings left, tags right */
+.loc-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Buildings section */
+.bld-section {
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.bld-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  background: var(--ink-0); color: white;
+}
+.bld-list {
+  list-style: none;
+  padding: 12px 16px;
+  background: var(--bg);
+}
+.bld-list li {
+  font-size: 13px; color: var(--ink-1);
+  line-height: 1.8; padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.bld-list li:last-child { border-bottom: none; }
+.bld-list li::before {
+  content: '–';
+  color: var(--ink-5); flex-shrink: 0;
+  font-size: 12px; margin-top: 2px;
+}
+
+/* Narrative tags section */
+.tag-section { }
+.tag-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 10px;
+}
+
+.tag-item {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px; color: var(--ink-1);
+  line-height: 1.85;
+  padding: 10px 16px 10px 14px;
+  border-left: 3px solid var(--border);
+  margin-bottom: 8px;
+  background: var(--surface);
+  position: relative;
+}
+/* Color the border by district */
+.tag-high  .tag-item { border-left-color: var(--high); }
+.tag-low   .tag-item { border-left-color: var(--low); }
+.tag-old   .tag-item { border-left-color: var(--old); }
+.tag-dock  .tag-item { border-left-color: var(--dock); }
+.tag-out   .tag-item { border-left-color: var(--out); }
+.tag-night .tag-item { border-left-color: var(--night); }
+
+/* Full-width tags (when no building column) */
+.loc-tags-only .tag-item {
+  font-size: 13.5px;
+}
+
+/* ══════════════════════════════════════
+   SPECIAL CALLOUT BOXES
+══════════════════════════════════════ */
+/* Divine trace */
+.divine-box {
+  margin-top: 16px;
+  border: 1px solid rgba(106,72,0,0.25);
+  border-top: 3px solid var(--divine);
+  overflow: hidden;
+}
+.divine-head {
+  background: var(--divine);
+  color: #fff8e0;
+  padding: 9px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+  display: flex; justify-content: space-between;
+}
+.divine-body {
+  padding: 14px 18px;
+  background: var(--divine-bg);
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 13px; color: var(--ink-1); line-height: 1.85;
+}
+
+/* Night market callout */
+.night-box {
+  margin-top: 16px;
+  border: 1px solid rgba(58,24,80,0.25);
+  border-top: 3px solid var(--night);
+  overflow: hidden;
+}
+.night-head {
+  background: var(--night);
+  color: #f0e0ff;
+  padding: 9px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+.night-body {
+  padding: 14px 18px;
+  background: var(--night-bg);
+}
+.night-body p {
+  font-size: 13px; color: var(--ink-1);
+  line-height: 1.85; margin-bottom: 10px;
+}
+.night-body p:last-child { margin-bottom: 0; }
+.night-body strong { color: var(--ink-0); }
+
+/* Riku Yuni's workshop */
+.yuli-box {
+  margin-top: 16px;
+  border: 1px solid rgba(30,56,80,0.25);
+  border-top: 3px solid var(--yuli);
+  overflow: hidden;
+}
+.yuli-head {
+  background: var(--yuli);
+  color: #d8e8f8;
+  padding: 9px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.yh-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+}
+.yh-sub {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 12px;
+  color: rgba(216,232,248,0.6);
+}
+.yuli-body {
+  padding: 16px 18px;
+  background: var(--yuli-bg);
+}
+.yuli-level {
+  display: flex; gap: 12px;
+  margin: 10px 0; align-items: flex-start;
+}
+.yl-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: white;
+  background: var(--yuli); padding: 3px 10px;
+  flex-shrink: 0; margin-top: 2px;
+}
+.yl-text {
+  font-size: 13px; color: var(--ink-1); line-height: 1.8; flex: 1;
+}
+
+/* Other views box */
+.ov-box {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.ov-head {
+  background: var(--surface2); padding: 9px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.ov-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ink-3);
+  border: 1px solid var(--border); padding: 2px 8px;
+}
+.ov-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink-0);
+}
+.ov-body {
+  padding: 14px 18px;
+  font-size: 13px; color: var(--ink-2); line-height: 1.8;
+}
+
+/* ══════════════════════════════════════
+   TABLES
+══════════════════════════════════════ */
+.ref-table {
+  width: 100%; border-collapse: collapse;
+  margin: 18px 0; font-size: 13px;
+}
+.ref-table thead th {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase; font-weight: 500;
+  padding: 10px 14px; text-align: left;
+  background: var(--ink-0); color: white;
+}
+.ref-table thead th.th-high  { background: var(--high); }
+.ref-table thead th.th-night { background: var(--night); }
+.ref-table thead th.th-divine{ background: var(--divine); }
+
+.ref-table tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.8; color: var(--ink-1);
+}
+.ref-table tbody tr:hover td { background: var(--surface); }
+.ref-table .key {
+  font-family: 'DM Serif Display', serif;
+  font-size: 14.5px; color: var(--ink-0);
+}
+.ref-table .mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--ink-3);
+}
+.ref-table .atm {
+  font-family: 'Lora', serif;
+  font-style: italic; font-size: 13px; color: var(--ink-2);
+}
+
+/* Risk badges */
+.risk {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 3px 9px;
+  border: 1px solid; display: inline-block;
+}
+.r-low  { color: #2e6020; border-color: #a0c890; }
+.r-mid  { color: #7a5010; border-color: #e0c070; }
+.r-high { color: #7a1818; border-color: #e09090; }
+
+/* ══════════════════════════════════════
+   SPECIAL SECTIONS
+══════════════════════════════════════ */
+.special-section {
+  padding: 52px 80px 60px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.sp-head {
+  display: flex; justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px; padding-bottom: 16px;
+  border-bottom: 2px solid var(--ink-0);
+}
+.sp-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px; color: var(--ink-0);
+  letter-spacing: -0.3px;
+}
+.sp-sub {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 13px;
+  color: var(--ink-3); margin-top: 3px;
+}
+.sp-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 5px 14px;
+  color: white; align-self: flex-start;
+}
+
+/* Sub-head within sections */
+.sub-head {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--ink-0);
+  margin: 32px 0 14px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+.sub-head::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ══════════════════════════════════════
+   CLOSING
+══════════════════════════════════════ */
+.closing {
+  background: var(--ink-0); padding: 52px 80px;
+  border-top: 3px solid var(--high);
+}
+.cl-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 4px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.quick-ref-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0 24px;
+}
+.qr-row {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.qr-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.qr-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 13.5px; color: var(--ink-4);
+}
+.qr-dots { flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.07); margin: 0 6px 3px; }
+.qr-atm {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 11.5px; color: var(--ink-5); white-space: nowrap;
+}
+
+/* ══════════════════════════════════════
+   HR & UTILS
+══════════════════════════════════════ */
+.hr { height: 1px; background: var(--border); margin: 28px 0; }
+.body-text {
+  font-size: 14px; color: var(--ink-1);
+  line-height: 2.0; margin-bottom: 16px;
+}
+.body-text strong { color: var(--ink-0); }
+
+/* ══════════════════════════════════════
+   CONNECT NOTE — inter-district transitions
+══════════════════════════════════════ */
+.connect-note {
+  margin: 28px 0 0;
+  padding: 0;
+  position: relative;
+}
+.connect-note-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.connect-note-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--ink-4);
+  white-space: nowrap;
+}
+.connect-note-rule {
+  flex: 1; height: 1px; background: var(--border);
+}
+.connect-note-zones {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  white-space: nowrap; padding: 3px 12px;
+  border: 1px solid var(--border);
+  color: var(--ink-3);
+}
+.connect-note-body {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13.5px; color: var(--ink-2);
+  line-height: 2.0;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-left: 3px solid var(--border-s);
+}
+.cn-high  .connect-note-body { border-left-color: var(--high); }
+.cn-low   .connect-note-body { border-left-color: var(--low); }
+.cn-old   .connect-note-body { border-left-color: var(--old); }
+.cn-dock  .connect-note-body { border-left-color: var(--dock); }
+.cn-out   .connect-note-body { border-left-color: var(--out); }
+.cn-high  .connect-note-zones { color: var(--high-mid); border-color: var(--high-pale); background: var(--high-bg); }
+.cn-low   .connect-note-zones { color: var(--low-mid);  border-color: var(--low-pale);  background: var(--low-bg); }
+.cn-old   .connect-note-zones { color: var(--old-mid);  border-color: var(--old-pale);  background: var(--old-bg); }
+.cn-dock  .connect-note-zones { color: var(--dock-mid); border-color: var(--dock-pale); background: var(--dock-bg); }
+.cn-out   .connect-note-zones { color: var(--out-mid);  border-color: var(--out-pale);  background: var(--out-bg); }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .masthead, .toc-wrap, .dist-body, .special-section, .closing { padding-left: 28px; padding-right: 28px; }
+  .dist-banner { padding-left: 28px; padding-right: 28px; top: 38px; position: static; }
+  .loc-cols { grid-template-columns: 1fr; }
+  .toc-grid, .quick-ref-grid { grid-template-columns: 1fr; }
+  .dist-tagline { display: none; }
+  .mh-title { font-size: 40px; }
+  .dist-name { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── NAV ── -->
+<nav class="topnav">
+  <div class="tn-brand">Vizel Port · Location Reference</div>
+  <a class="tn-item tn-high"  href="#high">High Ward</a>
+  <a class="tn-item tn-low"   href="#low">Low Ward</a>
+  <a class="tn-item tn-old"   href="#old">Old Ward</a>
+  <a class="tn-item tn-dock"  href="#dock">Dockfront</a>
+  <a class="tn-item tn-out"   href="#out">Outskirts</a>
+  <a class="tn-item tn-night" href="#special">Special Locations</a>
+  <a class="tn-item tn-night" href="#quickref">Quick Reference</a>
+</nav>
+
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <div class="mh-kicker">Location Reference · Vizel Port & Surroundings</div>
+  <div class="mh-title">Vizel Port</div>
+  <div class="mh-title-en">Vizel Port — Location Reference</div>
+  <div class="mh-summary">
+    A mid-sized port city, walled — though the wall has two collapsed sections (in the Old Ward and the north outskirts) that no one has ever repaired.
+    The city is divided into four main districts: the High Ward, Low Ward, Old Ward, and Dockfront.
+    Surrounding it are outskirts and natural landmarks to the north, east, south, and west.<br><br>
+    This document presents each location's physical structure and narrative character directly, from the author's own viewpoint —
+    unfiltered by any in-world institution or faction's perspective.
+  </div>
+  <div class="district-pills">
+    <span class="d-pill dp-high">High Ward · Church Center</span>
+    <span class="d-pill dp-low">Low Ward · Commerce & Daily Life</span>
+    <span class="d-pill dp-old">Old Ward · Half-Abandoned</span>
+    <span class="d-pill dp-dock">Dockfront · Port Trade</span>
+    <span class="d-pill dp-out">Outskirts · Natural Landmarks</span>
+    <span class="d-pill dp-night">Night Market · Special Locations</span>
+  </div>
+</div>
+
+
+<!-- ── TOC ── -->
+<div class="toc-wrap">
+  <div class="toc-label">Table of Contents</div>
+  <div class="toc-grid">
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--high);"></div>
+        <div class="tdc-name">High Ward</div>
+        <div class="tdc-en">High Ward</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">St. Vienne Square</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Conclave Street</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--low);"></div>
+        <div class="tdc-name">Low Ward</div>
+        <div class="tdc-en">Low Ward</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">Copper Kettle Market</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Dragonbone Alley</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">The Dry Well (Night Market Entrance)</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--old);"></div>
+        <div class="tdc-name">Old Ward</div>
+        <div class="tdc-en">Old Ward</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">Grey Belfry</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Stillstone Street</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Riku Yuni's Workshop</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--dock);"></div>
+        <div class="tdc-name">Dockfront</div>
+        <div class="tdc-en">Dockfront</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">Silver Step</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">The Misfortune</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Container Docks</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Shantytown</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Black Market</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--out);"></div>
+        <div class="tdc-name">Outskirts</div>
+        <div class="tdc-en">Outskirts</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">White Tree Chapel</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Tide Stone</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Foglight</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Mirror Lake</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Three Forks Stone</span>
+      </div>
+    </div>
+    <div class="toc-district">
+      <div class="toc-dist-head">
+        <div class="tdc-stripe" style="background:var(--night);"></div>
+        <div class="tdc-name">Special Locations</div>
+        <div class="tdc-en">Special Locations</div>
+      </div>
+      <div class="toc-locs">
+        <span class="toc-loc">Night Market Entrances</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Divine Traces</span>
+        <span class="toc-loc">·</span>
+        <span class="toc-loc">Quick Reference Table</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     HIGH WARD
+════════════════════════════════════════ -->
+<div class="district" id="high">
+  <div class="dist-banner db-high">
+    <div class="dist-banner-l">
+      <div class="dist-num">District I · High Ward</div>
+      <div class="dist-name">High Ward</div>
+      <div class="dist-name-en">Seat of the Church</div>
+    </div>
+    <div class="dist-tagline">The quietest, cleanest, most powerful district in the city.<br>Entered from the Low Ward through St. Vienne's Gate, where clergy stand watch.</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- District connection -->
+    <div class="connect-note cn-high">
+      <div class="connect-note-head">
+        <div class="connect-note-label">District Connection</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">High Ward ↔ Low Ward</div>
+      </div>
+      <div class="connect-note-body">St. Vienne's Gate is the only formal passage between the High Ward and the Low Ward. Inside: stone paving, quiet, clergy on watch. Outside: bare earth, noise, the smell of bread and fish. It's only about ten paces through the gate — but within those ten paces, you can feel the sound itself change, from "suppressed" to "released." No one designed it that way, but it's real all the same.</div>
+    </div>
+
+    <!-- St. Vienne Square -->
+    <div class="location" id="loc-svienne">
+      <div class="loc-header">
+        <div class="loc-name">St. Vienne Square</div>
+        <div class="loc-name-en">St. Vienne Square</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>Main cathedral (housing the Ashen Sovereign and the White Tree Elder, a dual shrine)</li>
+              <li>An old well at the square's center (sealed, its mouth covered by a stone slab carved with incantations)</li>
+              <li>Low stone buildings to the south (dormitories for the Church's lower-ranking staff)</li>
+              <li>A bell tower to the north (rings every morning at six, audible across the whole city)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-high">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">Both weddings and funerals are held here. For weddings, the bell rings an even number of times; for funerals, an odd number. Residents count.</div>
+          <div class="tag-item">The paving stones gleam especially brightly after rain — except for one slab, noticeably darker than the rest. Rumor has it something sealed lies beneath it. Probably just a legend.</div>
+          <div class="tag-item">In winter, temporary stalls sell hot mulled honey wine. The clergy don't chase the vendors off, but they'll give you a second look.</div>
+          <div class="tag-item">Under moonlight, the square always feels "too quiet" — footsteps seem amplified, as though someone were following you.</div>
+        </div>
+      </div>
+      <div class="divine-box">
+        <div class="divine-head">
+          <span>Divine Trace</span>
+          <span>Mother of Silence · Underground Chamber</span>
+        </div>
+        <div class="divine-body">Beneath the main cathedral lies a chamber dedicated to the Mother of Silence (goddess of memory and confession). It is not open to the public — only the Church's highest-ranking clergy know of its existence.</div>
+      </div>
+    </div>
+
+    <!-- Conclave Street -->
+    <div class="location" id="loc-conclave">
+      <div class="loc-header">
+        <div class="loc-name">Conclave Street</div>
+        <div class="loc-name-en">Conclave Street</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>An iron gate at the street entrance (usually closed; a side door stays open during the day)</li>
+              <li>Grey stone buildings on both sides: the Church archive, a temporary sealed-object storage facility, and residences for high-ranking clergy</li>
+              <li>A round building at the street's end (the Church's core deliberation hall — windowless, off-limits to non-members)</li>
+              <li>A dead-end alley to the right, ending in a bricked-up archway (said to lead to ancient underground ruins)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-high">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">The air here carries a faint mix of old paper and candle wax.</div>
+          <div class="tag-item">The guards wear no armor — just grey robes, and no visible weapons. Yet people instinctively step aside when they pass.</div>
+          <div class="tag-item">At night, this street has no lighting at all — yet footsteps can always be heard crossing through the dark.</div>
+          <div class="tag-item">Some claim to have seen a faint blue glow on the deliberation hall's roof late at night, lasting a few minutes before fading. The Church does not comment.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /High Ward -->
+
+
+<!-- ════════════════════════════════════════
+     LOW WARD
+════════════════════════════════════════ -->
+<div class="district" id="low">
+  <div class="dist-banner db-low">
+    <div class="dist-banner-l">
+      <div class="dist-num">District II · Low Ward</div>
+      <div class="dist-name">Low Ward</div>
+      <div class="dist-name-en">Commerce, Trades, and Everyday Life</div>
+    </div>
+    <div class="dist-tagline">The liveliest, most chaotic, most crowded part of the city.</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- District connection -->
+    <div class="connect-note cn-low">
+      <div class="connect-note-head">
+        <div class="connect-note-label">District Connection</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">Low Ward ↔ Old Ward</div>
+      </div>
+      <div class="connect-note-body">Head west from Dragonbone Alley, past a row of abandoned shopfronts, and the paving stones start to loosen, weeds pushing up through the cracks. About six minutes' walk, and you'll find you've already entered the Old Ward — there's no clear boundary, but you can feel it: the sound grows more distant, the air cools, the streetlamps grow farther apart. You cross that line without ever quite noticing.</div>
+    </div>
+
+    <!-- Copper Kettle Market -->
+    <div class="location" id="loc-market">
+      <div class="loc-header">
+        <div class="loc-name">Copper Kettle Market</div>
+        <div class="loc-name-en">Copper Kettle Market</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>Mostly open-air stalls; busiest from morning to midday, gradually closing in the afternoon</li>
+              <li>A bakery (with a stone oven out front, the baker using Element Arts to regulate temperature)</li>
+              <li>Several butcher stalls, vegetable stands, cloth shops, potters, and blacksmiths</li>
+              <li>A tea stall in the southeast corner (selling herbal tea and simple restorative tonics)</li>
+              <li>Two rows of two-story wooden buildings to the north (shops below, homes above)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-low">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">The name comes from a legend: a blacksmith once forged a copper kettle, and the next day it boiled water on its own. No one ever figured out why, but the name stuck.</div>
+          <div class="tag-item">The first thing the baker does every morning isn't kneading dough — it's resting a hand by the oven to "feel the temperature." The motion is so slight that most people never notice.</div>
+          <div class="tag-item">After rain, the market ground turns muddy, but one patch always dries faster than the rest — an old heating conduit lies buried beneath it, and no one's bothered to dig it out.</div>
+          <div class="tag-item">A black cat always crouches under the same eave in a corner of the market. No one knows whose it is. Some say it's a transformed sealed object; others say it's just lazy.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dragonbone Alley -->
+    <div class="location" id="loc-dragonbone">
+      <div class="loc-header">
+        <div class="loc-name">Dragonbone Alley</div>
+        <div class="loc-name-en">Dragonbone Alley</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>A narrow alley, densely packed with workshops on both sides</li>
+              <li>An alchemical supply shop (dried herbs, mineral samples, and jars hanging by the door)</li>
+              <li>An incantation-scribing shop (its window etched with fine symbols; passersby can see the scribes bent over their desks inside)</li>
+              <li>A sealed-object appraisal office (an unmarked grey building, its door always shut — you have to knock in a specific rhythm to get in)</li>
+              <li>A dry well at the alley's end (one of the Night Market entrances)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-low">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">The name is just a gimmick — there's never been an actual dragon bone here. Every newcomer asks "where's the dragonbone," and old residents laugh and point to a pile of rotted wood at the alley's end.</div>
+          <div class="tag-item">A mixed scent always lingers here: metal, dried herbs, old books, and a faint, indescribable sweetness (residue from some alchemical solvent).</div>
+          <div class="tag-item">The smoke from the chimneys is never black — it's grey-white, pale violet, occasionally pale green. Residents have grown used to it.</div>
+          <div class="tag-item">At night, the streetlamps here burn dimmer than elsewhere — not broken, but deliberately dimmed. Some workshops' work requires low light.</div>
+        </div>
+      </div>
+      <div class="night-box">
+        <div class="night-head">Night Market Entrance · The Dry Well</div>
+        <div class="night-body">
+          <p>A long-dry well at the end of Dragonbone Alley, its mouth covered by a rusted iron grate that can be moved aside.</p>
+          <p><strong>How to tell if it's open:</strong> drop a copper coin in. No echo means the Night Market is "open" tonight; an echo means come back another time.</p>
+          <p>At the bottom of the well, a horizontal passage leads into part of the Old Ward's underground drainage system. The Night Market convenes here on no fixed schedule. No one knows who organizes it. The Church is aware of its existence and has chosen to look the other way — because some things "are better tracked than lost entirely."</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /Low Ward -->
+
+
+<!-- ════════════════════════════════════════
+     OLD WARD
+════════════════════════════════════════ -->
+<div class="district" id="old">
+  <div class="dist-banner db-old">
+    <div class="dist-banner-l">
+      <div class="dist-num">District III · Old Ward</div>
+      <div class="dist-name">Old Ward</div>
+      <div class="dist-name-en">The City's Oldest District, Half-Abandoned After the Wall Was Rebuilt</div>
+    </div>
+    <div class="dist-tagline">Quiet, run-down, sparsely populated.<br>Riku Yuni lives here.</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- District connection -->
+    <div class="connect-note cn-old">
+      <div class="connect-note-head">
+        <div class="connect-note-label">District Connection</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">Old Ward ↔ Dockfront</div>
+      </div>
+      <div class="connect-note-body">Out through the back door of The Misfortune tavern is a nameless, narrow alley. About forty paces down, you'll reach a half-collapsed old wall with an iron door in it — the lock is old, and can be picked. On the other side of the door is the edge of the Old Ward. This route is often used by people who "don't want anyone to know where they went."</div>
+    </div>
+
+    <!-- Grey Belfry -->
+    <div class="location" id="loc-belfry">
+      <div class="loc-header">
+        <div class="loc-name">Grey Belfry</div>
+        <div class="loc-name-en">Grey Belfry</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>A stone bell tower, about 20 meters tall; the bell itself is long gone, leaving only an empty frame</li>
+              <li>A locked iron door at the base (an old cast-iron lock, its key long since lost)</li>
+              <li>A small gravel clearing beside it, with a few crooked trees</li>
+              <li>A long stone bench in the clearing (its surface worn smooth — many people have sat here)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-old">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">The bell no longer rings, but late at night there's sometimes a sound — not a true bell-toll, more a low-frequency vibration that doesn't carry far. Older residents say "the tower is talking to itself."</div>
+          <div class="tag-item">Someone once tried picking the lock, and claimed to have found a stone staircase leading down — they went a dozen or so steps before turning back. Too cold, and not the kind of cold that comes from low temperature.</div>
+          <div class="tag-item">On clear afternoons, a small patch of sunlight falls on the stone bench — one of the few spots in the Old Ward good for sitting and doing nothing. Riku Yuni comes here occasionally to sit for a while.</div>
+        </div>
+      </div>
+      <div class="night-box">
+        <div class="night-head">Night Market Link · Grey Belfry Basement</div>
+        <div class="night-body">
+          <p>If you actually have the key (no one knows what it looks like), the basement may lead to a different Night Market — not the one at Dragonbone Alley, but an older, deeper one that opens far less often.</p>
+          <p>Rumor holds that the key is in someone's hands within the Church; others say it was long ago sealed inside some sealed object.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stillstone Street -->
+    <div class="location" id="loc-stillstone">
+      <div class="loc-header">
+        <div class="loc-name">Stillstone Street</div>
+        <div class="loc-name-en">Stillstone Street</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>A stone-paved street, lined mostly with two-story stone buildings with iron-barred windows (many rusted shut)</li>
+              <li>Most houses stand empty; a few are lived in (potted plants, long dried out, occasionally sit on windowsills)</li>
+              <li><strong>No. 17</strong>: Riku Yuni's workshop (wooden door, windows papered over)</li>
+              <li>Across from No. 17: a vacant tailor's shop (the sign still hangs, its lettering faded)</li>
+              <li>A streetlamp at the far end (its shade crooked, but lit punctually every night — likely alchemically powered)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-old">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">This street is always quieter than the ones around it. Two people standing at either end, calling out, can barely hear each other. Some say it's the lingering effect of a sealed object; others say it's just how the wind funnels down the street.</div>
+          <div class="tag-item">Footsteps are muffled here, even in hard-soled shoes. Those unused to it find it makes their ears feel "plugged up."</div>
+          <div class="tag-item">Riku Yuni's workshop has no sign. To know which door is his, look at the stone step out front — worn smoother than any of the neighbors' (heavy foot traffic, though no one recalls ever seeing him come or go).</div>
+          <div class="tag-item">The empty house next door occasionally makes noise: a faint scraping, a creak of wood. Not a ghost — probably rats, though the Old Ward always has a few things that are hard to explain.</div>
+        </div>
+      </div>
+
+      <!-- Riku Yuni's Workshop -->
+      <div class="yuli-box">
+        <div class="yuli-head">
+          <div class="yh-title">Inside Riku Yuni's Workshop · No. 17 Stillstone Street</div>
+          <div class="yh-sub">For Writing Reference</div>
+        </div>
+        <div class="yuli-body">
+          <div class="yuli-level">
+            <div class="yl-label">Ground Floor</div>
+            <div class="yl-text">A small living room doubling as a kitchen. A table, two chairs, a hearth, a few bowls. Almost never used to receive guests.</div>
+          </div>
+          <div class="yuli-level">
+            <div class="yl-label">Basement</div>
+            <div class="yl-text">The workshop's core. Down a stone staircase, the space is roughly twice the size of the ground floor. Tool racks, a workbench, cabinets of sealing materials, a temporary storage area for sealed objects. The air is dry and slightly cool, smelling of metal, old wood, and sealing fluid. An alchemical lamp hangs above the workbench (a steady white light, never flickering).</div>
+          </div>
+          <div class="yuli-level">
+            <div class="yl-label">Inner Room</div>
+            <div class="yl-text">At the very back of the basement is a reinforced wooden door, behind which lies a smaller stone chamber — used to store sealed objects "not yet fully assessed." The door is fitted with two locks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Misfortune (Old Ward exit note) -->
+    <div class="location" id="loc-misfortune-old">
+      <div class="loc-header">
+        <div class="loc-name">The Misfortune (Old Ward Access)</div>
+        <div class="loc-name-en">The Misfortune — Old Ward Access</div>
+      </div>
+      <div class="ov-box">
+        <div class="ov-head">
+          <div class="ov-tag">Cross-Reference</div>
+          <div class="ov-title">The tavern's main building sits in Dockfront, but its back door opens onto the Old Ward</div>
+        </div>
+        <div class="ov-body">
+          Out the tavern's back door is a narrow alley, and through the alley lies the edge of the Old Ward. This route is often used by people who "don't want anyone to know where they went." See the Dockfront section for the full building description.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /Old Ward -->
+
+
+<!-- ════════════════════════════════════════
+     DOCKFRONT
+════════════════════════════════════════ -->
+<div class="district" id="dock">
+  <div class="dist-banner db-dock">
+    <div class="dist-banner-l">
+      <div class="dist-num">District IV · Dockfront</div>
+      <div class="dist-name">Dockfront</div>
+      <div class="dist-name-en">Port, Trade, Smuggling, Folk Faith, and Lower-Class Housing</div>
+    </div>
+    <div class="dist-tagline">The smell of the sea, nights of smuggling,<br>and the murmur of folk gods.</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- District connection -->
+    <div class="connect-note cn-dock">
+      <div class="connect-note-head">
+        <div class="connect-note-label">District Connection</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">Dockfront ↔ Shantytown</div>
+      </div>
+      <div class="connect-note-body">Head south from the far end of the Container Docks, and the ground turns from paving stone to broken brick, then from broken brick to bare mud. About a quarter-hour's walk, and you'll see the first row of shacks built from canvas and planks. There's no sign, no clear transition — you're simply walking, and then you realize you're no longer in Dockfront.</div>
+    </div>
+
+    <!-- Silver Step -->
+    <div class="location" id="loc-silverstep">
+      <div class="loc-header">
+        <div class="loc-name">Silver Step</div>
+        <div class="loc-name-en">Silver Step</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>A stone platform jutting into the sea, exposed about half a meter above water at low tide, submerged at high tide</li>
+              <li>The platform's surface bears faint carved patterns (tidal symbols, badly worn by seawater)</li>
+              <li>A stone pillar beside it, its top hollowed into a shallow groove (just large enough to hold a single silver coin)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-dock">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">Fishermen leave a silver coin here before a storm arrives — not as an offering to any Church-sanctioned god, but to "the sea" itself. Most couldn't say exactly who they're praying to; they just call it "the custom."</div>
+          <div class="tag-item">At low tide, copper and silver coins occasionally turn up among the rocks around the platform. Children pick them up; adults scold them for it — but no one dares pocket one, for fear of "upsetting the sea."</div>
+          <div class="tag-item">At sunset, the platform's shadow points due east for about ten minutes. Some take this as a kind of "answer."</div>
+        </div>
+      </div>
+      <div class="divine-box">
+        <div class="divine-head">
+          <span>Divine Trace</span>
+          <span>The Ocean Empress · Unrecognized by the Church</span>
+        </div>
+        <div class="divine-body">Every spring and autumn equinox, at dusk, the waves around Silver Step grow unusually calm for about a quarter hour. Fishermen call this "the Empress's Hour." Worship of the Ocean Empress persists among the common people, but the Church has never officially recognized it. Silver Step is the most concentrated site of this kind of "semi-underground faith."</div>
+      </div>
+    </div>
+
+    <!-- The Misfortune -->
+    <div class="location" id="loc-misfortune">
+      <div class="loc-header">
+        <div class="loc-name">The Misfortune</div>
+        <div class="loc-name-en">The Misfortune</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>A two-story building of mixed wood and stone, its exterior once whitewashed, now peeling</li>
+              <li>A tavern hall on the ground floor (a few wooden tables, a bar, a hearth that burns year-round, even in summer)</li>
+              <li>Guest rooms on the second floor (rarely opened)</li>
+              <li>The back door opens onto a narrow alley at the edge of the Old Ward</li>
+              <li>A hidden door in one basement wall leads to the Old Ward's sewers</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-dock">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">There is no sign. Regulars know it by "the door that's a shade darker than the ones beside it."</div>
+          <div class="tag-item">The house ale is weak, but there's a homemade herbal liquor (green, sweet, with a heavy kick). Regulars call it "Forget-Sorrow."</div>
+          <div class="tag-item">The owner is a silent, middle-aged woman who never asks a customer's name. Sit at the bar for more than ten minutes, and she'll slide over a free glass of water — that's her way of "sizing you up." Drink it, and nothing more happens. Drink it, though, and she'll give you a second look.</div>
+          <div class="tag-item">Well-dressed people often slip in through the back door, sit at the front for a single drink, then leave — they're not here to drink, but to confirm "whether there's a gathering tonight."</div>
+        </div>
+      </div>
+      <div class="night-box">
+        <div class="night-head">Night Market Entrance · The Misfortune's Back Door</div>
+        <div class="night-body">
+          <p><strong>How to tell if it's open:</strong> ask the owner, "Is there a gathering tonight?" She'll only answer if she recognizes you. If she doesn't, she'll just glance at you once and keep wiping her glasses.</p>
+          <p>The hidden door in the basement is one of the main routes into the Night Market. It's considered more "official" than the Dry Well in Dragonbone Alley, since someone actually guards it.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Container Docks -->
+    <div class="location" id="loc-docks">
+      <div class="loc-header">
+        <div class="loc-name">Container Docks</div>
+        <div class="loc-name-en">Container Docks</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>A wooden pier extending into the sea, able to dock mid-sized cargo ships</li>
+              <li>Goods stacked along the shore (crates, barrels, canvas-covered shapes of unclear content)</li>
+              <li>A customs house (a two-story stone building, staffed at the entrance)</li>
+              <li>An abandoned crane at the far east end (its iron frame rusted, no longer in use)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-dock">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">Smuggling is an open secret. Customs officials know which ships "need extra inspection" and which ones "get a glance and are waved through." Bribes come in every form imaginable.</div>
+          <div class="tag-item">Late at night, the docks see "silent transfers" — a few people, wordless, communicating only through gestures and nods, moving cargo from ship to waiting cart. No one knows what the cargo is. No one asks.</div>
+          <div class="tag-item">Some claim to have seen a faint glow atop the abandoned crane late at night, but walking over reveals nothing there.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shantytown -->
+    <div class="location" id="loc-shanty">
+      <div class="loc-header">
+        <div class="loc-name">Shantytown</div>
+        <div class="loc-name-en">Shantytown</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>South of Dockfront, hard against the outside of the city wall (which has a collapsed section here)</li>
+              <li>Shacks built of wood planks and canvas, densely packed, damp, muddy roads</li>
+              <li>A single communal well (the water tastes faintly of salt, but is drinkable)</li>
+              <li>An open-air market (old clothes, worthless odds and ends, and occasionally something strange)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-dock">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">Most residents here are dockworkers, the unemployed, or people who've found no place elsewhere.</div>
+          <div class="tag-item">A rumor circulates in Shantytown: beneath the rubble at the wall's collapsed section lies "the old wall's ghost." At night, a low sound can be heard coming from the stones.</div>
+          <div class="tag-item">Some children are born and raised here without ever having seen the High Ward. To them, the city is simply the docks, the water, and the mud roads.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Black Market -->
+    <div class="location" id="loc-blackmarket">
+      <div class="loc-header">
+        <div class="loc-name">Black Market (Information Node)</div>
+        <div class="loc-name-en">Black Market — The Information Node</div>
+      </div>
+      <div class="ov-box">
+        <div class="ov-head">
+          <div class="ov-tag">Note</div>
+          <div class="ov-title">The Black Market isn't a fixed location — it's part of the Night Market</div>
+        </div>
+        <div class="ov-body">
+          In Dockfront, there's an address you can go to if you don't know where the Night Market is:<br><br>
+          <strong>Location:</strong> the northeast corner of Shantytown, a relatively sturdy wooden house with a string of dried fish hanging by the door.<br><br>
+          An old man known as "Dried-Fish Chen" lives there. He doesn't sell fish — he sells information. Want to know where the Night Market is tonight? Give him three copper coins, and he'll tell you a direction and a time. His information isn't always accurate, but "if it's wrong, you can come back and yell at him — he won't mind."
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /Dockfront -->
+
+
+<!-- ════════════════════════════════════════
+     OUTSKIRTS
+════════════════════════════════════════ -->
+<div class="district" id="out">
+  <div class="dist-banner db-out">
+    <div class="dist-banner-l">
+      <div class="dist-num">District V · Outskirts</div>
+      <div class="dist-name">Outskirts & Natural Landmarks</div>
+      <div class="dist-name-en">Outskirts — Natural Landmarks</div>
+    </div>
+    <div class="dist-tagline">The world beyond the city wall,<br>where traces of the gods are easier to sense.</div>
+  </div>
+
+  <div class="dist-body">
+
+    <!-- District connection -->
+    <div class="connect-note cn-out">
+      <div class="connect-note-head">
+        <div class="connect-note-label">District Connection</div>
+        <div class="connect-note-rule"></div>
+        <div class="connect-note-zones">City ↔ Outskirts</div>
+      </div>
+      <div class="connect-note-body">The city wall has two collapsed sections: one in the Old Ward, one in the north outskirts. From the northern gap, it's about a half-hour walk to White Tree Chapel. From the Old Ward gap, a worn dirt path leads toward the old quarry, with no signage at all.</div>
+    </div>
+
+    <!-- White Tree Chapel -->
+    <div class="location" id="loc-chapel">
+      <div class="loc-header">
+        <div class="loc-name">North Outskirts · White Tree Chapel</div>
+        <div class="loc-name-en">North Outskirts — White Tree Chapel</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Structures</div>
+            <ul class="bld-list">
+              <li>A small stone chapel, about 8 meters tall, its outer walls covered in vines</li>
+              <li>Inside, a wooden carving of the White Tree Elder (shaped like a tree trunk, without any human form)</li>
+              <li>An old white poplar out front (its bark pale in color, though not literally a "white tree")</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-out">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">This is a sacred site of the god of rebirth. Passersby often step in to light a candle, praying for themselves or for someone who has passed. Candles are free; a donation box sits beside the stand for anyone who wishes to give.</div>
+          <div class="tag-item">The chapel's caretaker is an old nun who rarely speaks, but will offer you a glass of water.</div>
+          <div class="tag-item">Some say that sitting in the chapel late at night, you feel a sense of "being watched, but gently" — some attribute it to the White Tree Elder's gaze, others to simple imagination.</div>
+        </div>
+      </div>
+      <div class="divine-box">
+        <div class="divine-head">
+          <span>Divine Trace</span>
+          <span>The White Tree Elder (Rebirth) · Officially Recognized by the Church</span>
+        </div>
+        <div class="divine-body">This is the only officially recognized divine site outside the city walls, in the whole of Vizel Port's surroundings. The Church recognizes its legitimacy — but for that very reason, keeps it under closer watch.</div>
+      </div>
+    </div>
+
+    <!-- Tide Stone and Foglight -->
+    <div class="location" id="loc-tides">
+      <div class="loc-header">
+        <div class="loc-name">South Outskirts · Tide Stone & Foglight</div>
+        <div class="loc-name-en">South Outskirts — Tide Stone & Foglight</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Tide Stone</div>
+            <ul class="bld-list">
+              <li>A massive black reef along the south coastline, fully exposed at low tide</li>
+              <li>Its surface bears natural markings, popularly regarded as "the writing of the gods"</li>
+            </ul>
+          </div>
+          <div class="bld-section" style="margin-top:12px;">
+            <div class="bld-head">Foglight</div>
+            <ul class="bld-list">
+              <li>An abandoned stone lighthouse, about 15 meters tall</li>
+              <li>Once topped by an alchemical flame (a non-burning blue-white light), now extinguished</li>
+              <li>The tower door is locked (a new lock, installed by the Church); a broken window allows entry</li>
+              <li>Inside is nothing but a winding stone staircase and empty rooms</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-out">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">Before a storm, fishermen come to touch Tide Stone, then touch their own foreheads. An extremely old ritual — no one remembers where it began.</div>
+          <div class="tag-item">Every winter solstice night, the top of Foglight briefly lights up again for a few seconds before going dark. The Church declines to comment.</div>
+          <div class="tag-item">No one knows who originally built Foglight, or what kind of alchemy sustained that blue-white flame. The fact that the Church replaced the lock with a new one is, in itself, worth noting.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mirror Lake and Three Forks Stone -->
+    <div class="location" id="loc-west">
+      <div class="loc-header">
+        <div class="loc-name">West Outskirts · Mirror Lake & Three Forks Stone</div>
+        <div class="loc-name-en">West Outskirts — Mirror Lake & Three Forks Stone</div>
+      </div>
+      <div class="loc-cols">
+        <div>
+          <div class="bld-section">
+            <div class="bld-head">Mirror Lake</div>
+            <ul class="bld-list">
+              <li>A small lake formed in a flooded, abandoned quarry, its surface unusually still</li>
+              <li>Surrounded by gravel slopes and a few crooked pines</li>
+            </ul>
+          </div>
+          <div class="bld-section" style="margin-top:12px;">
+            <div class="bld-head">Three Forks Stone</div>
+            <ul class="bld-list">
+              <li>A large stone at the old quarry's entrance, naturally split into three forked protrusions</li>
+              <li>Three roads converge here (toward the city / toward the quarry / a northern route skirting the forest)</li>
+              <li>The stone is perpetually piled with small offerings left by passersby (bread, copper coins, and the like)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tag-out">
+          <div class="tag-head">Narrative Tags</div>
+          <div class="tag-item">No matter how hard the wind blows, Mirror Lake's surface barely ripples. Some who linger by its shore say "time seems to slow down" — a glance that felt like minutes. The Church once sent someone to check for a sealed object at the lake bottom; the conclusion was that there was none. The common folk don't believe it.</div>
+          <div class="tag-item">The God of Journey (god of travel and fate) has no fixed temple; people believe his shadow lingers at "every fork in the road." Three Forks Stone is the most famous such "fork" in the region.</div>
+          <div class="tag-item">People passing Three Forks Stone at dawn sometimes report seeing a blurred silhouette standing beside the stone, as if waiting for someone. It vanishes as they approach.</div>
+        </div>
+      </div>
+      <div class="divine-box">
+        <div class="divine-head">
+          <span>Divine Trace (Three Forks Stone)</span>
+          <span>God of Journey · Regarded by the Church as Folk Custom</span>
+        </div>
+        <div class="divine-body">The God of Journey (travel and fate) has no Church-sanctioned formal temple. The Church classifies the devotional practices at Three Forks Stone as "folk custom" rather than religious ritual — neither recognized nor interfered with.</div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /Outskirts -->
+
+
+<!-- ════════════════════════════════════════
+     SPECIAL LOCATIONS SUMMARY
+════════════════════════════════════════ -->
+<div class="special-section" id="special">
+  <div class="sp-head">
+    <div>
+      <div class="sp-title">Special Locations Summary</div>
+      <div class="sp-sub">Night Market Entrances · Divine Traces</div>
+    </div>
+    <div class="sp-badge" style="background:var(--night);">Cross-District Reference</div>
+  </div>
+
+  <div class="sub-head">Night Market Entrances (Three Known)</div>
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th class="th-night">Entrance</th>
+        <th class="th-night">Location</th>
+        <th class="th-night">How to Tell If It's Open</th>
+        <th class="th-night">Risk Level</th>
+        <th class="th-night">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="key">The Dry Well</td>
+        <td>Low Ward · End of Dragonbone Alley</td>
+        <td>Drop a coin — no echo means open</td>
+        <td><span class="risk r-low">Low</span></td>
+        <td>Occasional Church informants</td>
+      </tr>
+      <tr>
+        <td class="key">The Misfortune's Back Door</td>
+        <td>Dockfront / Old Ward Border</td>
+        <td>Ask the owner "Is there a gathering tonight?"</td>
+        <td><span class="risk r-mid">Medium</span></td>
+        <td>The owner won't answer strangers</td>
+      </tr>
+      <tr>
+        <td class="key">Grey Belfry Basement</td>
+        <td>Old Ward · Grey Belfry</td>
+        <td>Requires a key (lost, whereabouts unknown)</td>
+        <td><span class="risk r-high">Very High</span></td>
+        <td>Leads to an older, deeper Night Market; the key is rumored to be tied to the Church</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sub-head">Divine Traces (Five Known)</div>
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th class="th-divine">Name</th>
+        <th class="th-divine">Location</th>
+        <th class="th-divine">Associated Deity</th>
+        <th class="th-divine">Church's Stance</th>
+        <th class="th-divine">Phenomenon</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="key">Silver Step</td>
+        <td>Dockfront</td>
+        <td>The Ocean Empress</td>
+        <td>Unrecognized, not interfered with</td>
+        <td>Waves grow unusually calm for a quarter hour at spring/autumn equinox dusk</td>
+      </tr>
+      <tr>
+        <td class="key">White Tree Chapel</td>
+        <td>North Outskirts</td>
+        <td>The White Tree Elder (Rebirth)</td>
+        <td>Officially recognized, closely watched</td>
+        <td>A sense of being "watched, but gently" late at night</td>
+      </tr>
+      <tr>
+        <td class="key">Mother of Silence's Chamber</td>
+        <td>High Ward · Beneath the Main Cathedral</td>
+        <td>Mother of Silence (Memory)</td>
+        <td>Controlled, not open to the public</td>
+        <td>Its very existence is kept confidential</td>
+      </tr>
+      <tr>
+        <td class="key">Three Forks Stone</td>
+        <td>West Outskirts · Old Quarry Entrance</td>
+        <td>God of Journey (Travel)</td>
+        <td>Unrecognized, regarded as folk custom</td>
+        <td>A blurred silhouette occasionally seen at dawn, vanishing as one approaches</td>
+      </tr>
+      <tr>
+        <td class="key">Main Cathedral's Dual Shrine</td>
+        <td>High Ward · St. Vienne Square</td>
+        <td>Ashen Sovereign</td>
+        <td>Officially recognized</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div><!-- /Special Locations -->
+
+
+<!-- ════════════════════════════════════════
+     QUICK REFERENCE TABLE
+════════════════════════════════════════ -->
+<div class="closing" id="quickref">
+  <div class="cl-label">Quick Writing Reference · Location Atmosphere & Uses</div>
+  <div class="quick-ref-grid">
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--high);"></div>
+      <div class="qr-name">St. Vienne Square</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Solemn · Ritual · Night Visions</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--high);"></div>
+      <div class="qr-name">Conclave Street</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Closed-Off · Grey · Secretive</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--low);"></div>
+      <div class="qr-name">Copper Kettle Market</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Warm · Busy · Full of Life</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--low);"></div>
+      <div class="qr-name">Dragonbone Alley</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Narrow · Complex Scents · Mysterious</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--old);"></div>
+      <div class="qr-name">Stillstone Street</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Unnaturally Quiet · Dim Light</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--old);"></div>
+      <div class="qr-name">Riku Yuni's Workshop</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Functional · Enclosed · Underground</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--old);"></div>
+      <div class="qr-name">Grey Belfry</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Abandoned, Yet Still "Alive"</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--dock);"></div>
+      <div class="qr-name">Silver Step</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Folk Faith · The Sea · Semi-Legal</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--dock);"></div>
+      <div class="qr-name">The Misfortune</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Silent · Testing · Grey Area</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--dock);"></div>
+      <div class="qr-name">Container Docks</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Smuggling · Late Night · Wordless Transfers</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--dock);"></div>
+      <div class="qr-name">Shantytown</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Damp · Marginal · Lower-Class Life</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">White Tree Chapel</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Rebirth · Candlelight · Gentle Watchfulness</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">Tide Stone</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Ancient Ritual · Coastline · Wordless</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">Foglight</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Abandoned · Lights at Solstice · Church-Locked</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">Mirror Lake</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Unnaturally Still · Distorted Sense of Time</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--out);"></div>
+      <div class="qr-name">Three Forks Stone</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Journey · Choice · Folk Ritual</div>
+    </div>
+    <div class="qr-row">
+      <div class="qr-dot" style="background:var(--night);"></div>
+      <div class="qr-name">Night Market (General)</div>
+      <div class="qr-dots"></div>
+      <div class="qr-atm">Underground · Irregular Timing · Church-Tolerated</div>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- shell -->
+</body>
+</html>
