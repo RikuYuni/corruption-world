@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riku Yuni — Author's Internal File</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Inconsolata:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════
+   ROOT
+══════════════════════ */
+:root {
+  --paper:       #f3ede0;
+  --paper-warm:  #ece3cc;
+  --paper-mid:   #ddd4bb;
+  --paper-cool:  #eceae4;
+  --ink:         #1c1a12;
+  --ink-mid:     #38341e;
+  --ink-light:   #645e42;
+  --ink-faded:   #968e6e;
+  --ink-ghost:   #c4bca0;
+  --line:        rgba(100,90,58,0.18);
+  --line-strong: rgba(100,90,58,0.32);
+
+  /* Accent — Yuni (feminine) */
+  --yu:          #3e4e68;
+  --yu-mid:      #5a6e8a;
+  --yu-pale:     #c8d4e4;
+  --yu-wash:     rgba(62,78,104,0.07);
+
+  /* Accent — Riku (masculine) */
+  --li:          #5a3a1a;
+  --li-mid:      #7a5228;
+  --li-pale:     #e0ccaa;
+  --li-wash:     rgba(90,58,26,0.07);
+
+  /* Corruption resonance */
+  --crpt:        #4a1e4e;
+  --crpt-mid:    #6a3270;
+  --crpt-pale:   #d8b8e0;
+  --crpt-wash:   rgba(74,30,78,0.06);
+
+  /* Warning / mystery */
+  --warn:        #6e2010;
+  --warn-pale:   #e8c8c0;
+
+  /* Annotation ink */
+  --ann:         #3a3060;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #18140c;
+  font-family: 'Lora', 'Noto Serif SC', serif;
+  color: var(--ink);
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 40% 30%, #221c10 0%, #18140c 70%);
+  pointer-events: none;
+}
+
+/* ══════════════════════
+   OUTER
+══════════════════════ */
+.outer {
+  position: relative; z-index: 1;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 44px 16px 80px;
+}
+
+/* ══════════════════════
+   BOOK
+══════════════════════ */
+.book {
+  position: relative;
+  box-shadow:
+    -8px 4px 20px rgba(0,0,0,0.55),
+    8px 4px 20px rgba(0,0,0,0.35),
+    0 12px 55px rgba(0,0,0,0.65);
+}
+
+.book::after {
+  content: '';
+  position: absolute;
+  right: -4px; top: 3px; bottom: -3px; width: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--paper) 0px, var(--paper-mid) 1px,
+    var(--paper) 2px, var(--paper-warm) 3px
+  );
+  opacity: 0.6;
+}
+
+.grain {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.66' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+.ruled {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 29px,
+    var(--line) 29px, var(--line) 30px
+  );
+  background-position: 0 90px;
+  pointer-events: none; z-index: 0;
+}
+
+.book-body {
+  background: var(--paper);
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+
+/* ══════════════════════
+   NAV
+══════════════════════ */
+.nav-bar {
+  position: sticky; top: 0;
+  background: var(--ink);
+  display: flex; overflow-x: auto;
+  scrollbar-width: none; z-index: 200;
+  border-bottom: 2px solid var(--li);
+}
+.nav-bar::-webkit-scrollbar { display: none; }
+.nav-item {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9.5px; letter-spacing: 1.5px;
+  color: var(--ink-faded); padding: 11px 16px;
+  white-space: nowrap; text-decoration: none;
+  display: block; border-right: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.15s; text-transform: uppercase;
+}
+.nav-item:hover { background: rgba(255,255,255,0.05); color: var(--paper); }
+.nav-yu { color: var(--yu-mid) !important; }
+.nav-li { color: var(--li-pale) !important; }
+.nav-crpt { color: var(--crpt-pale) !important; }
+
+/* ══════════════════════
+   COVER
+══════════════════════ */
+.cover {
+  background: var(--ink);
+  padding: 0;
+  position: relative; overflow: hidden;
+}
+
+.cover-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 64px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.cb-left {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-faded); text-transform: uppercase;
+}
+.cb-right {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--li-pale); opacity: 0.6;
+  border: 1px solid rgba(200,160,90,0.25);
+  padding: 3px 12px; text-transform: uppercase;
+}
+
+.cover-main {
+  padding: 68px 64px 60px;
+  position: relative; z-index: 1;
+}
+
+/* Faint ruled lines on cover */
+.cover-main::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 30px,
+    rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px
+  );
+  pointer-events: none;
+}
+
+.cover-eyebrow {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px; letter-spacing: 4px;
+  color: var(--ink-faded); margin-bottom: 28px;
+  text-transform: uppercase;
+}
+
+/* Character name — split color */
+.cover-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 60px; font-weight: 300;
+  line-height: 1; margin-bottom: 10px;
+  letter-spacing: 4px;
+}
+.name-yu { color: var(--yu-pale); }
+.name-li { color: var(--li-pale); }
+
+.cover-pinyin {
+  font-family: 'Inconsolata', monospace;
+  font-size: 11px; letter-spacing: 6px;
+  color: var(--ink-faded); margin-bottom: 36px;
+  text-transform: uppercase;
+}
+
+.cover-rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, var(--yu-mid), var(--li-mid), transparent);
+  margin-bottom: 28px; opacity: 0.5;
+}
+
+.cover-desc {
+  font-family: 'Lora', serif;
+  font-style: italic; font-size: 13.5px;
+  color: var(--ink-faded); line-height: 2;
+  max-width: 520px; margin-bottom: 48px;
+}
+
+.cover-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.c-tag {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  padding: 5px 14px; text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--ink-ghost);
+}
+.c-tag.t-yu { border-color: rgba(90,110,138,0.4); color: var(--yu-pale); }
+.c-tag.t-li { border-color: rgba(122,82,40,0.4); color: var(--li-pale); }
+.c-tag.t-crpt { border-color: rgba(106,50,112,0.4); color: var(--crpt-pale); }
+
+/* ══════════════════════
+   SECTION
+══════════════════════ */
+.section {
+  padding: 52px 64px 60px;
+  border-bottom: 1px solid var(--line-strong);
+  position: relative;
+}
+.section:nth-child(even) {
+  background: linear-gradient(to bottom right, var(--paper), var(--paper-cool));
+}
+
+/* Colored left accent */
+.section[data-accent]::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--accent-color, var(--ink-light));
+  opacity: 0.7;
+}
+.section[data-accent="yu"] { --accent-color: var(--yu-mid); }
+.section[data-accent="li"] { --accent-color: var(--li-mid); }
+.section[data-accent="both"] {
+  --accent-color: transparent;
+}
+.section[data-accent="both"]::before {
+  background: linear-gradient(to bottom, var(--yu-mid) 50%, var(--li-mid) 50%);
+}
+.section[data-accent="crpt"] { --accent-color: var(--crpt-mid); }
+.section[data-accent="warn"] { --accent-color: var(--warn); }
+
+/* Section header */
+.sec-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 28px; padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+}
+.sec-code {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-faded); text-transform: uppercase;
+}
+.sec-flag {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--paper);
+  padding: 3px 12px;
+  text-transform: uppercase;
+}
+.sec-flag.yu { background: var(--yu); }
+.sec-flag.li { background: var(--li); }
+.sec-flag.both { background: linear-gradient(to right, var(--yu) 50%, var(--li) 50%); }
+.sec-flag.crpt { background: var(--crpt); }
+.sec-flag.neutral { background: var(--ink-light); }
+
+.sec-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px; font-weight: 300;
+  color: var(--ink-faded); letter-spacing: 4px;
+  margin-bottom: 4px; text-transform: uppercase;
+}
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px; font-weight: 600;
+  color: var(--ink); letter-spacing: 1px; line-height: 1.2;
+}
+.sec-title-en {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 13px; color: var(--ink-light);
+  margin-top: 4px; letter-spacing: 0.3px;
+}
+
+/* Body text */
+p.b {
+  font-size: 13.5px; color: var(--ink-mid);
+  line-height: 2.1; text-align: justify;
+  margin-bottom: 16px; text-indent: 0;
+}
+p.b:first-of-type { text-indent: 0; }
+
+/* ══════════════════════
+   DUAL PERSONA — two-column block
+══════════════════════ */
+.persona-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 22px 0;
+  border: 1px solid var(--line-strong);
+  overflow: hidden;
+}
+
+.persona-col {
+  padding: 22px 22px 24px;
+}
+.persona-col.col-yu {
+  background: var(--yu-wash);
+  border-right: 1px solid var(--line-strong);
+}
+.persona-col.col-li { background: var(--li-wash); }
+
+.pc-head {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pc-name-zh {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 600; line-height: 1;
+}
+.col-yu .pc-name-zh { color: var(--yu); }
+.col-li .pc-name-zh { color: var(--li); }
+
+.pc-name-en {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.col-yu .pc-name-en { color: var(--yu-mid); }
+.col-li .pc-name-en { color: var(--li-mid); }
+
+.pc-body {
+  font-size: 13px; color: var(--ink-mid);
+  line-height: 1.9;
+}
+
+.pc-item {
+  display: flex; gap: 10px;
+  margin: 8px 0; align-items: flex-start;
+  font-size: 13px; line-height: 1.8;
+}
+.pc-item::before {
+  content: '·'; color: var(--ink-ghost);
+  flex-shrink: 0; margin-top: 1px;
+}
+
+.pc-tag {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  padding: 2px 8px; text-transform: uppercase;
+  display: inline-block; margin-top: 12px;
+}
+.col-yu .pc-tag { border: 1px solid var(--yu-pale); color: var(--yu-mid); }
+.col-li .pc-tag { border: 1px solid var(--li-pale); color: var(--li-mid); }
+
+/* ══════════════════════
+   SHARED STATE — middle row below persona split
+══════════════════════ */
+.shared-bar {
+  background: linear-gradient(to right, var(--yu-wash), var(--li-wash));
+  border: 1px solid var(--line-strong);
+  border-top: none;
+  padding: 16px 22px;
+  font-size: 13px; color: var(--ink-mid);
+  line-height: 1.9;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+
+.sb-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--ink-faded); text-transform: uppercase;
+  grid-column: 1 / -1; margin-bottom: 4px;
+}
+
+.sb-item {
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.sb-key {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13.5px; font-weight: 600;
+  color: var(--ink); white-space: nowrap; min-width: 80px;
+}
+.sb-val { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+/* ══════════════════════
+   ENTRY BLOCK
+══════════════════════ */
+.entry {
+  margin: 20px 0;
+  border: 1px solid var(--line-strong);
+  overflow: hidden;
+}
+
+.entry-head {
+  background: var(--ink);
+  padding: 10px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.eh-code {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  color: var(--ink-faded); text-transform: uppercase;
+}
+.eh-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--paper-warm); letter-spacing: 0.5px;
+}
+
+.entry-body {
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.25);
+}
+.entry-body p {
+  font-size: 13.5px; color: var(--ink-mid);
+  line-height: 1.9; margin-bottom: 10px;
+}
+.entry-body p:last-child { margin-bottom: 0; }
+.entry-body strong { color: var(--ink); font-weight: 600; }
+
+.entry-note {
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px dashed var(--line-strong);
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 12px; color: var(--ink-light); line-height: 1.75;
+}
+
+/* ══════════════════════
+   ANNOTATION — handwritten-style
+══════════════════════ */
+.ann-block {
+  margin: 18px 0;
+  padding: 14px 18px;
+  background: rgba(58,48,96,0.06);
+  border-left: 3px solid var(--ann);
+  position: relative;
+}
+.ann-block::before {
+  content: '✎';
+  position: absolute; top: 12px; right: 14px;
+  font-size: 13px; color: var(--ann); opacity: 0.4;
+}
+.ann-text {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 13px; color: var(--ann);
+  line-height: 1.85;
+}
+
+/* ══════════════════════
+   CORRUPTION RESONANCE SPECIAL BLOCK
+══════════════════════ */
+.crpt-block {
+  margin: 20px 0;
+  border: 1px solid rgba(106,50,112,0.3);
+  border-top: 3px solid var(--crpt);
+  background: var(--crpt-wash);
+  overflow: hidden;
+}
+.crpt-head {
+  padding: 10px 18px;
+  background: var(--crpt);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ch-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  color: var(--crpt-pale); text-transform: uppercase;
+}
+.ch-badge {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 2px 8px; text-transform: uppercase;
+}
+.crpt-body {
+  padding: 16px 20px;
+}
+.crpt-body p {
+  font-size: 13.5px; color: var(--ink-mid);
+  line-height: 1.9; margin-bottom: 10px;
+}
+.crpt-body p:last-child { margin-bottom: 0; }
+.crpt-body strong { color: var(--crpt); font-weight: 600; }
+
+/* ══════════════════════
+   ABILITY TABLE
+══════════════════════ */
+.ability-table {
+  width: 100%; border-collapse: collapse;
+  margin: 18px 0; font-size: 13px;
+}
+.ability-table thead th {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2.5px;
+  color: var(--paper); background: var(--ink);
+  padding: 9px 14px; text-align: left;
+  text-transform: uppercase; font-weight: 500;
+}
+.ability-table tbody td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top; line-height: 1.85;
+  color: var(--ink-mid);
+}
+.ability-table tr:hover td { background: rgba(0,0,0,0.03); }
+.ability-table .a-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--ink); width: 160px;
+}
+.a-tag {
+  display: inline-block;
+  font-family: 'Inconsolata', monospace;
+  font-size: 8px; letter-spacing: 1px;
+  padding: 2px 7px; text-transform: uppercase;
+  border: 1px solid; margin-right: 4px;
+}
+.a-tag.yu { color: var(--yu-mid); border-color: var(--yu-pale); }
+.a-tag.li { color: var(--li-mid); border-color: var(--li-pale); }
+.a-tag.both { color: var(--ink-light); border-color: var(--line-strong); }
+.a-tag.crpt { color: var(--crpt-mid); border-color: var(--crpt-pale); }
+
+/* ══════════════════════
+   BEHAVIOR LIST
+══════════════════════ */
+.behavior-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px; margin: 16px 0;
+}
+.bv-card {
+  border: 1px solid var(--line-strong);
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.2);
+  transition: box-shadow 0.15s;
+}
+.bv-card:hover { box-shadow: 0 3px 14px rgba(0,0,0,0.08); }
+.bv-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--ink-faded); text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.bv-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--ink); margin-bottom: 7px; line-height: 1.3;
+}
+.bv-desc {
+  font-size: 12.5px; color: var(--ink-light);
+  line-height: 1.75;
+}
+
+/* ══════════════════════
+   MYSTERY / OPEN QUESTIONS
+══════════════════════ */
+.mystery-item {
+  display: flex; gap: 16px;
+  margin: 14px 0; align-items: flex-start;
+}
+.my-num {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px; font-weight: 600;
+  color: var(--paper); background: var(--warn);
+  min-width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.my-body { flex: 1; }
+.my-q {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--ink); margin-bottom: 5px; line-height: 1.3;
+}
+.my-desc {
+  font-size: 13px; color: var(--ink-mid); line-height: 1.85;
+}
+
+/* ══════════════════════
+   PULL QUOTE
+══════════════════════ */
+.pq {
+  margin: 22px 0; padding: 16px 0 16px 22px;
+  border-left: 3px solid var(--ink-light);
+}
+.pq-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 16.5px;
+  color: var(--ink); line-height: 1.7; letter-spacing: 0.2px;
+}
+.pq-attr {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9.5px; letter-spacing: 2px;
+  color: var(--ink-faded); margin-top: 10px;
+  display: block; text-transform: uppercase;
+}
+
+/* H-rule */
+.h-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-strong), transparent);
+  margin: 24px 0;
+}
+
+/* Margin note */
+.mn {
+  float: right; clear: right;
+  width: 150px; margin: 2px -22px 14px 18px;
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 11px; color: var(--ink-light);
+  line-height: 1.7; border-left: 1px solid var(--line-strong);
+  padding-left: 10px;
+}
+
+/* Scene box */
+.scene {
+  margin: 18px 0; padding: 17px 20px;
+  background: rgba(240,232,210,0.4);
+  border: 1px solid var(--paper-mid);
+  border-top: 2px solid var(--ink-light);
+}
+.scene-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-faded); text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.scene p {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 13px; color: var(--ink-mid); line-height: 1.95;
+}
+
+/* Footnotes */
+.footnotes {
+  margin-top: 32px; padding-top: 14px;
+  border-top: 1px solid var(--line-strong);
+}
+.fn-title {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-faded); margin-bottom: 8px; text-transform: uppercase;
+}
+.fn-item {
+  display: flex; gap: 10px; margin: 5px 0;
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 11.5px; color: var(--ink-light); line-height: 1.7;
+}
+.fn-num {
+  font-family: 'Inconsolata', monospace;
+  font-style: normal; font-size: 10px;
+  color: var(--ink-faded); flex-shrink: 0; min-width: 18px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .section { padding: 40px 30px 44px; }
+  .cover-main { padding: 48px 30px 44px; }
+  .cover-bar { padding: 11px 30px; }
+  .persona-split { grid-template-columns: 1fr; }
+  .persona-col.col-yu { border-right: none; border-bottom: 1px solid var(--line-strong); }
+  .shared-bar { grid-template-columns: 1fr; }
+  .behavior-grid { grid-template-columns: 1fr; }
+  .cover-name { font-size: 44px; letter-spacing: 2px; }
+  .mn { float: none; width: auto; margin: 12px 0; }
+}
+</style>
+</head>
+<body>
+<div class="outer">
+<div class="book">
+<div class="grain"></div>
+<div class="ruled"></div>
+<div class="book-body">
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <a class="nav-item" href="#cover">Cover</a>
+  <a class="nav-item nav-both" href="#s1">§1 · Basic Profile</a>
+  <a class="nav-item nav-yu" href="#s2">§2 · Yuni</a>
+  <a class="nav-item nav-li" href="#s3">§3 · Riku</a>
+  <a class="nav-item" href="#s4">§4 · Dual-Persona Mechanics</a>
+  <a class="nav-item" href="#s5">§5 · Abilities</a>
+  <a class="nav-item nav-crpt" href="#s6">§6 · Corruption Resonance</a>
+  <a class="nav-item" href="#s7">§7 · Behavioral Details</a>
+  <a class="nav-item" href="#s8">§8 · Inner State</a>
+  <a class="nav-item" href="#s9">§9 · Relations with the World</a>
+  <a class="nav-item nav-warn" href="#s10">§10 · Open Questions</a>
+</nav>
+
+
+<!-- ═══════ COVER ═══════ -->
+<div class="cover" id="cover">
+  <div class="cover-bar">
+    <div class="cb-left">Author's Internal File · Character Reference · Internal Use Only</div>
+    <div class="cb-right">Not for Publication · Creative Use Only</div>
+  </div>
+  <div class="cover-main">
+    <div class="cover-eyebrow">Primary Character File · Corruption</div>
+    <div class="cover-name">
+      <span class="name-li">Riku</span> <span class="name-yu">Yuni</span>
+    </div>
+    <div class="cover-pinyin">Riku Yuni</div>
+    <div class="cover-rule"></div>
+    <div class="cover-desc">
+      His name is made of two personas held together.<br>
+      To the outside world, he is one person; within, he is two.<br>
+      This is not a fracture, but a rare kind of coexistence.<br>
+      He lives in the Old Ward, restoring the things other people cannot let go of,<br>
+      and carries within his own body a fragment he still hasn't fully understood.
+    </div>
+    <div class="cover-tags">
+      <span class="c-tag">Sealed-Object Restorer</span>
+      <span class="c-tag t-yu">Yuni · Feminine Persona</span>
+      <span class="c-tag t-li">Riku · Masculine Persona</span>
+      <span class="c-tag t-crpt">Corruption Resonance Carrier</span>
+      <span class="c-tag">Dual Perception · High Mental Load</span>
+      <span class="c-tag">Lives Alone, Old Ward</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §1 · BASIC PROFILE ═══════ -->
+<div class="section" id="s1" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 1 · Basic Profile</div>
+    <div class="sec-flag both">Shared by Both Personas</div>
+  </div>
+  <div class="sec-num">Chapter One</div>
+  <div class="sec-title">Basic Profile</div>
+  <div class="sec-title-en">Core Identity & Situation</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <div class="shared-bar" style="border:1px solid var(--line-strong); border-top:1px solid var(--line-strong);">
+    <div class="sb-label">Basic Information</div>
+    <div class="sb-item">
+      <div class="sb-key">Public Name</div>
+      <div class="sb-val">Riku Yuni. Most clients don't know his real name and refer to him by an alias.</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">Internal Names</div>
+      <div class="sb-val">Used only between the two personas themselves: Yuni (feminine persona) / Riku (masculine persona)</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">Biological Sex</div>
+      <div class="sb-val">Male</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">Occupation</div>
+      <div class="sb-val">Sealed-object restorer / anomalous-relic appraiser (independent, commission-based)</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">Residence</div>
+      <div class="sb-val">The edge of the Old Ward. Lives alone. The workshop is in the basement; the ground floor has almost no space set aside for visitors.</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">Special Note</div>
+      <div class="sb-val">Carries a Corruption resonance (caused by a childhood accident, see §6)</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;"></div>
+
+  <p class="b">Riku Yuni's public persona is a single, unified one — a quiet, professional restorer who doesn't let people get close easily. Most of his clients meet him only once: they collect the object he's fixed, leave behind a modest sum, and never make contact again.</p>
+
+  <p class="b">He's usually called the "Seal-Smith" or "the Silent Monk of Objects." Only a handful of regulars know his name is Riku Yuni — and none of them know what that name actually means on the inside.</p>
+
+  <div class="ann-block">
+    <div class="ann-text">
+      Writing note: the outside world only ever sees "Riku Yuni" as a single whole. The two personas' individual names are internal worldbuilding details and generally shouldn't come up in the narrative, except in scenes involving their internal dialogue or a shared mindscape.
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §2 · YUNI ═══════ -->
+<div class="section" id="s2" data-accent="yu">
+  <div class="sec-top">
+    <div class="sec-code">§ 2 · Persona — Yuni</div>
+    <div class="sec-flag yu">Yuni · Feminine Persona</div>
+  </div>
+  <div class="sec-num">Chapter Two</div>
+  <div class="sec-title" style="color:var(--yu);">Yuni</div>
+  <div class="sec-title-en">The Feminine Persona — Observer, Analyst</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">Of the two personas, Yuni is the one more oriented toward perception. She isn't necessarily "quieter," but she's more inclined to observe and understand first, and only then decide whether it's worth speaking.</p>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 2.1 · Core Personality</div>
+      <div class="eh-title">Core Personality</div>
+    </div>
+    <div class="entry-body">
+      <p>· <strong>Observer's instinct</strong> — She's in the habit of watching a thing through to the end before speaking. This isn't hesitation; it's a natural aversion to "incomplete judgment."</p>
+      <p>· <strong>Precise but restrained</strong> — She talks less than Riku, but every time she speaks, it carries weight. She doesn't waste words, and occasionally a single sentence from her will leave the other person quiet for a long time.</p>
+      <p>· <strong>Emotionally reserved</strong> — She has feelings, but rarely expresses them outright. She tends to respond through action or silence rather than words.</p>
+      <p>· <strong>More attuned to sealed objects</strong> — When handling sealed objects, Yuni is more likely to pick up on the "emotional layer" within the resonance — especially signals of sorrow or obsession.</p>
+      <div class="entry-note">She isn't cold. She simply keeps most of what she feels on the inside, and doesn't see the need for anyone else to know.</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 2.2 · Sensory Experience</div>
+      <div class="eh-title">Sensory Traits</div>
+    </div>
+    <div class="entry-body">
+      <p>When Yuni is in the lead perceptually, her intake of the outside world is closer to "full-spectrum reception" — strong at picking up detail, but also more prone to discomfort in noisy environments.</p>
+      <p>With sealed-object resonance, she can sense a layer that Riku cannot — not just knowing that an object carries a resonance, but actually feeling the "texture" of the emotion, the temperature it had at the time.</p>
+      <div class="entry-note">This ability makes her extremely valuable in restoration work, but it's also one of the reasons she tires more easily.</div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">Sample Scene · The Atmosphere When Yuni Leads</div>
+    <p>She rested her hand on the ring and didn't move. A long silence passed.<br>
+    Riku waited behind her, without asking.<br>
+    "It's looking for a place," she said at last. "Not anywhere specific. Just… somewhere to stop."<br>
+    Riku was quiet for a moment. "Can we help it, then?"<br>
+    "Maybe. Let's take a look first."</p>
+  </div>
+</div>
+
+
+<!-- ═══════ §3 · RIKU ═══════ -->
+<div class="section" id="s3" data-accent="li">
+  <div class="sec-top">
+    <div class="sec-code">§ 3 · Persona — Riku</div>
+    <div class="sec-flag li">Riku · Masculine Persona</div>
+  </div>
+  <div class="sec-num">Chapter Three</div>
+  <div class="sec-title" style="color:var(--li);">Riku</div>
+  <div class="sec-title-en">The Masculine Persona — Executor, Analyst</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">Of the two personas, Riku is the one more oriented toward action. He isn't reckless, but he's more inclined to "get started and figure it out as he goes" rather than wait until he fully understands before moving.</p>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 3.1 · Core Personality</div>
+      <div class="eh-title">Core Personality</div>
+    </div>
+    <div class="entry-body">
+      <p>· <strong>Executor's instinct</strong> — Faced with a problem, he tends to build "just enough understanding" and then start working. He won't just sit there because he hasn't fully thought it through yet.</p>
+      <p>· <strong>Direct</strong> — He talks more than Yuni, and more bluntly. Sometimes he's already speaking while Yuni is still observing. She'll occasionally rein him in gently, internally.</p>
+      <p>· <strong>More outwardly curious</strong> — He has a strong drive to understand "how exactly this thing works." Part of why he studies sealed objects is simply that he finds it fun.</p>
+      <p>· <strong>More structurally attuned to sealed objects</strong> — When he handles sealed objects, he's more likely to read the "incantation layer" and "structural layer," which suits him well for judging a sealed object's mechanism and danger level.</p>
+      <div class="entry-note">Riku isn't reckless — he's just more willing to accept the logic of "step in first, ask questions later." That's an advantage in restoration work, but occasionally a risk when facing a dangerous sealed object.</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 3.2 · Sensory Experience</div>
+      <div class="eh-title">Sensory Traits</div>
+    </div>
+    <div class="entry-body">
+      <p>When Riku is in the lead perceptually, his intake of the outside world is more directional — he instinctively filters out "irrelevant" information and focuses on the core of whatever task is at hand.</p>
+      <p>This makes him more efficient when handling complex sealed objects, but it also means he sometimes overlooks side details — and those side details are occasionally exactly what Yuni catches.</p>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">Sample Scene · The Atmosphere When Riku Leads</div>
+    <p>He flipped the sealed object over and ran a finger along the edge.<br>
+    "Here," he said. "This bit of incantation was added later — and whoever added it wasn't paying attention."<br>
+    From behind, Yuni asked: what happened to that person?<br>
+    "No idea. Doesn't matter — let's strip this part out first."<br>
+    Yuni said nothing more, but she made a note of it.</p>
+  </div>
+</div>
+
+
+<!-- ═══════ §4 · DUAL-PERSONA MECHANICS ═══════ -->
+<div class="section" id="s4" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 4 · Dual Persona Mechanics</div>
+    <div class="sec-flag both">Shared by Both Personas</div>
+  </div>
+  <div class="sec-num">Chapter Four</div>
+  <div class="sec-title">Dual-Persona Mechanics</div>
+  <div class="sec-title-en">How Yuni and Riku Coexist</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">Yuni and Riku don't coexist by taking turns with the body — theirs is a genuine, parallel existence. They can be online at the same time, switch which of them leads freely, and even during an "incomplete switch," each can independently handle a different channel of perception or behavior.</p>
+
+  <p class="b">But parallel existence doesn't mean they're always in step. On core judgment calls — whether to take on a dangerous commission, whether to trust someone, whether to touch a particular sealed object — the two personas can disagree sharply. This isn't friction from complementary personalities; it's real opposition, and sometimes it can't be quickly resolved.</p>
+
+  <p class="b"><strong>External signs of conflict:</strong> when disagreement crosses a certain threshold, something like "left hand fighting right hand" can occur — one hand doing something, the other doing the opposite; walking up to a door and stopping, then repeating the approach twice; switching tone mid-sentence, as if two people were taking turns speaking. This isn't the norm, but it can happen under high pressure.</p>
+
+  <p class="b"><strong>"Ceding" control of the body:</strong> in situations that call for quick action or a direct decision, Yuni will often "temporarily hand the body over" to Riku — she recedes to the perceptual layer, stops issuing action commands, and lets Riku take full control. From the outside, Riku Yuni will seem to "change": speaking faster, acting more directly, hesitating less. In situations that call for delicate perception, Riku will likewise cede control to Yuni.</p>
+
+  <p class="b"><strong>Riku's more outward-facing temperament:</strong> Riku's way of speaking is more direct and casual than Yuni's. He'll talk to himself in the workshop, addressing his tools or a sealed object; he walks faster on the street and looks straight ahead; he'll occasionally strike up a conversation with a stranger (while Yuni rolls her eyes internally). He has a dry sense of humor — not meant to make anyone else laugh, but said because he found it funny himself.</p>
+
+  <div class="persona-split">
+    <div class="persona-col col-yu">
+      <div class="pc-head">
+        <div class="pc-name-zh">Yuni</div>
+        <div class="pc-name-en">Perception Lead</div>
+      </div>
+      <div class="pc-item">Emotional layer · resonance perception</div>
+      <div class="pc-item">Detail capture · full-spectrum perception</div>
+      <div class="pc-item">Observation first · judgment after</div>
+      <div class="pc-item">Restrained speech · precise expression</div>
+      <span class="pc-tag">Perception · Emotional Layer</span>
+    </div>
+    <div class="persona-col col-li">
+      <div class="pc-head">
+        <div class="pc-name-zh">Riku</div>
+        <div class="pc-name-en">Execution Lead</div>
+      </div>
+      <div class="pc-item">Incantation layer · structural perception</div>
+      <div class="pc-item">Directional focus · filters out noise</div>
+      <div class="pc-item">Action first · thinks while doing</div>
+      <div class="pc-item">Direct speech · occasionally reined in</div>
+      <span class="pc-tag">Execution · Structural Layer</span>
+    </div>
+  </div>
+
+  <div class="shared-bar">
+    <div class="sb-label">Traits Shared by Both Personas</div>
+    <div class="sb-item">
+      <div class="sb-key">No contest</div>
+      <div class="sb-val">They never fight for control of the body. Switching happens naturally, without conflict or internal drain.</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">Mental communication</div>
+      <div class="sb-val">They can hold internal conversations without any external speech. This is used heavily, daily.</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">Incomplete switching</div>
+      <div class="sb-val">Both personas can run at once — one leading speech, the other leading perception, both running in parallel. This is their most common working state.</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">Mental load</div>
+      <div class="sb-val">Running both personas at high intensity simultaneously greatly increases mental exhaustion. Sustaining it for a long time leads to severe accumulated fatigue.</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-key">No concept of loneliness</div>
+      <div class="sb-val">Since neither has ever been alone, neither truly understands the weight of the word "loneliness." Yuni once tried to "pretend to be lonely" and failed; Riku has zero interest in the question.</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 4.1 · Fatigue Dynamics</div>
+      <div class="eh-title">Fatigue Mechanics</div>
+    </div>
+    <div class="entry-body">
+      <p>The dual-persona structure has a special compensatory ability in terms of stamina: when one persona enters a fatigued state, the other can take over and maintain the capacity to act. Under normal circumstances the two personas don't compete for control of the body, but conflict remains a real possibility — under high pressure or high-stakes disagreement, this compensatory mechanism can actually increase the tension between them.</p>
+      <p>However, this is not true "rest." The persona taking over is also expending mental resources; the overall fatigue keeps accumulating — its perception is simply delayed.</p>
+      <p>The result is: <strong>Riku Yuni can sustain a longer stretch of action within a single event than an ordinary person, but the overall fatigue debt is harder to notice and harder to settle in time.</strong></p>
+      <div class="entry-note">He sometimes becomes suddenly, extremely exhausted with little visible warning, which can confuse the people around him. He himself has grown used to it, but still can't always accurately predict when it will hit.</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 4.2 · External Presentation</div>
+      <div class="eh-title">How He Presents Externally</div>
+    </div>
+    <div class="entry-body">
+      <p>Because the two personas run in parallel so frequently, Riku Yuni carries, to outside observers, a <strong>hard-to-define layered quality</strong>: sometimes his way of speaking is restrained and precise; sometimes he suddenly becomes more direct and driven; and sometimes both styles surface within the same sentence.</p>
+      <p>People unfamiliar with dual-persona phenomena usually don't realize what this is — they just feel this person is "a bit strange," or "feels like two people," without being able to pin down exactly what's off.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §5 · ABILITIES ═══════ -->
+<div class="section" id="s5" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 5 · Abilities</div>
+    <div class="sec-flag neutral">Professional & Innate Abilities</div>
+  </div>
+  <div class="sec-num">Chapter Five</div>
+  <div class="sec-title">Abilities</div>
+  <div class="sec-title-en">Professional Skills & Innate Abilities</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <table class="ability-table">
+    <thead>
+      <tr>
+        <th>Ability</th>
+        <th>Nature</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="a-name">Seal Restoration</td>
+        <td><span class="a-tag both">Professional Skill</span></td>
+        <td>His core professional ability. Repairs, rebuilds, or stabilizes the decaying sealing structure of a sealed object. Draws on Word Arts, Alchemy, and Soul Arts together. Extremely high precision.</td>
+      </tr>
+      <tr>
+        <td class="a-name">Anomalous Relic Appraisal</td>
+        <td><span class="a-tag both">Professional Skill</span></td>
+        <td>Judging a sealed object's grade, nature, danger pattern, and resonance type. Riku leads on reading the incantation structure, Yuni leads on reading the emotional resonance; the two working together are markedly more efficient than any single caster.</td>
+      </tr>
+      <tr>
+        <td class="a-name">Spiritual Resonance Handling</td>
+        <td><span class="a-tag both">Professional Skill</span></td>
+        <td>Performs "resonance dissolution" or "resonance isolation" on sealed objects carrying soul residue. High mental load; requires a long recovery period afterward.</td>
+      </tr>
+      <tr>
+        <td class="a-name">Dual Sensory Reception</td>
+        <td><span class="a-tag crpt">Special Ability</span></td>
+        <td>Touch, pain, and mana-fluctuation perception all show a dual-reception phenomenon. His perception of sealed objects is stronger and more nuanced, but the risk of sensory overload is also higher.</td>
+      </tr>
+      <tr>
+        <td class="a-name">Soul Arts (Intermediate)</td>
+        <td><span class="a-tag yu">Yuni-Led</span></td>
+        <td>Yuni is naturally suited to the Soul Arts school. Capable of mental communication, emotional perception, and shallow resonance reading. Her core perceptual tool in restoration work.</td>
+      </tr>
+      <tr>
+        <td class="a-name">Word Arts (Advanced)</td>
+        <td><span class="a-tag li">Riku-Led</span></td>
+        <td>Riku excels at incantation-structure analysis and seal construction. Familiar with a large body of sealed-object-related incantation systems; his core tool for appraisal work.</td>
+      </tr>
+      <tr>
+        <td class="a-name">Alchemy (Practical Level)</td>
+        <td><span class="a-tag both">Shared by Both Personas</span></td>
+        <td>Alchemical operations aimed at restoration and sealing. The basement workshop is stocked with a standard kit of sealing materials and tools.</td>
+      </tr>
+      <tr>
+        <td class="a-name">Corruption Resonance Perception</td>
+        <td><span class="a-tag crpt">Passive / Anomalous Passive</span></td>
+        <td>Because he carries a resonance within him, he can sense the presence of Corruption at extremely close range — but cannot reliably identify the source. He occasionally mistakes a strong sealed-object resonance for a similar signal. (See §6.)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="ann-block">
+    <div class="ann-text">
+      Writing note: Riku Yuni's strength lies in "perceiving and understanding," not "confronting and destroying." He can read a sealed object more accurately than almost anyone — but if a scene calls for him to face a threat head-on, that isn't his strength. His more likely response is to observe first, look for a structural weakness, rather than charge straight in.
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §6 · CORRUPTION RESONANCE ═══════ -->
+<div class="section" id="s6" data-accent="crpt">
+  <div class="sec-top">
+    <div class="sec-code">§ 6 · Corruption Resonance</div>
+    <div class="sec-flag crpt">Core Setting · Author's Internal Note</div>
+  </div>
+  <div class="sec-num">Chapter Six</div>
+  <div class="sec-title">Corruption Resonance</div>
+  <div class="sec-title-en">The Resonance Within — Origin & Implications</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <div class="crpt-block">
+    <div class="crpt-head">
+      <div class="ch-label">Origin Incident</div>
+      <div class="ch-badge">Author's Internal Setting</div>
+    </div>
+    <div class="crpt-body">
+      <p>As a child, out of intense curiosity about sealed objects, Riku Yuni accidentally came into contact with a sealed object whose grade far exceeded what he could handle at the time. That object carried a <strong>Corruption trace</strong> — not a complete Corruption individual, but a fragment-level residue of consciousness left behind after some past erosion event.</p>
+      <p>During the contact, part of the residue's structure seeped into Riku Yuni's mental layer, forming a <strong>permanent Corruption resonance</strong>. This is not being eroded by Corruption, nor is it a precursor to becoming a host — it's something closer to a "mark." The resonance exists within his mental structure, but has no consciousness, no initiative of its own, and will not actively expand.</p>
+      <p>The incident was never recorded by the Church (no one was present at the time), and it has never been systematically diagnosed. Riku Yuni himself is aware the resonance exists, but doesn't fully understand its exact nature or origin.</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 6.1 · Effect on Corruption Perception</div>
+      <div class="eh-title">Effect on Corruption's Ability to Identify Him</div>
+    </div>
+    <div class="entry-body">
+      <p>Because of the Corruption resonance he carries, Riku Yuni's mental structure gives off a particular signal to Corruption — something like "resonating at the same frequency."</p>
+      <p>To an actual Corruption individual, this signal is exceedingly rare, and it causes confusion in identification: <strong>it cannot immediately determine whether Riku Yuni is human, or some special kind of its own kind.</strong></p>
+      <p>This is why a certain Corruption individual has developed a particular fixation on Riku Yuni — <strong>not because it has marked him as prey, but because it's confused.</strong> That signal keeps drawing it closer, trying to work out exactly what this being is.</p>
+      <div class="entry-note">This is currently the only known case of "a Corruption individual actively directing sustained attention at a specific human," and the root cause isn't that Riku Yuni has some special value — it's that the resonance inside him is throwing off Corruption's identification mechanism.</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 6.2 · Effect on Riku Yuni's Abilities</div>
+      <div class="eh-title">Effect on His Own Abilities</div>
+    </div>
+    <div class="entry-body">
+      <p>The resonance's presence gives Riku Yuni's Soul Arts perception a boost in certain specific situations — especially when handling sealed objects connected to Corruption. He can read information layers that an ordinary restorer simply cannot reach.</p>
+      <p>At the same time, though, this also means his mental structure is more open to interference from Corruption, and less defended against it. This is a risk he is only vaguely, not fully, aware of.</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 6.3 · What Riku Yuni Knows</div>
+      <div class="eh-title">How Much He Himself Understands</div>
+    </div>
+    <div class="entry-body">
+      <p>Riku Yuni knows there is "something abnormal" inside him — he can feel it resonate when he handles certain sealed objects. But he has never been able to accurately identify what it is.</p>
+      <p>He tends to understand it as "some kind of perceptual quirk left over from a childhood accident," rather than "a Corruption resonance," because he has never had a complete framework of knowledge that would let him make that diagnosis.</p>
+      <p>His attitude toward it is closer to "something he's grown used to living with" than "a problem to be solved" — it's always been there, and it hasn't turned him into anything else, so he's chosen to coexist with it.</p>
+      <div class="entry-note">This "having grown used to it" is itself a potential point of narrative tension: what will he think, the day he truly understands what this thing is?</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §7 · BEHAVIORAL DETAILS ═══════ -->
+<div class="section" id="s7" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 7 · Behavioral Details</div>
+    <div class="sec-flag both">Shared Presentation</div>
+  </div>
+  <div class="sec-num">Chapter Seven</div>
+  <div class="sec-title">Behavioral Details</div>
+  <div class="sec-title-en">How He Acts in the World</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">The following are behavior patterns for writing reference — not personality labels, but details of what he'd actually do day to day.</p>
+
+  <div class="behavior-grid">
+    <div class="bv-card">
+      <div class="bv-label">Crowds & Social Contact</div>
+      <div class="bv-title">Actively avoids dense contact</div>
+      <div class="bv-desc">Dual perception means he bears a higher sensory load in crowds. He walks along the edges, unconsciously speeds up in crowded places, and dislikes being approached from behind. It isn't social anxiety — it's an instinctive avoidance of sensory overload.</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">Physical Contact</div>
+      <div class="bv-title">Instinctive flinching</div>
+      <div class="bv-desc">He has an instinctive flinch response to sudden physical contact. His sense of pain runs stronger than it appears — when hurt, he feels more pain than he shows, but he's usually already learned to manage that reaction.</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">Work Mode</div>
+      <div class="bv-title">Extremely focused, hard to interrupt</div>
+      <div class="bv-desc">Once he's in work mode, the outside world all but disappears for him. Calling his name may take three tries. He's not ignoring anyone — he's simply completely inside it.</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">Attitude Toward Sealed Objects</div>
+      <div class="bv-title">Listen first, act after</div>
+      <div class="bv-desc">On encountering a new sealed object, he'll usually do nothing at first, just let himself sense it for a while — sometimes several minutes. This isn't hesitation; he's "listening."</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">Signs of Fatigue</div>
+      <div class="bv-title">Quiet and still</div>
+      <div class="bv-desc">When deeply exhausted, he'll sit down wherever's nearest and do nothing, just stare into space. It doesn't necessarily look severe, but internally, both personas have gone quiet. It's the closest he gets to "powering down."</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">Speech Habits</div>
+      <div class="bv-title">Says little, but accurately</div>
+      <div class="bv-desc">He doesn't waste words, and doesn't explain every judgment he makes. If he says "there's something wrong with this," there usually is — even if, at the time, he can't say exactly where the problem lies. His instinctive read can be trusted.</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">Curiosity</div>
+      <div class="bv-title">The stranger, the more interested</div>
+      <div class="bv-desc">He has a personal interest in "unusual things" that goes beyond professional necessity. The harder a sealed object is to explain, the more he wants to understand it. This trait is more visible in Riku, but Yuni shares it too, just expressed more quietly.</div>
+    </div>
+    <div class="bv-card">
+      <div class="bv-label">Home Life</div>
+      <div class="bv-title">A homebody, but not disorganized</div>
+      <div class="bv-desc">The workshop is kept functionally tidy — every tool has a fixed place, because disorder would get in the way of work. The living area on the ground floor is a different story: not deliberately arranged, but not quite "messy" either — just "not something he pays much mind to."</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §8 · INNER STATE ═══════ -->
+<div class="section" id="s8" data-accent="both">
+  <div class="sec-top">
+    <div class="sec-code">§ 8 · Inner State</div>
+    <div class="sec-flag neutral">Inner State</div>
+  </div>
+  <div class="sec-num">Chapter Eight</div>
+  <div class="sec-title">Inner State</div>
+  <div class="sec-title-en">What It's Like to Be Riku Yuni</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <div class="pq">
+    <div class="pq-text">His pain is not the main theme.<br>His daily life is not a constant struggle.<br>He simply lives in a very particular way,<br>and has, by and large, come to accept it.</div>
+    <span class="pq-attr">— Character Tone Note</span>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 8.1 · Relationship with the Dual State</div>
+      <div class="eh-title">His Relationship with the Dual-Persona State</div>
+    </div>
+    <div class="entry-body">
+      <p>There's no ongoing conflict between Yuni and Riku, but on key judgment calls, real disagreement can arise. They are two genuinely distinct persons, each with their own preferences and judgments; on core questions they can sometimes find themselves in real opposition, not just a difference of opinion.</p>
+      <p>They typically resolve disagreements through internal dialogue — quick, brief, and sometimes without needing a conclusion at all, simply each knowing what the other thinks. Most of the time they find an approach both can accept. When they can't, they can't. Silence is also a way of dealing with it.</p>
+      <p><strong>This coexistent state is, to Riku Yuni, simply "normal."</strong> He has never lived any other way, so he has no frame of reference to call it "abnormal." It's just his mode of existence — friction and the occasional standoff included.</p>
+      <div class="entry-note">The one thing that occasionally gives him pause is this: when the outside world describes "a person," it defaults to that person being singular. He isn't always sure that default applies to him.</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 8.2 · Relationship with Anomaly</div>
+      <div class="eh-title">His Relationship with "Anomaly"</div>
+    </div>
+    <div class="entry-body">
+      <p>Riku Yuni has been around sealed objects since childhood, sensing things "outside the normal framework" from an early age. In his world, "anomaly" isn't a terrifying exception — it's simply another kind of normal.</p>
+      <p>This means that, faced with something strange, his first reaction usually isn't fear or rejection, but <strong>curiosity</strong>, followed by a <strong>desire to understand</strong>. He can't simply walk away, indifferent, from something odd — he'll want to know what it is, and why it's the way it is.</p>
+      <p>This curiosity is the real reason he became a restorer — not just for the money.</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 8.3 · Core Emotional Texture</div>
+      <div class="eh-title">Core Emotional Texture</div>
+    </div>
+    <div class="entry-body">
+      <p>· <strong>He isn't happy, but he isn't suffering, either.</strong> His baseline emotional state is closer to "steady calm" — occasionally moved by something, but not easily trapped for long.</p>
+      <p>· <strong>He's wary, but doesn't distrust everyone.</strong> He just needs more time to build trust, because he can perceive more of "the person" than most people can — sometimes even the layer someone hasn't put into words.</p>
+      <p>· <strong>He has a particular sensitivity to "endings."</strong> Restoring sealed objects is, at its core, work spent handling things that "couldn't be let go of" — he has a deeper understanding of this than most people, which is why he sometimes goes quiet for a long time after finishing a restoration. Not out of sadness — just taking in the weight of it.</p>
+      <div class="entry-note">He doesn't need to be understood, but every so often, he'd like someone nearby who says nothing, and just is.</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 8.4 · Relationship with Loneliness</div>
+      <div class="eh-title">His Relationship with Loneliness</div>
+    </div>
+    <div class="entry-body">
+      <p>Riku Yuni has had two personas existing side by side since birth, and has never truly experienced being "alone." Because of this, his understanding of "loneliness" has always remained on the level of knowledge, never of felt experience.</p>
+      <p>· <strong>He cannot understand loneliness as a lived emotion.</strong> When someone says "I feel so lonely," he can, on a knowledge level, understand what the word means — but he can't resonate with it on a felt level. He knows it's supposed to be a kind of suffering, but to him it's like a color described only in theory — namable, but never seen.</p>
+      <p>· <strong>He once tried "pretending to be lonely."</strong> He deliberately kept Riku from speaking, tried to act as if Riku didn't exist, attempting to enter a state of "being just one person." Each attempt lasted about three minutes before he gave up — not because he couldn't do it, but because he had no frame of reference to confirm what "being just one person" was supposed to feel like. He never knew what he was "supposed" to feel in those three minutes.</p>
+      <p>· <strong>He holds a spectator's curiosity about "loneliness."</strong> What does it actually feel like? Can a person really suffer just from no one else being present? He'll occasionally watch people who are alone — someone sitting on a bench, someone staring out a window — trying to understand it from the outside. He watches carefully, but he also knows this may be something he can never understand, because what he's missing isn't information, but a point of comparison.</p>
+      <div class="entry-note">Riku has zero interest in the question. His response is: "So there's no one else around. And then what?"</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ §9 · RELATIONS WITH THE WORLD ═══════ -->
+<div class="section" id="s9" data-accent="li">
+  <div class="sec-top">
+    <div class="sec-code">§ 9 · Relations with the World</div>
+    <div class="sec-flag neutral">External Relations</div>
+  </div>
+  <div class="sec-num">Chapter Nine</div>
+  <div class="sec-title">Relations with the World</div>
+  <div class="sec-title-en">How Riku Yuni Exists in the World Around Him</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 9.1 · With the Church</div>
+      <div class="eh-title">With the Church</div>
+    </div>
+    <div class="entry-body">
+      <p>Riku Yuni doesn't belong to the Church and isn't under its jurisdiction — he's an independent, commission-based restorer operating at the edge of the official system. The Church knows he exists, but has so far chosen to "tolerate" rather than actively manage him, since a fair portion of the sealed objects he handles are of a type the Church would rather not deal with publicly.</p>
+      <p>His attitude toward the Church is one of <strong>deliberate distance</strong>: he knows the Church holds a great deal he doesn't know, and he knows it will never tell him. He accepts this reality, but it doesn't mean he trusts the Church.</p>
+      <div class="entry-note">If the Church ever needed him to do something, he would ask "why" first, rather than simply agreeing.</div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 9.2 · With Clients</div>
+      <div class="eh-title">With Clients</div>
+    </div>
+    <div class="entry-body">
+      <p>His relationships with clients are extremely shallow — most people come once, collect what he's fixed, and disappear. He doesn't maintain contact on his own, and most clients wouldn't know how to establish a longer connection with him anyway.</p>
+      <p>There are occasional exceptions: certain clients, because they've brought him something that genuinely interests him, get asked a few extra questions — which, for him, already counts as a considerable degree of active engagement.</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <div class="eh-code">§ 9.3 · With Sealed Objects</div>
+      <div class="eh-title">With Sealed Objects</div>
+    </div>
+    <div class="entry-body">
+      <p>This is his truest, deepest, longest-running "relationship." His basement holds years' worth of accumulated sealed objects — some left behind after a commission was completed for further study, some he sought out himself.</p>
+      <p>His attitude toward sealed objects isn't that of "tools" — it's closer to <strong>"things that need to be understood."</strong> He'll sit beside a sealed object for hours, doing nothing, just sensing it. This isn't inefficiency — it's his way of understanding them.</p>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">Sample Scene · His Everyday Distance from the World</div>
+    <p>Sometimes, late at night, he goes up to the ground floor and sits by the window, listening to the rain.<br>
+    The sounds of the city feel far away from him — lights, voices, the noise of the market closing up for the night.<br>
+    He doesn't feel lonely, and he doesn't feel not-lonely.<br>
+    He's simply there, both of him, and after a while, he goes back down to keep working.</p>
+  </div>
+</div>
+
+
+<!-- ═══════ §10 · OPEN QUESTIONS ═══════ -->
+<div class="section" id="s10" data-accent="warn">
+  <div class="sec-top">
+    <div class="sec-code">§ 10 · Open Questions</div>
+    <div class="sec-flag" style="background:var(--warn);">Open Questions</div>
+  </div>
+  <div class="sec-num">Chapter Ten</div>
+  <div class="sec-title">Open Questions</div>
+  <div class="sec-title-en">What Remains Unknown — Even to the Author</div>
+
+  <div style="margin-top:24px;"></div>
+
+  <p class="b">The following are core narrative threads about Riku Yuni that currently have no definitive answer, kept here as reference for future writing.</p>
+
+  <div class="mystery-item">
+    <div class="my-num">Q1</div>
+    <div class="my-body">
+      <div class="my-q">What exactly was that sealed object?</div>
+      <div class="my-desc">The heart of the childhood incident. The sealed object that left the Corruption resonance inside him — how did it end up in circulation among ordinary people? What is its own origin? Does it still exist? Might he encounter it again someday, and learn more about the resonance from it?</div>
+    </div>
+  </div>
+
+  <div class="mystery-item">
+    <div class="my-num">Q2</div>
+    <div class="my-body">
+      <div class="my-q">Will that Corruption ever figure out what he is?</div>
+      <div class="my-desc">The Corruption individual whose attention was drawn to him by the misidentification — as it keeps approaching him, how will its understanding of Riku Yuni evolve? When it finally realizes he's human rather than one of its own kind, what will it do? Lose interest — or form something more complicated?</div>
+    </div>
+  </div>
+
+  <div class="mystery-item">
+    <div class="my-num">Q3</div>
+    <div class="my-body">
+      <div class="my-q">Will the resonance always just be a resonance?</div>
+      <div class="my-desc">The current setting holds that the resonance has no consciousness, no initiative, and won't expand. But "currently" is the key word. As Riku Yuni continues to come into contact with high-grade sealed objects and Corruption-related relics, might the resonance's state change? This remains an open narrative possibility.</div>
+    </div>
+  </div>
+
+  <div class="mystery-item">
+    <div class="my-num">Q4</div>
+    <div class="my-body">
+      <div class="my-q">The origin of the dual personas</div>
+      <div class="my-desc">The current setting offers no explanation for why Riku Yuni was born with two personas from the start. This can remain a mystery, or be explained partway through the narrative. If there is an explanation, is it connected to the Corruption resonance — or is it a wholly separate matter?</div>
+    </div>
+  </div>
+
+  <div class="mystery-item">
+    <div class="my-num">Q5</div>
+    <div class="my-body">
+      <div class="my-q">How would Riku Yuni view Corruption's capacity for emotion?</div>
+      <div class="my-desc">The sealed objects he handles every day are "the obsessions left behind by souls that couldn't let go." He understands the weight of "wanting to keep existing" better than almost anyone. If he ever truly comes to understand the origin of Corruption and the question of its emotions, where would he stand? This is the fundamental thing that sets him apart from everyone else.</div>
+    </div>
+  </div>
+
+  <div class="footnotes">
+    <div class="fn-title">Creative Notes</div>
+    <div class="fn-item"><span class="fn-num">·</span><span>None of the above questions need to be fully answered. Preserving the mystery itself is part of the narrative strategy.</span></div>
+    <div class="fn-item"><span class="fn-num">·</span><span>Q5 has the greatest narrative potential of any question here. Riku Yuni's uniqueness lies not in how strong he is, but in how differently he sees things compared to everyone else.</span></div>
+  </div>
+</div>
+
+
+</div><!-- book-body -->
+</div><!-- book -->
+</div><!-- outer -->
+</body>
+</html>
