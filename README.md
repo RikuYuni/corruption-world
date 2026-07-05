@@ -1,7 +1,7 @@
 # Corruption · 世界观入口
 
 这是一个关于灵魂、执念、封印物与日常异常的中世纪风格世界观。
-不是热血冒险，更像在旧书页之间发现了一封没写完的信。
+比起热血冒险，更像在旧书页之间发现了一封没写完的信。
 
 📍 访问入口：https://rikuyuni.github.io/corruption-world/index.html
 
