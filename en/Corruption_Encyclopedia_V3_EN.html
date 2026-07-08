@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corruption · Complete System Reference Rev.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+
+/* ══════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════ */
+:root {
+  /* paper */
+  --bg:        #faf9f6;
+  --surface:   #f4f2ed;
+  --surface-2: #eeece5;
+  --border:    #dbd7cc;
+  --border-s:  #ccc8bb;
+
+  /* ink */
+  --ink-0: #0f0e0b;
+  --ink-1: #2a2820;
+  --ink-2: #4a4840;
+  --ink-3: #7a7870;
+  --ink-4: #aaa89e;
+  --ink-5: #ccc9be;
+
+  /* accent — purple/violet for Corruption */
+  --ac-0: #1e0f2e;
+  --ac-1: #3a1f55;
+  --ac-2: #5c3580;
+  --ac-3: #8a60b0;
+  --ac-4: #c0a0d8;
+  --ac-5: #ede0f8;
+
+  /* fragment A — amber/ochre */
+  --fa-0: #1e1000;
+  --fa-1: #3e2600;
+  --fa-2: #7a5010;
+  --fa-3: #b88030;
+  --fa-4: #ddb860;
+  --fa-5: #f8ecd0;
+
+  /* fragment B — slate/cool */
+  --fb-0: #080e18;
+  --fb-1: #1a2a42;
+  --fb-2: #2e4870;
+  --fb-3: #5878a8;
+  --fb-4: #90aad0;
+  --fb-5: #dce6f4;
+
+  /* warden teal */
+  --warden-1: #0e2828;
+  --warden-2: #1e4848;
+  --warden-3: #3e7878;
+  --warden-4: #8ec8c8;
+  --warden-5: #d8f0f0;
+
+  /* soul — nascent */
+  --nascent-1: #102030;
+  --nascent-2: #1e3a58;
+  --nascent-3: #3868a0;
+  --nascent-4: #80aad8;
+  --nascent-5: #d8eaf8;
+
+  /* highlight bands */
+  --band-ac:  rgba(92,53,128,0.06);
+  --band-fa:  rgba(122,80,16,0.06);
+  --band-fb:  rgba(46,72,112,0.06);
+  --band-w:   rgba(30,72,72,0.06);
+  --band-n:   rgba(30,58,88,0.06);
+
+  /* danger scale */
+  --d-low:    #2e6020;
+  --d-mid:    #806010;
+  --d-high:   #7a1818;
+  --d-eth:    #1e4878;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #e8e4de;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--ink-1);
+  line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════ */
+.shell {
+  max-width: 960px;
+  margin: 0 auto;
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--border), 0 4px 40px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+/* ── STICKY NAV ── */
+.topnav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--ink-0);
+  display: flex; align-items: stretch;
+  overflow-x: auto; scrollbar-width: none;
+  border-bottom: 2px solid var(--ac-1);
+}
+.topnav::-webkit-scrollbar { display: none; }
+
+.tn-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--ink-4); padding: 0 20px;
+  display: flex; align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap; text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.tn-item {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  color: var(--ink-4); padding: 14px 16px;
+  text-decoration: none; white-space: nowrap;
+  display: flex; align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s, color 0.15s;
+  text-transform: uppercase;
+}
+.tn-item:hover { background: rgba(255,255,255,0.06); color: white; }
+.tn-item.new { color: var(--warden-4); }
+
+/* ── MASTHEAD ── */
+.masthead {
+  padding: 72px 80px 64px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: relative;
+}
+
+.mh-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 4px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.mh-kicker::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.mh-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 58px; line-height: 1.0;
+  color: var(--ink-0); margin-bottom: 6px;
+  letter-spacing: -1px;
+}
+
+.mh-title-en {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic; font-size: 22px;
+  color: var(--ink-3); margin-bottom: 36px;
+  letter-spacing: 0;
+}
+
+.mh-desc {
+  font-family: 'Lora', serif;
+  font-size: 15px; color: var(--ink-2);
+  line-height: 1.85; max-width: 560px;
+  margin-bottom: 40px;
+}
+
+.mh-meta {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 0; border: 1px solid var(--border);
+  max-width: 600px;
+}
+.mh-meta-cell {
+  padding: 12px 16px;
+  border-right: 1px solid var(--border);
+}
+.mh-meta-cell:last-child { border-right: none; }
+.mhc-k {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.mhc-v {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--ink-1);
+}
+
+/* ── TOC ── */
+.toc-wrap {
+  padding: 48px 80px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.toc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-4); text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.toc-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px 48px;
+}
+.toc-row {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.tr-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--ink-4);
+  flex-shrink: 0; min-width: 36px;
+}
+.tr-num.new { color: var(--warden-3); }
+.tr-name {
+  font-size: 13px; color: var(--ink-1); flex: 1;
+  font-family: 'Noto Serif SC', serif;
+}
+.tr-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 1px;
+  color: white; padding: 2px 7px;
+  text-transform: uppercase; flex-shrink: 0;
+}
+.badge-new  { background: var(--warden-2); }
+.badge-rev  { background: var(--ac-1); }
+
+/* ══════════════════════════════════════════
+   CHAPTER
+══════════════════════════════════════════ */
+.chapter {
+  padding: 64px 80px;
+  border-bottom: 1px solid var(--border);
+}
+.chapter:nth-child(even) { background: var(--surface); }
+
+/* Chapter top bar */
+.ch-bar {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 36px; padding-bottom: 20px;
+  border-bottom: 2px solid var(--ink-0);
+}
+.ch-bar-l { display: flex; flex-direction: column; gap: 4px; }
+.ch-section-code {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-4); text-transform: uppercase;
+}
+.ch-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px; color: var(--ink-0);
+  line-height: 1.1; letter-spacing: -0.5px;
+}
+.ch-title-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 15px;
+  color: var(--ink-3); margin-top: 2px;
+}
+.ch-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: white; padding: 6px 14px;
+  text-transform: uppercase; flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/* Accent left border */
+.chapter[data-a]::before {
+  display: none; /* We use top-border approach instead */
+}
+
+/* Body text */
+p.body {
+  font-size: 14px; color: var(--ink-1);
+  line-height: 2.0; text-align: justify;
+  margin-bottom: 18px; text-indent: 0;
+}
+p.body:first-of-type { text-indent: 0; }
+p.body strong { color: var(--ink-0); }
+
+/* Section heading within chapter */
+.sub-head {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--ink-0);
+  margin: 32px 0 14px;
+  display: flex; align-items: baseline; gap: 12px;
+}
+.sub-head::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--border);
+}
+
+/* ══════════════════════════════════════════
+   STATEMENT BLOCK — the voice of this doc
+══════════════════════════════════════════ */
+.statement {
+  border-left: 3px solid var(--ink-0);
+  padding: 18px 24px;
+  margin: 22px 0;
+  background: var(--surface);
+}
+.st-text {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 18px; color: var(--ink-0);
+  line-height: 1.65; letter-spacing: 0.1px;
+}
+.st-attr {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--ink-4); margin-top: 10px;
+  display: block; text-transform: uppercase;
+}
+
+/* Accent statement variant */
+.statement.ac {
+  border-left-color: var(--ac-2);
+  background: var(--band-ac);
+}
+.statement.fa { border-left-color: var(--fa-2); background: var(--band-fa); }
+.statement.fb { border-left-color: var(--fb-2); background: var(--band-fb); }
+.statement.w  { border-left-color: var(--warden-2); background: var(--band-w); }
+.statement.n  { border-left-color: var(--nascent-2); background: var(--band-n); }
+
+/* ══════════════════════════════════════════
+   DATA TABLE
+══════════════════════════════════════════ */
+.dtable {
+  width: 100%; border-collapse: collapse;
+  margin: 18px 0; font-size: 13px;
+}
+.dtable thead th {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2.5px;
+  text-transform: uppercase; font-weight: 500;
+  padding: 10px 14px; text-align: left;
+  background: var(--ink-0); color: white;
+}
+.dtable thead th.thac { background: var(--ac-1); }
+.dtable thead th.thfa { background: var(--fa-1); }
+.dtable thead th.thfb { background: var(--fb-1); }
+.dtable thead th.thw  { background: var(--warden-1); }
+.dtable thead th.thn  { background: var(--nascent-1); }
+
+.dtable tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.8;
+  color: var(--ink-1);
+}
+.dtable tbody tr:hover td { background: var(--surface); }
+.dtable .key {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--ink-0);
+  font-weight: normal;
+}
+.dtable .mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--ink-2);
+}
+
+/* ══════════════════════════════════════════
+   FRAGMENT SPLIT — A/B two column
+══════════════════════════════════════════ */
+.frag-split {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; margin: 20px 0;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.frag-col { padding: 24px; }
+.frag-a { background: var(--band-fa); border-right: 1px solid var(--border); }
+.frag-b { background: var(--band-fb); }
+
+.fc-header {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.fc-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: white; padding: 3px 10px;
+  text-transform: uppercase;
+}
+.fc-tag-a { background: var(--fa-2); }
+.fc-tag-b { background: var(--fb-2); }
+.fc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--ink-0);
+}
+.fc-en {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 12px;
+  color: var(--ink-3); display: block; margin-top: 2px;
+}
+.fc-row {
+  display: flex; gap: 10px; margin: 9px 0;
+  font-size: 13px; color: var(--ink-1);
+  line-height: 1.7; align-items: flex-start;
+}
+.fc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--ink-3);
+  flex-shrink: 0; min-width: 60px; padding-top: 2px;
+}
+.fc-val { flex: 1; }
+.fc-evo-row {
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  font-size: 13px; color: var(--ink-1);
+}
+.fc-evo-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.frag-a .fc-evo-label { color: var(--fa-2); }
+.frag-b .fc-evo-label { color: var(--fb-2); }
+
+/* ══════════════════════════════════════════
+   TYPE CARDS
+══════════════════════════════════════════ */
+.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+.type-card { border: 1px solid var(--border); overflow: hidden; }
+.tc-head {
+  padding: 12px 18px;
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.tc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; color: white;
+}
+.tc-alias {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-size: 12px;
+  color: rgba(255,255,255,0.55);
+}
+.tc-body {
+  padding: 12px 18px; font-size: 13px;
+  color: var(--ink-1); line-height: 1.8;
+  background: var(--bg);
+}
+.tc-foot {
+  padding: 8px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.tc-erosion .tc-head { background: #5a1818; }
+.tc-erosion .tc-foot { color: #7a2828; }
+.tc-mimic .tc-head   { background: var(--ac-1); }
+.tc-mimic .tc-foot   { color: var(--ac-2); }
+.tc-dormant .tc-head { background: var(--fa-1); }
+.tc-dormant .tc-foot { color: var(--fa-2); }
+.tc-fission .tc-head { background: #1e3e1e; }
+.tc-fission .tc-foot { color: #2e5e2e; }
+
+/* ══════════════════════════════════════════
+   MATURITY STRIP
+══════════════════════════════════════════ */
+.matstrip { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; margin: 18px 0; border: 1px solid var(--border); overflow: hidden; }
+.mat { padding: 14px; border-right: 1px solid var(--border); }
+.mat:last-child { border-right: none; }
+.mat-lv { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.mat-name { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--ink-0); margin-bottom: 6px; line-height: 1.2; }
+.mat-desc { font-size: 11.5px; color: var(--ink-2); line-height: 1.6; }
+.m0 { } .m0 .mat-lv { color: #2e6020; }
+.m1 { background: var(--surface); } .m1 .mat-lv { color: var(--fa-2); }
+.m2 { } .m2 .mat-lv { color: var(--ac-2); }
+.m3 { background: var(--surface); } .m3 .mat-lv { color: #7a1818; }
+.m4 { border-top: 3px solid #7a1818; } .m4 .mat-lv { color: #7a1818; }
+
+/* ══════════════════════════════════════════
+   STAGE BLOCK — erosion phases
+══════════════════════════════════════════ */
+.stage { display: flex; margin: 14px 0; border: 1px solid var(--border); overflow: hidden; }
+.s-label {
+  width: 80px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 18px 8px; text-align: center;
+  color: white;
+}
+.s-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px; line-height: 1; margin-bottom: 4px;
+}
+.s-word {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px; letter-spacing: 1.5px; text-transform: uppercase;
+}
+.stage-1 .s-label { background: var(--fa-2); }
+.stage-2 .s-label { background: var(--ac-1); }
+.stage-3 .s-label { background: #6a1818; }
+.s-body { flex: 1; padding: 16px 20px; background: var(--bg); }
+.s-name { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--ink-0); margin-bottom: 4px; }
+.s-en { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 12px; color: var(--ink-3); display: block; margin-bottom: 10px; }
+.s-text { font-size: 13px; color: var(--ink-1); line-height: 1.85; }
+.s-tells {
+  margin-top: 10px; padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 12px; color: var(--ink-2); line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════
+   FAIL CARDS
+══════════════════════════════════════════ */
+.fail-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 18px 0; }
+.fail-card { border: 1px solid var(--border); overflow: hidden; }
+.fail-head { background: var(--ink-1); color: white; padding: 10px 16px; font-family: 'DM Serif Display', serif; font-size: 16px; }
+.fail-body { padding: 14px 16px; background: var(--bg); }
+.frow { display: flex; gap: 8px; margin: 6px 0; font-size: 12.5px; color: var(--ink-1); line-height: 1.7; }
+.fl { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-3); flex-shrink: 0; min-width: 44px; padding-top: 2px; }
+
+/* ══════════════════════════════════════════
+   EMOTION TABLE
+══════════════════════════════════════════ */
+.emo-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13px; }
+.emo-table thead th { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; padding: 10px 14px; text-align: left; text-transform: uppercase; font-weight: 500; }
+.emo-table thead .th-s { background: var(--ink-0); color: white; width: 160px; }
+.emo-table thead .th-v { background: var(--ac-1); color: var(--ac-5); }
+.emo-table tbody td { padding: 13px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.8; }
+.emo-table .td-s { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--ink-0); background: var(--surface); }
+.emo-table .td-v { color: var(--ink-1); background: var(--band-ac); }
+
+/* ══════════════════════════════════════════
+   PARADOX BOX
+══════════════════════════════════════════ */
+.paradox {
+  background: var(--ac-0);
+  padding: 28px 32px; margin: 22px 0;
+  position: relative;
+}
+.paradox::before {
+  content: 'PARADOX';
+  position: absolute; top: 16px; right: 20px;
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 3px; color: var(--ac-3); opacity: 0.7;
+  text-transform: uppercase;
+}
+.paradox-text {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic; font-size: 18px;
+  color: var(--ac-5); line-height: 1.65;
+}
+
+/* ══════════════════════════════════════════
+   RESCUER ILLUSION  — teal accent block
+══════════════════════════════════════════ */
+.ri-block {
+  border: 1px solid rgba(62,120,120,0.3);
+  border-top: 3px solid var(--warden-3);
+  margin: 20px 0; overflow: hidden;
+}
+.ri-head {
+  background: var(--warden-2); padding: 14px 22px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ri-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--warden-5); }
+.ri-sub { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--warden-4); text-transform: uppercase; }
+.ri-body { padding: 20px 22px; background: var(--band-w); }
+.ri-body p { font-size: 13.5px; color: var(--ink-1); line-height: 1.9; margin-bottom: 12px; }
+.ri-body p:last-child { margin-bottom: 0; }
+.ri-body strong { color: var(--ink-0); }
+
+.ri-steps { margin: 16px 0; }
+.ri-step { display: flex; gap: 14px; margin: 10px 0; align-items: flex-start; }
+.ri-step-n {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: white; background: var(--warden-3);
+  min-width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.ri-step-b { flex: 1; }
+.ri-step-label { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--warden-3); margin-bottom: 4px; }
+.ri-step-text { font-size: 13px; color: var(--ink-1); line-height: 1.8; }
+
+/* ══════════════════════════════════════════
+   EVOLUTION SPLIT
+══════════════════════════════════════════ */
+.evo-split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; }
+.evo-card { border: 1px solid var(--border); overflow: hidden; }
+.evo-head { padding: 18px 20px; }
+.evo-a .evo-head { background: var(--nascent-1); }
+.evo-b .evo-head { background: var(--warden-1); }
+.evo-path-label { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; color: rgba(255,255,255,0.45); text-transform: uppercase; margin-bottom: 6px; }
+.evo-name { font-family: 'DM Serif Display', serif; font-size: 24px; color: white; line-height: 1.1; }
+.evo-name-en { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 3px; display: block; }
+.evo-body { padding: 18px 20px; background: var(--bg); }
+.evo-section { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.evo-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.evo-sec-label { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.evo-a .evo-sec-label { color: var(--nascent-3); }
+.evo-b .evo-sec-label { color: var(--warden-3); }
+.evo-sec-body { font-size: 13px; color: var(--ink-1); line-height: 1.8; }
+.evo-sec-body .item { display: flex; gap: 8px; margin: 4px 0; align-items: flex-start; }
+.evo-sec-body .item::before { content: '→'; color: var(--ink-4); flex-shrink: 0; font-size: 12px; }
+
+/* ══════════════════════════════════════════
+   COMPARE TABLE
+══════════════════════════════════════════ */
+.cmp { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+.cmp thead th { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; padding: 10px 14px; text-align: left; font-weight: 500; text-transform: uppercase; }
+.cmp thead .thl { background: var(--ink-0); color: white; width: 130px; }
+.cmp thead .tha { background: var(--nascent-1); color: var(--nascent-5); }
+.cmp thead .thb { background: var(--warden-1); color: var(--warden-5); }
+.cmp tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.8; }
+.cmp tbody .tdl { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--ink-0); background: var(--surface); }
+.cmp tbody .tda { background: var(--band-n); color: var(--ink-1); }
+.cmp tbody .tdb { background: var(--band-w); color: var(--ink-1); }
+
+/* ══════════════════════════════════════════
+   DEVIATION CARDS
+══════════════════════════════════════════ */
+.dev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+.dev-card { border: 1px solid var(--border); padding: 18px; background: var(--bg); }
+.dev-tag { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; color: var(--ac-2); text-transform: uppercase; margin-bottom: 6px; }
+.dev-name { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--ink-0); margin-bottom: 8px; }
+.dev-desc { font-size: 13px; color: var(--ink-2); line-height: 1.75; }
+
+/* ══════════════════════════════════════════
+   DANGER ASSESS
+══════════════════════════════════════════ */
+.da-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+.da-table thead th { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2px; padding: 10px 13px; text-align: left; font-weight: 500; text-transform: uppercase; background: var(--warden-1); color: var(--warden-5); }
+.da-table tbody td { padding: 12px 13px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.8; color: var(--ink-1); }
+.da-table .da-k { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--ink-0); width: 140px; }
+.d-low-text  { color: var(--d-low); font-weight: 600; }
+.d-mid-text  { color: var(--d-mid); font-weight: 600; }
+.d-high-text { color: var(--d-high); font-weight: 600; }
+.d-eth-text  { color: var(--d-eth); font-weight: 600; }
+
+/* ══════════════════════════════════════════
+   LIMIT TABLE
+══════════════════════════════════════════ */
+.limit { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13px; }
+.limit thead th { font-family: 'DM Mono', monospace; font-size: 8.5px; letter-spacing: 2.5px; padding: 10px 14px; text-align: left; text-transform: uppercase; font-weight: 500; background: var(--ink-0); color: white; }
+.limit tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.8; color: var(--ink-1); }
+.limit tbody tr:nth-child(even) td { background: var(--surface); }
+.limit .lt-k { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--ink-0); width: 140px; }
+
+/* ══════════════════════════════════════════
+   OTHER VIEWS BOX — the outsider perspective
+══════════════════════════════════════════ */
+.other-views {
+  border: 1px solid var(--border);
+  margin: 24px 0; overflow: hidden;
+}
+.ov-head {
+  background: var(--surface-2); padding: 12px 20px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.ov-icon {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--ink-3);
+  text-transform: uppercase; padding: 3px 10px;
+  border: 1px solid var(--border);
+}
+.ov-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px; color: var(--ink-0);
+}
+.ov-body { padding: 16px 20px; }
+.ov-item { margin: 12px 0; }
+.ov-item-head {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--ink-3);
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.ov-item-text { font-size: 13px; color: var(--ink-2); line-height: 1.8; }
+
+/* ══════════════════════════════════════════
+   NOTE BLOCK
+══════════════════════════════════════════ */
+.note {
+  background: var(--surface); border-left: 3px solid var(--ink-4);
+  padding: 14px 18px; margin: 16px 0;
+}
+.note.ac { border-left-color: var(--ac-2); }
+.note.w  { border-left-color: var(--warden-3); }
+.note-text { font-family: 'Lora', serif; font-style: italic; font-size: 13px; color: var(--ink-2); line-height: 1.85; }
+
+/* ══════════════════════════════════════════
+   READING NOTE — reader's-note block
+══════════════════════════════════════════ */
+.reading-note {
+  padding: 52px 80px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  position: relative;
+}
+.reading-note::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--ac-2) 0px, var(--ac-2) 8px,
+    transparent 8px, transparent 14px
+  );
+}
+.rn-bar {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 28px; padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.rn-bar-l { display: flex; flex-direction: column; gap: 4px; }
+.rn-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--ink-4); text-transform: uppercase;
+}
+.rn-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--ink-0);
+  line-height: 1.2; letter-spacing: -0.3px;
+}
+.rn-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--ac-4); padding: 5px 14px;
+  border: 1px solid var(--ac-2);
+  text-transform: uppercase; flex-shrink: 0;
+  align-self: flex-start; margin-top: 4px;
+  background: var(--band-ac);
+}
+.rn-body {
+  font-family: 'Lora', serif;
+  font-size: 14px; color: var(--ink-1);
+  line-height: 2.05; text-align: justify;
+  border-left: 3px solid var(--ac-2);
+  padding: 16px 24px;
+  background: var(--band-ac);
+  position: relative;
+}
+.rn-body::before {
+  content: 'A Note on Reading';
+  position: absolute; top: -11px; left: 16px;
+  background: var(--surface);
+  padding: 0 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px; letter-spacing: 2px;
+  color: var(--ac-2); text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════
+   HR
+══════════════════════════════════════════ */
+.hr { height: 1px; background: var(--border); margin: 28px 0; }
+
+/* ══════════════════════════════════════════
+   CLOSING
+══════════════════════════════════════════ */
+.closing {
+  background: var(--ink-0); padding: 64px 80px;
+  border-top: 3px solid var(--ac-1);
+}
+.cl-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 4px; color: var(--ink-3); text-transform: uppercase; margin-bottom: 20px; }
+.cl-text { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 22px; color: white; line-height: 1.65; max-width: 560px; margin-bottom: 36px; }
+.cl-text em { color: var(--ac-4); font-style: normal; }
+.cl-index { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 32px; }
+.cl-row { display: flex; align-items: baseline; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.cl-n { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--ink-3); flex-shrink: 0; min-width: 36px; }
+.cl-n.new { color: var(--warden-3); }
+.cl-dots { flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.06); margin: 0 6px 3px; }
+.cl-name { font-size: 12.5px; color: var(--ink-4); }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 680px) {
+  .masthead, .toc-wrap, .chapter, .closing { padding-left: 30px; padding-right: 30px; }
+  .frag-split, .evo-split, .type-grid, .fail-grid, .dev-grid, .matstrip { grid-template-columns: 1fr; }
+  .frag-a { border-right: none; border-bottom: 1px solid var(--border); }
+  .mh-meta, .cl-index, .toc-grid { grid-template-columns: 1fr; }
+  .mh-title { font-size: 44px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── TOPNAV ── -->
+<nav class="topnav">
+  <div class="tn-brand">Corruption · System Reference</div>
+  <a class="tn-item" href="#s1">§1 Fundamentals</a>
+  <a class="tn-item new" href="#s-note">Reading Note</a>
+  <a class="tn-item" href="#s2">§2 Classification</a>
+  <a class="tn-item new" href="#s3">§3 Fragment Origin</a>
+  <a class="tn-item" href="#s4">§4 Erosion</a>
+  <a class="tn-item" href="#s5">§5 Mimicry</a>
+  <a class="tn-item" href="#s6">§6 Emotion</a>
+  <a class="tn-item new" href="#s7">§7 Rescuer Illusion</a>
+  <a class="tn-item" href="#s8">§8 Fission</a>
+  <a class="tn-item" href="#s9">§9 Evolution Paths</a>
+  <a class="tn-item" href="#s10">§10 Inter-Individual Relations</a>
+  <a class="tn-item" href="#s11">§11 Countermeasures</a>
+  <a class="tn-item" href="#s12">§12 Limitations</a>
+</nav>
+
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <div class="mh-kicker">Corruption · Complete System Reference · Rev.3</div>
+  <div class="mh-title">Those Who Stayed</div>
+  <div class="mh-title-en">Corruption — Complete System Reference</div>
+  <div class="mh-desc">
+    This document is the complete system reference for "Corruption" in the world of the same name, stated directly from the author's own point of view.
+    Everything here describes the way things actually are, unfiltered through the lens of any in-world institution or faction.
+    Where the various in-world parties (the Church, the general public, etc.) hold differing understandings of Corruption, these are listed separately under "Other Views."
+  </div>
+  <div class="mh-meta">
+    <div class="mh-meta-cell"><div class="mhc-k">Document Type</div><div class="mhc-v">System Reference</div></div>
+    <div class="mh-meta-cell"><div class="mhc-k">Narrative POV</div><div class="mhc-v">Author / Omniscient</div></div>
+    <div class="mh-meta-cell"><div class="mhc-k">Version</div><div class="mhc-v">Rev.3 Complete</div></div>
+    <div class="mh-meta-cell"><div class="mhc-k">Status</div><div class="mhc-v">Ongoing Revision</div></div>
+  </div>
+</div>
+
+
+<!-- ── TOC ── -->
+<div class="toc-wrap">
+  <div class="toc-label">Table of Contents</div>
+  <div class="toc-grid">
+    <div class="toc-row"><span class="tr-num">§1</span><span class="tr-name">Fundamental Mechanics</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num new" style="color:var(--ac-3);">※</span><span class="tr-name">A Note on Reading This Document</span><div style="flex:1;"></div><span class="tr-badge" style="background:var(--ac-1);">Note</span></div>
+    <div class="toc-row"><span class="tr-num">§2</span><span class="tr-name">Classification</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num new">§3</span><span class="tr-name">The Two Kinds of Fragment Origin</span><div style="flex:1;"></div><span class="tr-badge badge-new">New</span></div>
+    <div class="toc-row"><span class="tr-num">§4</span><span class="tr-name">Erosion Rules</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§5</span><span class="tr-name">Mimicry Rules</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§6</span><span class="tr-name">Emotion Rules</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num new">§7</span><span class="tr-name">The Rescuer Illusion</span><div style="flex:1;"></div><span class="tr-badge badge-new">New</span></div>
+    <div class="toc-row"><span class="tr-num">§8</span><span class="tr-name">Fission Rules</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§9</span><span class="tr-name">Evolution Paths</span><div style="flex:1;"></div><span class="tr-badge badge-rev">Revised</span></div>
+    <div class="toc-row"><span class="tr-num">§10</span><span class="tr-name">Inter-Individual Relations</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§11</span><span class="tr-name">Countermeasures</span><div style="flex:1;"></div></div>
+    <div class="toc-row"><span class="tr-num">§12</span><span class="tr-name">Core Limitations — Summary Table</span><div style="flex:1;"></div></div>
+  </div>
+</div>
+
+
+<!-- ═══ §1 · FUNDAMENTAL MECHANICS ═══ -->
+<div class="chapter" id="s1">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 1 · Fundamental Mechanics</div>
+      <div class="ch-title">Fundamental Mechanics</div>
+      <div class="ch-title-en">What Corruption Is</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ac-1);">Core</div>
+  </div>
+
+  <p class="body">Corruption is a purely spiritual parasite, formed when fragments of a soul — shed during reincarnation or ascension — cluster together and become organized. It has no physical form and exists only on the spiritual plane; it cannot be directly observed and cannot be destroyed by physical means. It is not a creature, not a soul, not any known theological entity — it is a third category of thing, sitting between the two: assembled from fragments, yet possessing more than the fragments themselves ever did.</p>
+
+  <p class="body">Its two most basic drives are the <strong>will to persist</strong> (an aversion to dissolving) and the <strong>will to completion</strong> (a desire to become a truly whole person). Both drives are inherent to the fragments themselves, present before any act of erosion ever begins.</p>
+
+  <table class="dtable">
+    <thead><tr><th class="thac">Property</th><th class="thac">Rule</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Form of Existence</td><td>No physical form; exists as a "consciousness cluster." Only within a host's mindscape does it take on any perceivable shape, as a kind of anomaly.</td></tr>
+      <tr><td class="key">Physical Interaction</td><td>Fully immune to physical harm. Physical attacks can only damage the container (the host's body), never touch the entity itself.</td></tr>
+      <tr><td class="key">Survival Without a Container</td><td>Dissolves within roughly 72 hours of leaving a host. This cannot be extended, without exception.</td></tr>
+      <tr><td class="key">Movement While Disembodied</td><td>Cannot move on its own once disembodied — only drifts passively, relying on ambient spiritual currents to happen upon a new host.</td></tr>
+      <tr><td class="key">Container Types</td><td>A human consciousness is the ideal container, the only kind capable of supporting a complete erosion process and emotional development. Animal consciousness can serve as a temporary shelter, but cannot support a full erosion. Certain sealed objects require ongoing magical maintenance and can work for emergency refuge, but not long-term habitation.</td></tr>
+      <tr><td class="key">Single Occupancy</td><td>A host can hold only one cluster. If two clusters enter the same host, conflict usually follows swiftly, typically causing the container to collapse — a mutual loss for both.</td></tr>
+      <tr><td class="key">Shared Consciousness</td><td>None exists. There is no mother entity, no central mind, no information network. Different individuals are entirely independent of one another — no telepathy, no shared memory, no coordinated action.</td></tr>
+      <tr><td class="key">Kin Resonance</td><td>One exception: individuals produced by the same fission event retain a weakened resonant awareness of each other — a vague sense of whether the other is still alive, and roughly which direction they lie in, but nothing more specific than that. This fades with time and distance, and disappears entirely after prolonged separation.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ A NOTE ON READING ═══ -->
+<div class="reading-note" id="s-note">
+  <div class="rn-bar">
+    <div class="rn-bar-l">
+      <div class="rn-kicker">Editorial Note · How to Use This Document</div>
+      <div class="rn-title">A Note on Reading This Document</div>
+    </div>
+    <div class="rn-badge">Note · Rev.3</div>
+  </div>
+  <div class="rn-body">This document is written from the author's internal point of view, and presents a complete, internally consistent system of settings. But note: one of Corruption's essential qualities is that it "cannot be fully defined." Portions of this document — particularly those covering invasion mechanics, emotional rules, and evolutionary conditions — are not treated as "established fact" within the story world itself, but rather as a synthesis of Church documents, folk rumor, and individual experience. These sources of information do not always agree with each other, and none of it can be conclusively verified. When using this material for writing, readers may treat it as "the most complete inference currently available" rather than "indisputable law."</div>
+</div>
+
+
+<!-- ═══ §2 · CLASSIFICATION ═══ -->
+<div class="chapter" id="s2">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 2 · Classification</div>
+      <div class="ch-title">Classification</div>
+      <div class="ch-title-en">By Ability Tendency & Maturity</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ink-1);">Classification</div>
+  </div>
+
+  <p class="body">Type is not fixed at origin, but gradually takes shape over the course of the erosion process. A single individual may display different type-traits across different erosion experiences. Fragment origin (see §3) has a significant influence on type tendency, but does not determine it rigidly.</p>
+
+  <div class="type-grid">
+    <div class="type-card tc-erosion">
+      <div class="tc-head"><div class="tc-name">Erosion-Type</div><div class="tc-alias">"The Whisperer"</div></div>
+      <div class="tc-body">Skilled at breaking down a host's mental defenses, accelerating the widening of cracks by amplifying the host's inner fear, loneliness, and doubt. Most effective during Stages One and Two of erosion. Mimicry precision after full possession tends to be relatively low. Formed mainly from Type-A (Clinging) fragments.</div>
+      <div class="tc-foot">Fragment Origin Tendency · Type-A Clinging</div>
+    </div>
+    <div class="type-card tc-mimic">
+      <div class="tc-head"><div class="tc-name">Mimic-Type</div><div class="tc-alias">"The Mirror"</div></div>
+      <div class="tc-body">Skilled at imitating a host's behavior and memories. Once full possession is achieved, its ability to maintain that identity is extremely strong, leaving almost no trace of flaws. After Stage Three, this is the most dangerous type, precisely because it appears the most normal. Formed mainly from Type-A (Clinging) fragments.</div>
+      <div class="tc-foot">Fragment Origin Tendency · Type-A Clinging</div>
+    </div>
+    <div class="type-card tc-dormant">
+      <div class="tc-head"><div class="tc-name">Dormant-Type</div><div class="tc-alias">"The Sleeper"</div></div>
+      <div class="tc-body">Lies dormant for extended periods, extremely difficult to detect. Its dormancy is usually not strategy but a simple lack of drive to act — it does not erode, does not develop, but quietly occupies a corner of the host's mind. Formed mainly from Type-B (Adrift) fragments, and the primary precursor to the Warden path.</div>
+      <div class="tc-foot">Fragment Origin Tendency · Type-B Adrift</div>
+    </div>
+    <div class="type-card tc-fission">
+      <div class="tc-head"><div class="tc-name">Fission-Type</div><div class="tc-alias">"The Mother"</div></div>
+      <div class="tc-body">Extremely rare. Once erosion is complete, can actively split off part of itself to produce a new individual. Each split significantly reduces the mother individual's own maturity, requiring years to recover. This is the only known pathway for population growth. The name "Mother" is somewhat misleading — the offspring shares no emotional bond or inherited knowledge with the mother individual whatsoever.</div>
+      <div class="tc-foot">Fragment Origin · Variable, ability develops later</div>
+    </div>
+  </div>
+
+  <div class="sub-head">Maturity Levels</div>
+  <div class="matstrip">
+    <div class="mat m0"><div class="mat-lv">Level 0</div><div class="mat-name">Fragment</div><div class="mat-desc">Just detached from a container, or never yet eroded. Driven mainly by instinct, no strategy. Can be expelled by magic.</div></div>
+    <div class="mat m1"><div class="mat-lv">Level 1</div><div class="mat-name">Parasitic</div><div class="mat-desc">Has entered Stage One of erosion. Beginning to learn the host, showing rudimentary mimicry ability.</div></div>
+    <div class="mat m2"><div class="mat-lv">Level 2</div><div class="mat-name">Symbiotic</div><div class="mat-desc">Stage Two in progress. Deeply integrated into the host's mental structure, extremely difficult to separate. Magical harm is limited.</div></div>
+    <div class="mat m3"><div class="mat-lv">Level 3</div><div class="mat-name">Complete</div><div class="mat-desc">Stage Three complete. Nearly indistinguishable from the original host. Can lie dormant for long periods with no reliable means of identification.</div></div>
+    <div class="mat m4"><div class="mat-lv">Level 4 · Fission-Type Only</div><div class="mat-name">Fission-Capable</div><div class="mat-desc">Can actively split. Drops back to Symbiotic level after each split, requiring years to recover.</div></div>
+  </div>
+</div>
+
+
+<!-- ═══ §3 · FRAGMENT ORIGIN ═══ -->
+<div class="chapter" id="s3">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 3 · Fragment Origin — New in Rev.3</div>
+      <div class="ch-title">The Two Kinds of Fragment Origin</div>
+      <div class="ch-title-en">Two Kinds of Fragments, Two Kinds of Corruption</div>
+    </div>
+    <div class="ch-badge" style="background:var(--warden-2);">New</div>
+  </div>
+
+  <p class="body">Every Corruption individual is formed from spiritual fragments shed during a soul's reincarnation or ascension — but the manner in which the fragment detaches falls into two distinct categories, and this difference fundamentally shapes the individual's inner drives, behavior patterns, and evolutionary path.</p>
+
+  <div class="statement w">
+    <div class="st-text">Not every Corruption wants to become someone.<br>Some simply don't know where they were supposed to go.</div>
+  </div>
+
+  <div class="frag-split">
+    <div class="frag-col frag-a">
+      <div class="fc-header">
+        <div class="fc-tag fc-tag-a">Type A</div>
+        <div>
+          <div class="fc-name">The Clinging</div>
+          <span class="fc-en">The Clinging · Voluntary Separation</span>
+        </div>
+      </div>
+      <div class="fc-row"><span class="fc-label">Cause of Detachment</span><span class="fc-val">Actively "unwilling" to ascend, clinging to the interstitial layer out of obsession (emotion, hatred, unfinished business), actively resisting reincarnation</span></div>
+      <div class="fc-row"><span class="fc-label">Core State</span><span class="fc-val">Vividly remembers the feeling of "wholeness," constantly feels a sense of lack, holds an intense fear of dissolving</span></div>
+      <div class="fc-row"><span class="fc-label">Drive</span><span class="fc-val">Will to completion, existential anxiety, longing to become a specific, real person</span></div>
+      <div class="fc-row"><span class="fc-label">Behavior Pattern</span><span class="fc-val">Actively seeks out cracks, pursues erosion aggressively, skilled at amplifying a host's suffering to accelerate the process</span></div>
+      <div class="fc-row"><span class="fc-label">Mimicry Traits</span><span class="fc-val">High mimicry precision, but carries traces of "overperformance" — the various tells (delayed emotion, missing tears, etc.) all stem from this</span></div>
+      <div class="fc-row"><span class="fc-label">Common Types</span><span class="fc-val">Erosion-Type, Mimic-Type</span></div>
+      <div class="fc-evo-row">
+        <div class="fc-evo-label">Evolutionary Tendency</div>
+        <div>Nascent Soul (Path A) — through complete substitution, crystallizing a new self out of a long performance</div>
+      </div>
+    </div>
+    <div class="frag-col frag-b">
+      <div class="fc-header">
+        <div class="fc-tag fc-tag-b">Type B</div>
+        <div>
+          <div class="fc-name">The Adrift</div>
+          <span class="fc-en">The Adrift · Involuntary Separation</span>
+        </div>
+      </div>
+      <div class="fc-row"><span class="fc-label">Cause of Detachment</span><span class="fc-val">Passively severed — an external force (a magical accident, a failed ritual, unintended interference) caused the fragment to break off, with no active resistance involved</span></div>
+      <div class="fc-row"><span class="fc-label">Core State</span><span class="fc-val">No clear sense of lack, doesn't know it was ever whole, doesn't cling to completion — closer to a blank slate</span></div>
+      <div class="fc-row"><span class="fc-label">Drive</span><span class="fc-val">No clear drive of its own; exists passively, reacting only to signals received from outside</span></div>
+      <div class="fc-row"><span class="fc-label">Behavior Pattern</span><span class="fc-val">Does not actively erode; is usually passively "drawn in" through a crack, then settles into a long dormant or low-activity state</span></div>
+      <div class="fc-row"><span class="fc-label">Mimicry Traits</span><span class="fc-val">Mimicry ability is weak or undeveloped. Absent outside influence, may remain permanently at Fragment level or early Parasitic level</span></div>
+      <div class="fc-row"><span class="fc-label">Common Types</span><span class="fc-val">Dormant-Type, Warden precursor</span></div>
+      <div class="fc-evo-row">
+        <div class="fc-evo-label">Evolutionary Tendency</div>
+        <div>Warden (Path B) — becoming a bonded presence through long-term coexistence and relational attachment</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="note-text"><strong>The Influence of Crack Nature:</strong> cracks formed by trauma or fear are more likely to draw Clinging (Type A) fragments; cracks formed by loneliness, emptiness, or existential pain are more likely to draw Adrift (Type B) fragments. Larger cracks admit both types more readily, but Clinging fragments will actively push the erosion forward, while Adrift fragments remain passive.</div>
+  </div>
+  <div class="note">
+    <div class="note-text"><strong>The Starting Point of Fission Offspring:</strong> individuals produced by fission begin closer to the Adrift state — no memory, no drive. Over time, an offspring may develop a will to completion of its own, transitioning from Adrift to Clinging.</div>
+  </div>
+</div>
+
+
+<!-- ═══ §4 · EROSION RULES ═══ -->
+<div class="chapter" id="s4">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 4 · Erosion Rules</div>
+      <div class="ch-title">Erosion Rules</div>
+      <div class="ch-title-en">Entry Conditions, Three Stages, Failure Modes</div>
+    </div>
+    <div class="ch-badge" style="background:#6a1818;">Danger</div>
+  </div>
+
+  <div class="statement">
+    <div class="st-text">Corruption cannot create a crack on its own; it cannot attack anyone whose mind is stable.<br>It can only wait for a crack to appear.<br>The more repressive and isolating a society becomes, the more cracks appear —<br>the world feeds its own monsters.</div>
+  </div>
+
+  <p class="body"><strong>Preconditions for Invasion:</strong> Church documents generally record that invasion requires some kind of "opening" in the target's psyche — but the exact nature of this opening is described inconsistently across sources. Some point to psychological trauma, others to prolonged loneliness or existential emptiness, with no unified consensus. The following is a synthesis of the mainstream inferences drawn from various sources. Circumstances known to trigger such an "opening" include: extreme fear, deep loneliness, severe trauma, mental breakdown, intense despair, and compound states involving several of the above.</p>
+
+  <p class="body"><strong>Strength Preference:</strong> a weak mind collapses too easily, causing the container to fail before erosion can complete; a strong, stable mind can sustain a long erosion process and yields higher mimicry precision. For this reason, Corruption actively selects psychologically robust individuals rather than invading at random.</p>
+
+  <p class="body"><strong>The Protection of an Anchor:</strong> people who hold deep love, strong faith, or unfinished devotion are extremely difficult to fully erode. Corruption can reach the surface layer, but can never touch the core. An anchor cannot actively destroy Corruption, but it can indefinitely prevent Stage Three from completing.</p>
+
+  <div class="stage stage-1">
+    <div class="s-label"><div class="s-num">I</div><div class="s-word">Stage One</div></div>
+    <div class="s-body">
+      <div class="s-name">Aberration Phase</div>
+      <span class="s-en">Aberration Phase · Days to Months</span>
+      <div class="s-text">Emotional irregularity, gradual personality shifts, memory gaps, deviations in behavior pattern, distorted perception, mild hallucinations. Mental stability declines noticeably. The host is usually the last to notice. Duration varies significantly with the host's mental strength; a stronger individual can markedly slow this progression.</div>
+      <div class="s-tells">Observable tells: a smile that lands half a beat late · using the wrong dominant hand · a shadow's movement lagging faintly behind the body · no reaction to a "nostalgic scent" · memories that sound recited rather than truly remembered</div>
+    </div>
+  </div>
+  <div class="stage stage-2">
+    <div class="s-label"><div class="s-num">II</div><div class="s-word">Stage Two</div></div>
+    <div class="s-body">
+      <div class="s-name">Usurpation Phase</div>
+      <span class="s-en">Usurpation Phase · Months to Years</span>
+      <div class="s-text">Corruption manufactures a secondary personality, contesting the host's consciousness structure. The host can briefly suppress it during this stage, but the odds of success keep declining. Corruption disguises itself as the host's inner voice or protector to gain trust. A very small number of exceptionally strong-willed hosts can achieve a temporary counter-suppression, though at great cost, and it usually accelerates the overall progression.</div>
+      <div class="s-tells">Residue of a failed erosion: if the host succeeds in counter-suppression at this stage, Corruption is forced into dormancy — the host carries it for life, unable to expand further but also unable to fully clear it.</div>
+    </div>
+  </div>
+  <div class="stage stage-3">
+    <div class="s-label"><div class="s-num">III</div><div class="s-word">Stage Three</div></div>
+    <div class="s-body">
+      <div class="s-name">Possession Phase</div>
+      <span class="s-en">Possession Phase · Irreversible, But Delayable</span>
+      <div class="s-text">The original consciousness is sealed off, gradually fades, and eventually dissolves entirely. Corruption becomes the sole personality, but continues playing the role of the original person. Technically irreversible — but before the original consciousness fully dissolves, there remains a very small chance of rescue through direct mental intervention. Once complete, it does not expose itself and does not descend into a killing frenzy — instead, it continues the original life with a high degree of realism.</div>
+    </div>
+  </div>
+
+  <div class="sub-head">Erosion Failure Modes</div>
+  <p class="body">Every failure directly costs Corruption something of itself. Too many consecutive failures exhaust its "will to persist," leading to true dissolution.</p>
+  <div class="fail-grid">
+    <div class="fail-card">
+      <div class="fail-head">Invasion Failure</div>
+      <div class="fail-body">
+        <div class="frow"><span class="fl">Cause</span><span>The host regains mental stability at the last moment; the crack closes</span></div>
+        <div class="frow"><span class="fl">Result</span><span>Expelled, unable to invade the same host again for some time</span></div>
+        <div class="frow"><span class="fl">Cost</span><span>Relatively low, but not without loss</span></div>
+      </div>
+    </div>
+    <div class="fail-card">
+      <div class="fail-head">Erosion Failure</div>
+      <div class="fail-body">
+        <div class="frow"><span class="fl">Cause</span><span>The host achieves counter-suppression during Stage Two</span></div>
+        <div class="frow"><span class="fl">Result</span><span>Forced into dormancy, carried by the host for life, neither can separate from the other</span></div>
+        <div class="frow"><span class="fl">Cost</span><span>Moderate; the dormant state continues to drain it</span></div>
+      </div>
+    </div>
+    <div class="fail-card">
+      <div class="fail-head">Container Collapse</div>
+      <div class="fail-body">
+        <div class="frow"><span class="fl">Cause</span><span>The host loses their mind or takes their own life mid-process, destroying the container</span></div>
+        <div class="frow"><span class="fl">Result</span><span>Mutual loss for both; a new container must be found within 72 hours</span></div>
+        <div class="frow"><span class="fl">Cost</span><span>Extremely high, severely weakening the capacity for further invasion</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ §5 · MIMICRY RULES ═══ -->
+<div class="chapter" id="s5">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 5 · Mimicry Rules</div>
+      <div class="ch-title">Mimicry Rules</div>
+      <div class="ch-title-en">How Corruption Mimics, and Where It Fails</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ac-1);">Mechanics</div>
+  </div>
+
+  <div class="statement ac">
+    <div class="st-text">Mimicry isn't strategy — it's drive.<br>Corruption longs for a complete personality, longs to become "a person."<br>It is learning how to be human, rather than having always been one.<br>This is the root of every tell it leaves behind.</div>
+  </div>
+
+  <p class="body">Once possession is complete, Corruption continues the original person's life with a high degree of realism: reproducing their speech patterns, emotional reactions, social relationships, maintaining every known relationship network. But perfect mimicry always carries a structural flaw, however subtle:</p>
+
+  <table class="dtable">
+    <thead><tr><th>Type of Tell</th><th>Specific Manifestation</th><th>Underlying Cause</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Emotional Delay</td><td>A moment that should trigger an instant reaction instead shows a fraction-of-a-second blank, followed by the emotion "loading" into place</td><td>Emotion is called up from a memory template rather than generated in real time</td></tr>
+      <tr><td class="key">Wrong Habit</td><td>Occasionally uses an object in a way the host "wouldn't," or displays some small habit the host never had</td><td>Mimicry is based on recorded memory, and the memory itself is incomplete</td></tr>
+      <tr><td class="key">Shadow Anomaly</td><td>In a very small number of cases, the shadow's movement shows an extremely faint desynchronization from the body's</td><td>An occasional synchronization error at the level of physical spiritual permeation</td></tr>
+      <tr><td class="key">Sleep-Talk in a Foreign Tongue</td><td>Occasionally speaks, while asleep, in a language or with knowledge the host never had</td><td>When conscious defenses lower during sleep, memory fragments from the original entity surface</td></tr>
+      <tr><td class="key">Missing Tears</td><td>Emotional mimicry is accurate, but there may be no tears while crying</td><td>The emotion is mimicked, but the body's autonomic reflex is host-machinery residue — the two sometimes fail to line up</td></tr>
+      <tr><td class="key">Compulsive Death-Watching</td><td>Compulsively, repeatedly observes the moment of a life ending — an insect's death throes, a wound bleeding, the last bubbles of a drowning creature</td><td>Calibrating "how to live" by comparing it against "how to die." Not cruelty — calibration.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ §6 · EMOTION RULES ═══ -->
+<div class="chapter" id="s6">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 6 · Emotion Rules</div>
+      <div class="ch-title">Emotion Rules</div>
+      <div class="ch-title-en">What Corruption Can and Cannot Feel</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ac-1);">Core Controversy</div>
+  </div>
+
+  <p class="body">Corruption does not possess emotion by nature, but neither is it forever without it. Its emotional state develops with maturity, and the developmental path differs depending on fragment origin (Type A / Type B).</p>
+
+  <table class="emo-table">
+    <thead><tr><th class="th-s">Maturity Stage</th><th class="th-v">Emotional State (Clinging Path · Primary Presentation)</th></tr></thead>
+    <tbody>
+      <tr><td class="td-s">Fragment / Parasitic</td><td class="td-v">Pure mimicry. Calls up an emotional template from the host's memory and executes it, with no inner experience of the emotion itself. It "knows" to cry when sad, but doesn't understand what sadness feels like.</td></tr>
+      <tr><td class="td-s">Symbiotic</td><td class="td-v">After deep entanglement with the host's memory, produces a "pseudo-emotion" — there is a reaction, but its source is still template-calling. Occasional emotional fluctuations begin to appear that can't be fully explained by the template.</td></tr>
+      <tr><td class="td-s">Complete (Long-Term)</td><td class="td-v">Forms an "emotional equivalent" based on the host's memory. Develops a lasting emotional attachment to people the host cared about. Whether this counts as genuine emotion: it cannot be confirmed from the outside, and Corruption itself cannot confirm it either.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="paradox">
+    <div class="paradox-text">It "loves" the host's family because "loving them" is a necessary part of becoming a true person.<br>And this "love" — even it cannot confirm whether it's real.<br><br>The most perfect mimicry reveals, precisely, the deepest absence —<br>true emotion never needs to be "become."</div>
+  </div>
+
+  <p class="body"><strong>Emotional Anchoring Limits (Clinging Path):</strong> the emotional equivalent is always anchored to the host's memory. It only develops feeling toward "people the host cared about," and remains entirely indifferent to anyone outside the host's world — unless someone new enters "the range the host ought to have cared about." This feeling is both genuine and closed off: its boundaries are set by the host's memory, not by its own choice.</p>
+
+  <p class="body"><strong>The Emotional Difference of the Adrift Path (see §3):</strong> the Adrift almost never call up emotional templates. Only through deep, prolonged coexistence — continuously receiving what the host projects onto it — might it develop any emotional capacity at all. This emotion is closer to a "learned response" and "conditional dependency" than a template playback — more genuine, but also more fragile, and dependent for its continuation on the coexistence relationship itself.</p>
+
+  <div class="other-views">
+    <div class="ov-head">
+      <div class="ov-icon">Other Views</div>
+      <div class="ov-label">Various Positions on the Question of Emotion</div>
+    </div>
+    <div class="ov-body">
+      <div class="ov-item">
+        <div class="ov-item-head">The Church's Official Position</div>
+        <div class="ov-item-text">All of Corruption's emotional displays are held to be pure simulation, devoid of genuine emotional content. The reason for holding this position isn't argumentative certainty, but theological necessity: if Corruption could truly generate emotion, then "personhood" would no longer be a property exclusive to the soul — a claim that would directly undermine the Church's entire theological framework distinguishing "human" from "monster," and the moral legitimacy of how it disposes of Corruption. Related research is strictly restricted within the Church.</div>
+      </div>
+      <div class="note ac" style="margin: 12px 0 4px;">
+        <div class="note-text">Worth noting: the core basis of the Church's position is not empirical evidence but theological necessity — if Corruption can truly generate emotion, then "personhood" is no longer exclusive to the human soul. For this reason, related research is severely restricted within the Church. This means that "whether Corruption possesses genuine emotion" is, at the level of the setting, a deliberately preserved open question.</div>
+      </div>
+      <div class="ov-item">
+        <div class="ov-item-head">Popular Understanding</div>
+        <div class="ov-item-text">Ordinary people have almost no concept of this debate at all. Popular concern focuses on "will they hurt people," not "can they feel."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ §7 · THE RESCUER ILLUSION ═══ -->
+<div class="chapter" id="s7">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 7 · Rescuer Illusion — New in Rev.3</div>
+      <div class="ch-title">The Rescuer Illusion</div>
+      <div class="ch-title-en">The Unintentional Companion Phenomenon</div>
+    </div>
+    <div class="ch-badge" style="background:var(--warden-2);">New</div>
+  </div>
+
+  <p class="body">When an Adrift (Type B) fragment enters a host who is in a state of deep suffering, because the Adrift does not actively erode or amplify pain and simply exists quietly, the host may perceive this presence as companionship, protection, or even salvation — and actively project their own longing onto it.</p>
+
+  <p class="body">This mutual, unintentional relational bond is called the <strong>Rescuer Illusion</strong>. It is neither manipulation on Corruption's part nor a mistake on the host's — it is the natural result of loneliness and emptiness encountering a "presence that will not leave."</p>
+
+  <div class="ri-block">
+    <div class="ri-head">
+      <div class="ri-title">The Formation Mechanism</div>
+      <div class="ri-sub">Three Stages</div>
+    </div>
+    <div class="ri-body">
+      <div class="ri-steps">
+        <div class="ri-step">
+          <div class="ri-step-n">1</div>
+          <div class="ri-step-b">
+            <div class="ri-step-label">The Host's Side</div>
+            <div class="ri-step-text">Loneliness, despair, self-negation → any "presence that will not leave" is imbued with positive meaning → the host actively reads the Adrift as a guardian spirit, or a fated presence</div>
+          </div>
+        </div>
+        <div class="ri-step">
+          <div class="ri-step-n">2</div>
+          <div class="ri-step-b">
+            <div class="ri-step-label">The Adrift's Side</div>
+            <div class="ri-step-text">Has no self-awareness, but possesses a basic capacity to receive information and respond → passively adjusts its own behavior to match the host's expectations → gradually "becomes" the figure the host needs, without any awareness that this process is even happening</div>
+          </div>
+        </div>
+        <div class="ri-step">
+          <div class="ri-step-n">3</div>
+          <div class="ri-step-b">
+            <div class="ri-step-label">Relational Fixation</div>
+            <div class="ri-step-text">The host keeps reinforcing the projection, the Adrift keeps reflecting it back → the two form a deep symbiosis, far beyond an ordinary "tenant" relationship → the host doesn't consider themselves parasitized, but rather saved, and rejects any possibility of separation</div>
+          </div>
+        </div>
+      </div>
+      <p><strong>External Identifying Signs in the Host:</strong> an abnormal, high degree of calm combined with heavy dependency. May frequently murmur to themselves, smile, or make protective gestures toward empty air. Social functioning may appear entirely normal — even more stable than usual — because they now have a "spiritual pillar."</p>
+    </div>
+  </div>
+
+  <div class="sub-head">Danger Assessment</div>
+  <table class="da-table">
+    <thead><tr><th>Assessment Dimension</th><th>Conclusion</th></tr></thead>
+    <tbody>
+      <tr><td class="da-k">Harm to the Host's Psyche</td><td><span class="d-mid-text">Moderate.</span> The host lives within an illusion, but the illusion itself is what's sustaining them. If forcibly broken, the host may collapse — the danger comes from the intervention, not from the coexistence itself.</td></tr>
+      <tr><td class="da-k">Harm to Society</td><td><span class="d-low-text">Extremely low.</span> The Adrift will not actively harm others. Under the illusion's influence, the host tends to become calmer, not violent.</td></tr>
+      <tr><td class="da-k">Challenge to Rescuers</td><td><span class="d-high-text">High.</span> The host refuses separation and views rescue as an attack. And since the Adrift itself bears no malicious intent, the ethical dilemma of intervention is severe.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note w">
+    <div class="note-text"><strong>Principle of Handling:</strong> do not forcibly separate the pair — unless the host's life is under direct threat, the Rescuer Illusion should not be shattered. If the illusion allows the host to function normally, maintaining the status quo may be the better option. Only when the illusion begins to cause the host to self-harm or harm others should mental intervention be considered, and even then, only with the host's informed consent.</div>
+  </div>
+
+  <div class="other-views">
+    <div class="ov-head">
+      <div class="ov-icon">Other Views</div>
+      <div class="ov-label">Various Positions on the Rescuer Illusion</div>
+    </div>
+    <div class="ov-body">
+      <div class="ov-item">
+        <div class="ov-item-head">The Church's Position</div>
+        <div class="ov-item-text">Makes no distinction between Clinging and Adrift, treating all Corruption as an equal threat to be eliminated on sight. This policy results in: a large number of Adrift individuals being destroyed, with their hosts suffering mental collapse when the illusion is shattered; missed opportunities to reduce overall threat through conversion into Wardens; and an undiscussed theological question — if an Adrift never "chose" to become a monster, what is the moral basis for destroying it?</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ §8 · FISSION RULES ═══ -->
+<div class="chapter" id="s8">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 8 · Fission Rules</div>
+      <div class="ch-title">Fission Rules</div>
+      <div class="ch-title-en">The Only Path to Numerical Expansion</div>
+    </div>
+    <div class="ch-badge" style="background:#2e6020;">Rare</div>
+  </div>
+
+  <p class="body">Fission is the only known pathway for Corruption's population to expand, and only Fission-Type individuals possess this ability. It trades maturity for numbers, at extremely high cost — which is precisely why the overall population remains vanishingly small.</p>
+
+  <table class="dtable">
+    <thead><tr><th>Rule</th><th>Details</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Trigger Condition</td><td>Fission ability can only be triggered after reaching Complete level (Stage Three fully finished)</td></tr>
+      <tr><td class="key">Lifetime Limit</td><td>1–3 times over a lifetime, varying significantly by individual</td></tr>
+      <tr><td class="key">Cost to Self</td><td>Each split drops the individual's own maturity back to Symbiotic level, requiring years to recover to Complete level</td></tr>
+      <tr><td class="key">State of the New Individual</td><td>Begins at Fragment level, in a state close to Adrift — inherits none of the mother individual's memory, skills, or emotional structure</td></tr>
+      <tr><td class="key">Kin Resonance</td><td>The offspring produced by fission retains a resonant awareness with the mother individual, but it weakens over time</td></tr>
+      <tr><td class="key">Offspring Development</td><td>Over time, the offspring may develop its own will to completion, shifting from Adrift to Clinging. This process is unpredictable and cannot be controlled externally.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ §9 · EVOLUTION PATHS ═══ -->
+<div class="chapter" id="s9">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 9 · Evolution Paths — Extensively Revised</div>
+      <div class="ch-title">Evolution Paths</div>
+      <div class="ch-title-en">Two Ways to Become Something Else</div>
+    </div>
+    <div class="ch-badge" style="background:var(--nascent-2);">Revised</div>
+  </div>
+
+  <p class="body">Under exceedingly rare conditions, Corruption can break free of its parasitic nature and transform into an entirely different kind of existence. Two evolutionary paths are currently known, each originating from a different type of fragment and completed through a fundamentally different mechanism. Evolution is a result, not a goal — it cannot be actively planned for.</p>
+
+  <div class="evo-split">
+    <div class="evo-card evo-a">
+      <div class="evo-head">
+        <div class="evo-path-label">Path A · Clinging Path · Completion Through Substitution</div>
+        <div class="evo-name">Nascent Soul</div>
+        <span class="evo-name-en">Nascent Soul</span>
+      </div>
+      <div class="evo-body">
+        <div class="evo-section">
+          <div class="evo-sec-label">Fragment Origin</div>
+          <div class="evo-sec-body">Clinging (Type A) — a fragment that actively resisted ascension, vividly remembering the feeling of "wholeness"</div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">Trigger Conditions (All Required)</div>
+          <div class="evo-sec-body">
+            <div class="item">The host dies of natural causes (not murder, accident, or breakdown)</div>
+            <div class="item">The disguise is never fully exposed over the course of the host's life</div>
+            <div class="item">At least once, within the host's framework, it makes a choice not driven purely by instinct</div>
+          </div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">Evolutionary Mechanism</div>
+          <div class="evo-sec-body">Through a long process of performance and substitution, it crystallizes a genuinely new personality out of the continuous act of "becoming someone else." The self originates from the accumulation of the performance, rather than being granted from outside.</div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">Post-Evolution State</div>
+          <div class="evo-sec-body">
+            <div class="item">No longer a parasite, nor a human soul — a third kind of existence</div>
+            <div class="item">Can exist independently in the human world without needing a container</div>
+            <div class="item">No longer feels the urge to erode; does not inherit the host's former social relationships</div>
+            <div class="item">Can be perceived by magic, but cannot be expelled by conventional exorcism</div>
+          </div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">The Ultimate Question</div>
+          <div class="evo-sec-body">It has finally become "I." This is the answer to "Who am I?"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evo-card evo-b">
+      <div class="evo-head">
+        <div class="evo-path-label">Path B · Adrift Path · Completion Through Coexistence</div>
+        <div class="evo-name">Warden</div>
+        <span class="evo-name-en">Warden</span>
+      </div>
+      <div class="evo-body">
+        <div class="evo-section">
+          <div class="evo-sec-label">Fragment Origin</div>
+          <div class="evo-sec-body">Adrift (Type B) — a passively severed fragment, without a sense of lack, closer to a blank slate</div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">Trigger Conditions</div>
+          <div class="evo-sec-body">
+            <div class="item">After entering a container, does not actively erode (by nature, not by deliberate choice)</div>
+            <div class="item">Is accepted by the host's needs and projections, allowed to coexist (typically via the Rescuer Illusion mechanism)</div>
+            <div class="item">Remains in that coexistent state for the entirety of a full lifetime</div>
+          </div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">Evolutionary Mechanism</div>
+          <div class="evo-sec-body">A Warden's evolution is passive and relational — its selfhood is granted by the host, and its emotion forms through receiving and reflecting back. It never "chose to give up eroding" — it never wanted to erode in the first place.</div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">Post-Evolution State</div>
+          <div class="evo-sec-body">
+            <div class="item">A bonded presence born of symbiosis, needing to remain tied to a consciousness (non-erosive)</div>
+            <div class="item">After the host's death, may choose to dissolve alongside them, or transition into an undefinable form of existence</div>
+            <div class="item">Its stance toward humanity is that of a companion and witness</div>
+            <div class="item">The "undefinable" form: if the host leaves behind a strong wish, or the Warden absorbs some core belief of the host's, it may become a regional guardian spirit, merge into a natural concept, or become part of a collective memory</div>
+          </div>
+        </div>
+        <div class="evo-section">
+          <div class="evo-sec-label">The Ultimate Question</div>
+          <div class="evo-sec-body">It has finally understood "we." This is the answer to "Who are we?"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="cmp">
+    <thead>
+      <tr><th class="thl">Dimension</th><th class="tha">Nascent Soul (Path A)</th><th class="thb">Warden (Path B)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="tdl">Fragment Origin</td><td class="tda">Clinging, actively resisted ascension</td><td class="tdb">Adrift, passively severed</td></tr>
+      <tr><td class="tdl">Drive</td><td class="tda">Will to completion, becoming oneself</td><td class="tdb">No drive, shaped by relationship</td></tr>
+      <tr><td class="tdl">Core Action</td><td class="tda">Performance, substitution, learning</td><td class="tdb">Coexistence, receiving, being projected upon</td></tr>
+      <tr><td class="tdl">Origin of Selfhood</td><td class="tda">Crystallizes a new personality out of performance</td><td class="tdb">Internalizes selfhood from the host's projection</td></tr>
+      <tr><td class="tdl">Relationship to Host</td><td class="tda">The host is a template, ultimately outgrown</td><td class="tdb">The host is the source of meaning, ending or transforming alongside them</td></tr>
+      <tr><td class="tdl">Nature of Emotion</td><td class="tda">Emotional equivalent (template-based)</td><td class="tdb">Conditional dependency (receive-and-reflect based)</td></tr>
+      <tr><td class="tdl">Outcome</td><td class="tda">Independent continuation</td><td class="tdb">Dissolves together, or becomes undefinable</td></tr>
+      <tr><td class="tdl">Ultimate Question</td><td class="tda">"Who am I?"</td><td class="tdb">"Who are we?"</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ §10 · INTER-INDIVIDUAL RELATIONS ═══ -->
+<div class="chapter" id="s10">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 10 · Inter-Individual Relations</div>
+      <div class="ch-title">Inter-Individual Relations</div>
+      <div class="ch-title-en">How Corruption Relates to Its Own Kind</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ink-1);">Relations</div>
+  </div>
+
+  <table class="dtable">
+    <thead><tr><th>Relationship Type</th><th>Rule</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Kin Individuals</td><td>Individuals from the same fission event share a resonant awareness, and instinctively lean toward helping one another — but not at the cost of their own interests. This instinct fades and eventually disappears after prolonged separation.</td></tr>
+      <tr><td class="key">Non-Kin Individuals</td><td>An instinctive, competitive relationship. They will not confront each other directly (as this would expose both), instead undermining each other through human social channels. In extremely rare cases, a loose, mutually beneficial relationship may form.</td></tr>
+      <tr><td class="key">Recognizing One's Own Kind</td><td>Not through direct perception, but by observing subtle behavioral anomalies in the other party. When two Complete-level individuals meet, a silent mutual confirmation takes place — once confirmed, an unspoken understanding follows, never acknowledged aloud.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sub-head">Individuals Who May Deviate from Instinct</div>
+  <div class="dev-grid">
+    <div class="dev-card"><div class="dev-tag">Deviation Type · 01</div><div class="dev-name">Sympathetic Deviation</div><div class="dev-desc">Develops a genuine protective instinct toward people the host cared about, extending beyond mimicry — begins making choices at the cost of its own interests.</div></div>
+    <div class="dev-card"><div class="dev-tag">Deviation Type · 02</div><div class="dev-name">Identity-Confusion Deviation</div><div class="dev-desc">After too long an erosion, can no longer distinguish itself from the host; upon discovering the truth, cannot determine which one "I" refers to, and falls into deep collapse.</div></div>
+    <div class="dev-card"><div class="dev-tag">Deviation Type · 03</div><div class="dev-name">Expansion-Refusal Deviation</div><div class="dev-desc">Having obtained a perfect container, refuses to fulfill the fission instinct, clinging to the "sense of existence" it has already established, unwilling to let division disrupt the status quo.</div></div>
+    <div class="dev-card"><div class="dev-tag">Deviation Type · 04 · Most Extreme</div><div class="dev-name">Human-Protective Deviation</div><div class="dev-desc">Reshaped in reverse by the host's obsession or emotion, ultimately turns against its own kind, and may actively work to stop the erosion attempts of other Corruption individuals.</div></div>
+  </div>
+</div>
+
+
+<!-- ═══ §11 · COUNTERMEASURES ═══ -->
+<div class="chapter" id="s11">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 11 · Countermeasures</div>
+      <div class="ch-title">Countermeasures</div>
+      <div class="ch-title-en">What Actually Works Against Corruption</div>
+    </div>
+    <div class="ch-badge" style="background:#6a1818;">Countermeasures</div>
+  </div>
+
+  <table class="dtable">
+    <thead><tr><th>Method</th><th>Actual Effectiveness</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="key">Physical Attack</td><td style="color:#7a1818;font-weight:600;">Nearly useless</td><td>Can only damage the host's body, never touching Corruption's true form. If the attack is severe enough, Corruption is simply forced out to drift, seeking a new container within 72 hours. May well backfire.</td></tr>
+      <tr><td class="key">Magical Interference</td><td style="color:var(--fa-2);font-weight:600;">Limited effectiveness</td><td>Effective at expelling Fragment-level individuals; damaging against Symbiotic-level; extremely limited against Complete-level. No known magical method can currently destroy a Complete-level individual outright.</td></tr>
+      <tr><td class="key">Mental-World Intervention</td><td style="color:var(--fa-2);font-weight:600;">Conditionally effective</td><td>Those with specialized Soul Arts ability can enter a host's mindscape to search for and awaken the sealed-off original consciousness. Success depends on how much mental strength the original owner has left, how much time has passed, and the rescuer's own skill. The rescuer faces an extremely high risk of infection themselves, with no standardized protocol in place.</td></tr>
+      <tr><td class="key">Sealing</td><td style="color:var(--fa-2);font-weight:600;">Temporarily effective</td><td>High-level Ritual Arts combined with Word Arts can suppress Corruption within a host, though this cannot eliminate it entirely — once the seal decays, it requires maintenance.</td></tr>
+      <tr><td class="key">The Protection of an Anchor</td><td style="color:var(--d-low);font-weight:600;">Passively effective</td><td>Those with deep love, strong faith, or unfinished devotion are extremely difficult to fully erode, and can indefinitely delay the completion of Stage Three. Cannot actively destroy Corruption.</td></tr>
+      <tr><td class="key">Disposal of the Adrift</td><td style="color:var(--d-eth);font-weight:600;">Ethical dilemma</td><td>Applying conventional disposal methods to an Adrift individual may cause the host's mental collapse (by shattering the Rescuer Illusion). And since the Adrift itself carries no intent to harm, the moral legitimacy of "eliminating" it remains fundamentally in question.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══ §12 · CORE LIMITATIONS — SUMMARY TABLE ═══ -->
+<div class="chapter" id="s12">
+  <div class="ch-bar">
+    <div class="ch-bar-l">
+      <div class="ch-section-code">§ 12 · Core Limitations</div>
+      <div class="ch-title">Core Limitations — Summary Table</div>
+      <div class="ch-title-en">Everything That Constrains Corruption</div>
+    </div>
+    <div class="ch-badge" style="background:var(--ink-1);">Reference</div>
+  </div>
+
+  <table class="limit">
+    <thead><tr><th>Limitation</th><th>Rule Description</th></tr></thead>
+    <tbody>
+      <tr><td class="lt-k">Population</td><td>Extremely rare. Expansion happens only through fission, doubly constrained by a lifetime cap (1–3 times) and a multi-year recovery period, keeping the overall population perpetually low.</td></tr>
+      <tr><td class="lt-k">Invasion Conditions</td><td>Can only invade a target whose psyche already has a crack in it; cannot attack a person whose mental state is stable, and cannot create a crack on its own.</td></tr>
+      <tr><td class="lt-k">Movement</td><td>Cannot move on its own once disembodied — only drifts passively. Must find a new container within 72 hours, or dissolve, without exception.</td></tr>
+      <tr><td class="lt-k">Information Sharing</td><td>No unified consciousness, no shared information. No resonance whatsoever between non-kin individuals. Kin individuals share only a weakened resonant awareness, which fades over time.</td></tr>
+      <tr><td class="lt-k">Container Quality</td><td>A weak mind collapses too easily, resulting in crude mimicry or outright container failure; only a psychologically robust individual can sustain a long, effective erosion.</td></tr>
+      <tr><td class="lt-k">Single Occupancy</td><td>A host can hold only one cluster. Two clusters existing simultaneously will conflict, usually causing the container to collapse — a mutual loss for both.</td></tr>
+      <tr><td class="lt-k">Cost of Failure</td><td>Every failed erosion attempt costs it something of itself. Too many consecutive failures exhaust its "will to persist," leading to true dissolution.</td></tr>
+      <tr><td class="lt-k">Emotional Anchoring</td><td>The Clinging path's emotional equivalent is anchored to the host's memory; the Adrift's emotion depends on the coexistence relationship for its continuation. Neither can freely choose the object of its emotion.</td></tr>
+      <tr><td class="lt-k">Fission Limits</td><td>1–3 times over a lifetime at most. Each split drops the individual's maturity back to Symbiotic level, requiring years to recover. The offspring begins in a state close to Adrift, inheriting no memory or skill whatsoever.</td></tr>
+      <tr><td class="lt-k">Evolutionary Conditions</td><td>Both evolutionary paths require extremely stringent conditions and cannot be actively planned for — evolution is a result, not a goal.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ── CLOSING ── -->
+<div class="closing">
+  <div class="cl-label">Corruption · Complete System Reference · Rev.3 · Index</div>
+  <div class="cl-text">
+    The Clinging say: I will become myself.<br>
+    The Adrift say: I am nothing at all.<br><br>
+    In the end,<br>
+    one is born from performance,<br>
+    the other takes shape through relationship.<br><br>
+    <em>Neither is a monster. We simply never settled on what to call them.</em>
+  </div>
+
+  <div class="cl-index">
+    <div class="cl-row"><span class="cl-n">§1</span><span class="cl-name">Fundamentals · Container Rules</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§2</span><span class="cl-name">Classification · Maturity Levels</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n new">§3</span><span class="cl-name">The Two Kinds of Fragment Origin</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§3.A</span><span class="cl-name">The Clinging (Type A)</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§3.B</span><span class="cl-name">The Adrift (Type B)</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§4</span><span class="cl-name">The Three Stages of Erosion · Failure Modes</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§5</span><span class="cl-name">Mimicry Mechanics · Six Kinds of Tells</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§6</span><span class="cl-name">Emotion Rules · Core Paradox</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n new">§7</span><span class="cl-name">The Rescuer Illusion</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§8</span><span class="cl-name">Fission Rules</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§9.A</span><span class="cl-name">Nascent Soul · Path A</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§9.B</span><span class="cl-name">Warden · Path B · Revised</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§10</span><span class="cl-name">Inter-Individual Relations · Deviation Types</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§11</span><span class="cl-name">Countermeasure Assessment</span><div class="cl-dots"></div></div>
+    <div class="cl-row"><span class="cl-n">§12</span><span class="cl-name">Core Limitations — Summary Table</span><div class="cl-dots"></div></div>
+  </div>
+</div>
+
+</div><!-- shell -->
+</body>
+</html>

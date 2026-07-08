@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corruption — Encyclopaedia Magica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Sacramento&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f4edd8;
+  --paper-warm: #ede3c4;
+  --paper-mid: #ddd0aa;
+  --paper-dark: #c8b888;
+  --ink: #221c10;
+  --ink-mid: #3e3218;
+  --ink-light: #6a5838;
+  --ink-faded: #9a8460;
+  --ink-ghost: #c4aa7a;
+  --sage: #4a5e3a;
+  --sage-mid: #6a7e58;
+  --sage-light: #8a9e78;
+  --sage-pale: #c0d0a8;
+  --sage-wash: rgba(74,94,58,0.06);
+  --rust: #7a3820;
+  --rust-mid: #a05030;
+  --rust-light: #c87050;
+  --rust-pale: #e8c0a0;
+  --rust-wash: rgba(122,56,32,0.05);
+  --gold: #8a6820;
+  --gold-mid: #b08830;
+  --gold-light: #d0a848;
+  --gold-pale: #f0dfa0;
+  --gold-wash: rgba(138,104,32,0.06);
+  --blue: #3a4e68;
+  --blue-mid: #5a6e88;
+  --blue-pale: #b8c8d8;
+  --blue-wash: rgba(58,78,104,0.06);
+  --violet: #5a3868;
+  --violet-pale: #c8b0d8;
+  --line: rgba(160,130,80,0.2);
+  --shadow: rgba(50,35,10,0.1);
+
+  /* School colors */
+  --faith: #6a5020;
+  --word: #2a4a3a;
+  --soul: #4a2a5a;
+  --elem: #3a4a20;
+  --ritual: #5a2a20;
+  --alch: #2a3a5a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #1e180e;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 60%, #28201200 0%, #1e180e 70%),
+    repeating-linear-gradient(45deg, transparent, transparent 60px, rgba(80,60,20,0.015) 60px, rgba(80,60,20,0.015) 61px);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════
+   OUTER WRAPPER
+═══════════════════════════════════ */
+.outer {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 40px 16px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════
+   BOOK CONTAINER
+═══════════════════════════════════ */
+.book {
+  position: relative;
+  background: var(--paper);
+  box-shadow:
+    -12px 0 24px rgba(0,0,0,0.5),
+    12px 0 24px rgba(0,0,0,0.5),
+    0 12px 80px rgba(0,0,0,0.7),
+    inset 0 0 140px rgba(160,130,60,0.1);
+}
+
+.book::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 40px;
+  background: linear-gradient(to right, rgba(30,20,5,0.4), rgba(30,20,5,0.08), transparent);
+  z-index: 20; pointer-events: none;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23g)' opacity='0.052'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1;
+}
+
+.ruled {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent, transparent 30px,
+    var(--line) 30px, var(--line) 31px
+  );
+  background-position: 0 100px;
+  pointer-events: none; z-index: 0;
+}
+
+.book-inner { position: relative; z-index: 2; }
+
+/* ═══════════════════════════════════
+   NAVIGATION (sticky tab bar)
+═══════════════════════════════════ */
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  background: var(--ink);
+  display: flex;
+  gap: 0;
+  z-index: 100;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sticky-nav::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 1.5px;
+  color: var(--ink-ghost);
+  padding: 12px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  text-decoration: none;
+  display: block;
+}
+
+.nav-tab:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--paper);
+}
+
+.nav-tab.active {
+  background: var(--sage);
+  color: #f0f4ec;
+}
+
+/* ═══════════════════════════════════
+   COVER
+═══════════════════════════════════ */
+.cover {
+  background: linear-gradient(160deg, #ede5cc 0%, #ddd4b0 35%, #ccc098 65%, #b8ac82 100%);
+  padding: 90px 88px 80px 96px;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 3px solid var(--paper-dark);
+}
+
+/* Corner decoration */
+.cover::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 240px; height: 240px;
+  background:
+    conic-gradient(from 180deg at 100% 0%,
+      transparent 0deg,
+      rgba(74,94,58,0.08) 60deg,
+      transparent 120deg,
+      rgba(74,94,58,0.05) 180deg,
+      transparent 360deg
+    );
+  pointer-events: none;
+}
+
+.cover-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--ink-faded);
+  margin-bottom: 28px;
+  text-transform: uppercase;
+}
+
+.cover-volume {
+  font-family: 'Sacramento', cursive;
+  font-size: 28px;
+  color: var(--sage-mid);
+  margin-bottom: 10px;
+}
+
+.cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 46px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.cover-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-light);
+  margin-bottom: 36px;
+  letter-spacing: 0.5px;
+}
+
+.cover-ornament {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  color: var(--gold-mid);
+  opacity: 0.7;
+}
+.cover-ornament::before, .cover-ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-mid), transparent);
+}
+
+.cover-summary {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 2;
+  max-width: 520px;
+  margin-bottom: 48px;
+}
+
+.cover-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cover-index-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cip-row {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faded);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.cip-dot {
+  width: 6px; height: 6px;
+  background: var(--ink-faded);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cover-motto {
+  text-align: right;
+}
+
+.cm-main {
+  font-family: 'Sacramento', cursive;
+  font-size: 28px;
+  color: var(--rust-mid);
+  display: block;
+  line-height: 1.4;
+}
+
+.cm-attr {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink-faded);
+  letter-spacing: 1px;
+}
+
+/* ═══════════════════════════════════
+   SECTIONS
+═══════════════════════════════════ */
+.section {
+  padding: 64px 88px 72px 96px;
+  border-bottom: 1px solid var(--paper-mid);
+  position: relative;
+}
+
+.section:nth-child(even) {
+  background: linear-gradient(to bottom right, var(--paper), #f0e8d0);
+}
+
+/* School color accent stripe */
+.section[data-school]::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--school-color, var(--sage));
+}
+
+.section[data-school="faith"] { --school-color: var(--faith); }
+.section[data-school="word"] { --school-color: var(--word); }
+.section[data-school="soul"] { --school-color: var(--soul); }
+.section[data-school="elem"] { --school-color: var(--elem); }
+.section[data-school="ritual"] { --school-color: var(--ritual); }
+.section[data-school="alch"] { --school-color: var(--alch); }
+
+/* ─── Section Header ─── */
+.sec-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--paper-dark);
+  position: relative;
+}
+
+.sec-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--paper-dark);
+  line-height: 0.85;
+  flex-shrink: 0;
+  user-select: none;
+  margin-top: 4px;
+}
+
+.sec-titles { flex: 1; }
+
+.sec-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 4px;
+  color: var(--ink-faded);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+  margin-bottom: 5px;
+}
+
+.sec-subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-light);
+  letter-spacing: 0.3px;
+}
+
+/* School badge (for school sections) */
+.school-badge {
+  position: absolute;
+  right: 0; top: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  padding: 8px 16px;
+  color: white;
+  background: var(--school-color, var(--sage));
+}
+
+/* ─── Body text ─── */
+p.b {
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 2.1;
+  text-align: justify;
+  margin-bottom: 16px;
+  text-indent: 0;
+}
+p.b:first-of-type { text-indent: 0; }
+
+/* ─── Pull quote ─── */
+.pq {
+  margin: 28px 0;
+  padding: 24px 40px;
+  background: linear-gradient(135deg, var(--gold-wash), rgba(240,223,160,0.15));
+  border-left: 3px solid var(--gold-mid);
+  position: relative;
+}
+
+.pq::before {
+  content: '"';
+  position: absolute;
+  top: -4px; left: 16px;
+  font-family: 'Playfair Display', serif;
+  font-size: 60px;
+  color: var(--gold-pale);
+  line-height: 1;
+}
+
+.pq-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink);
+  line-height: 1.7;
+  letter-spacing: 0.3px;
+  padding-left: 12px;
+}
+
+.pq-attr {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gold-mid);
+  margin-top: 10px;
+  padding-left: 12px;
+  display: block;
+}
+
+/* ─── Entry definition ─── */
+.entry {
+  margin: 20px 0;
+  padding: 20px 24px;
+  border: 1px solid var(--paper-dark);
+  background: rgba(255,255,255,0.35);
+  position: relative;
+}
+
+.entry::before {
+  content: attr(data-tag);
+  position: absolute;
+  top: -11px; left: 14px;
+  background: var(--paper);
+  padding: 0 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.entry-term {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.entry-body {
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 1.9;
+}
+
+.entry-sub {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--ink-light);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--paper-dark);
+  line-height: 1.75;
+}
+
+/* ─── Foundation table ─── */
+.found-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13.5px;
+}
+
+.found-table thead tr {
+  border-bottom: 2px solid var(--ink);
+}
+
+.found-table th {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--ink-light);
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.found-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--paper-mid);
+  vertical-align: top;
+  line-height: 1.8;
+  color: var(--ink-mid);
+}
+
+.found-table tr:hover td { background: rgba(160,130,60,0.06); }
+
+.found-table .key-col {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 14px;
+  width: 120px;
+}
+
+/* ─── Overload states table ─── */
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.state-card {
+  border: 1px solid var(--paper-dark);
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(240,230,200,0.2));
+  position: relative;
+  transition: transform 0.15s;
+}
+.state-card:hover { transform: translateY(-1px); box-shadow: 0 3px 14px var(--shadow); }
+
+.sc-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--rust-mid);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.sc-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.sc-desc {
+  font-size: 12.5px;
+  color: var(--ink-light);
+  line-height: 1.75;
+}
+
+/* ─── School card (main cards for each school) ─── */
+.school-card {
+  background: rgba(255,255,255,0.3);
+  border: 1px solid var(--paper-dark);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.school-card-head {
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sch-name-zh {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.sch-name-en {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-faded);
+  margin-top: 2px;
+}
+
+.sch-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 6px 14px;
+  border: 1px solid currentColor;
+}
+
+.school-card-body {
+  padding: 0 22px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.scb-section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2px;
+  color: var(--ink-faded);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--paper-dark);
+}
+
+.scb-item {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  margin-bottom: 4px;
+  align-items: flex-start;
+}
+
+.scb-item::before {
+  content: '·';
+  color: var(--ink-faded);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.scb-core {
+  grid-column: 1 / -1;
+  background: rgba(160,130,60,0.06);
+  border-left: 2px solid var(--school-color, var(--sage));
+  padding: 12px 16px;
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 1.85;
+  font-style: italic;
+}
+
+/* School-specific header colors */
+.faith-head { background: linear-gradient(to right, rgba(106,80,32,0.1), transparent); }
+.word-head { background: linear-gradient(to right, rgba(42,74,58,0.1), transparent); }
+.soul-head { background: linear-gradient(to right, rgba(74,42,90,0.1), transparent); }
+.elem-head { background: linear-gradient(to right, rgba(58,74,32,0.1), transparent); }
+.ritual-head { background: linear-gradient(to right, rgba(90,42,32,0.1), transparent); }
+.alch-head { background: linear-gradient(to right, rgba(42,58,90,0.1), transparent); }
+
+.faith-tag { color: var(--faith); }
+.word-tag { color: var(--word); }
+.soul-tag { color: var(--soul); }
+.elem-tag { color: var(--elem); }
+.ritual-tag { color: var(--ritual); }
+.alch-tag { color: var(--alch); }
+
+/* ─── Phenomenon box ─── */
+.phenom-box {
+  background: var(--gold-wash);
+  border: 1px solid rgba(176,136,48,0.25);
+  border-top: 2px solid var(--gold-mid);
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+
+.phenom-title {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--gold-mid);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.phenom-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.phenom-list li {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mid);
+  padding: 5px 14px;
+  border: 1px solid var(--paper-dark);
+  background: rgba(255,255,255,0.5);
+}
+
+/* ─── Combination table ─── */
+.combo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.combo-card {
+  border: 1px solid var(--paper-dark);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.combo-card:hover { box-shadow: 0 4px 18px var(--shadow); }
+
+.combo-schools {
+  display: flex;
+}
+
+.cs-tag {
+  flex: 1;
+  padding: 8px 10px;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: white;
+}
+
+.cs-plus {
+  background: rgba(0,0,0,0.15);
+  padding: 8px 6px;
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.combo-result {
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.3);
+}
+
+.cr-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.cr-desc {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.7;
+}
+
+.cr-yuli {
+  margin-top: 8px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--sage-mid);
+  border-top: 1px dashed var(--paper-dark);
+  padding-top: 6px;
+}
+
+/* ─── Practitioner table ─── */
+.prac-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 13px;
+}
+
+.prac-table thead th {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  color: var(--ink-faded);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--ink);
+  font-weight: 500;
+}
+
+.prac-table tbody td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--paper-mid);
+  color: var(--ink-mid);
+  line-height: 1.75;
+  vertical-align: top;
+}
+
+.prac-table .type-col {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.prac-school-tag {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  margin: 2px 2px 2px 0;
+}
+
+/* ─── Scene sample ─── */
+.scene {
+  margin: 20px 0;
+  background: rgba(255,255,255,0.4);
+  border: 1px solid var(--paper-dark);
+  border-top: 2px solid var(--ink-faded);
+  padding: 20px 26px;
+}
+
+.scene-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 3px;
+  color: var(--ink-faded);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.scene-text {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 2;
+}
+
+/* ─── Keyword strips ─── */
+.kw-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.kw {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  padding: 5px 14px;
+  border: 1px solid var(--paper-dark);
+  background: rgba(255,255,255,0.4);
+  color: var(--ink-mid);
+  cursor: default;
+  transition: all 0.15s;
+}
+.kw:hover { background: var(--sage-pale); border-color: var(--sage-light); color: var(--sage); }
+.kw.g { color: var(--sage); border-color: var(--sage-pale); }
+.kw.r { color: var(--rust-mid); border-color: var(--rust-pale); }
+.kw.o { color: var(--gold); border-color: rgba(176,136,48,0.3); }
+
+/* ─── Final summary ─── */
+.final-block {
+  background: linear-gradient(160deg, var(--ink) 0%, #2e2010 100%);
+  padding: 60px 88px 60px 96px;
+  position: relative;
+  overflow: hidden;
+}
+
+.final-block::before {
+  content: '';
+  position: absolute;
+  right: -40px; bottom: -40px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90,107,74,0.15) 0%, transparent 70%);
+}
+
+.fb-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--ink-ghost);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.fb-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--paper-warm);
+  line-height: 1.7;
+  letter-spacing: 0.3px;
+  margin-bottom: 20px;
+}
+
+.fb-highlight {
+  display: block;
+  font-family: 'Sacramento', cursive;
+  font-size: 42px;
+  color: var(--gold-pale);
+  margin-top: 8px;
+  letter-spacing: 2px;
+  line-height: 1.3;
+}
+
+.fb-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.fb-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 6px 14px;
+  border: 1px solid rgba(160,130,60,0.4);
+  color: var(--ink-ghost);
+}
+
+/* ─── H-rule ─── */
+.hr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 28px 0;
+  opacity: 0.5;
+}
+.hr::before, .hr::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-mid), transparent);
+}
+.hr span { font-family: 'Lora', serif; font-size: 14px; color: var(--gold-mid); }
+
+/* ─── Margin note ─── */
+.mn {
+  float: right;
+  clear: right;
+  width: 150px;
+  margin: 0 -60px 16px 20px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--rust-mid);
+  line-height: 1.65;
+  border-left: 1px solid rgba(160,80,48,0.35);
+  padding-left: 10px;
+}
+
+/* ─── Anomaly list (§1.5 unclassified phenomena) ─── */
+.anomaly-list {
+  list-style: none;
+  margin: 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.anomaly-item {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 15px 20px;
+  background: rgba(255,255,255,0.28);
+  border: 1px solid var(--paper-dark);
+  border-left: 3px solid var(--ink-faded);
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.9;
+  transition: background 0.15s;
+}
+.anomaly-item:hover {
+  background: rgba(255,255,255,0.44);
+}
+.ai-num {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faded);
+  flex-shrink: 0;
+  padding-top: 4px;
+  min-width: 20px;
+  text-align: right;
+  user-select: none;
+}
+.anomaly-note {
+  margin-top: 20px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(154,132,96,0.07), transparent);
+  border-top: 1px solid var(--paper-dark);
+  border-bottom: 1px solid var(--paper-dark);
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--ink-mid);
+  line-height: 1.95;
+}
+.anomaly-note-attr {
+  display: block;
+  margin-top: 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  color: var(--ink-faded);
+  font-style: normal;
+}
+
+/* Responsive */
+@media (max-width: 680px) {
+  .section { padding: 44px 28px 48px 36px; }
+  .cover { padding: 56px 32px 48px 40px; }
+  .cover-title { font-size: 32px; }
+  .combo-grid { grid-template-columns: 1fr; }
+  .state-grid { grid-template-columns: 1fr; }
+  .school-card-body { grid-template-columns: 1fr; }
+  .scb-core { grid-column: 1; }
+  .mn { float: none; width: auto; margin: 12px 0; }
+  .sec-num { font-size: 48px; }
+  .final-block { padding: 40px 28px 44px 36px; }
+}
+</style>
+</head>
+<body>
+<div class="outer">
+<div class="book">
+<div class="grain"></div>
+<div class="ruled"></div>
+<div class="book-inner">
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <a href="#cover" class="nav-tab">Cover</a>
+  <a href="#s1" class="nav-tab">Fundamentals</a>
+  <a href="#s1-5" class="nav-tab">Unclassified</a>
+  <a href="#s2" class="nav-tab">Cost System</a>
+  <a href="#s3" class="nav-tab">Faith Arts</a>
+  <a href="#s4" class="nav-tab">Word Arts</a>
+  <a href="#s5" class="nav-tab">Soul Arts</a>
+  <a href="#s6" class="nav-tab">Element Arts</a>
+  <a href="#s7" class="nav-tab">Ritual Arts</a>
+  <a href="#s8" class="nav-tab">Alchemy</a>
+  <a href="#s9" class="nav-tab">Combined Uses</a>
+  <a href="#s10" class="nav-tab">Practitioner Types</a>
+  <a href="#s11" class="nav-tab">World Style</a>
+</nav>
+
+<!-- COVER -->
+<div class="cover" id="cover">
+  <div>
+    <div class="cover-eyebrow">Corruption · Encyclopaedia Magica · Vol. I</div>
+    <div class="cover-volume">Hybrid Magic System</div>
+    <div class="cover-title">Encyclopaedia Magica</div>
+    <div class="cover-subtitle">A Complete Reference of the Living Magic System</div>
+    <div class="cover-ornament"><span>✦</span></div>
+    <div class="cover-summary">
+      This volume systematically compiles the nature and unified theoretical foundation of magic in the world of <em>Corruption</em>,
+      complete entries for its six schools of casting, the cost mechanism, a map of combined applications, the social
+      standing of practitioners, and an overall style guide for writing about it.<br>
+      Intended for long-term creative reference, worldbuilding, and character design.
+    </div>
+  </div>
+  <div class="cover-footer">
+    <div class="cover-index-preview">
+      <div class="cip-row"><div class="cip-dot"></div>Book One · Nature of Magic & Fundamental Theory</div>
+      <div class="cip-row"><div class="cip-dot"></div>Book Two · The Cost System</div>
+      <div class="cip-row"><div class="cip-dot"></div>Books Three–Eight · The Six Schools, In Full</div>
+      <div class="cip-row"><div class="cip-dot"></div>Book Nine · Combined Applications & Interactions</div>
+      <div class="cip-row"><div class="cip-dot"></div>Book Ten · Social Classification of Practitioners</div>
+      <div class="cip-row"><div class="cip-dot"></div>Book Eleven · General Writing Style</div>
+    </div>
+    <div class="cover-motto">
+      <span class="cm-main">The way the soul<br>speaks with the world</span>
+      <span class="cm-attr">— The magic system, in one line</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 1 · FUNDAMENTALS
+══════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="sec-head">
+    <div class="sec-num">1</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK ONE · FUNDAMENTALS</div>
+      <div class="sec-title">Nature of Magic & Fundamental Theory</div>
+      <div class="sec-subtitle">The Unified Theory of All Magic</div>
+    </div>
+  </div>
+
+  <p class="b">In the world of <em>Corruption</em>, magic is not made of some mysterious external element, nor a privilege granted by the gods to a chosen few. It is part of the world's own inner logic — a fundamental capacity present within every living being that possesses a soul.</p>
+
+  <div class="pq">
+    <div class="pq-text">The nature of magic is "the soul and consciousness interfering with reality."</div>
+    <span class="pq-attr">— Hybrid System · Unified Foundational Definition</span>
+  </div>
+
+  <p class="b">Every act of spellcasting arises from the same mechanism: some form of mental activity within the caster exerts an influence on the laws governing external reality. Different casting traditions and different cultural understandings are simply different ways of describing and channeling this same process — not different sources of power.</p>
+
+  <div class="entry" data-tag="Core Entry">
+    <div class="entry-term">The Five Foundational Elements of Spellcasting</div>
+    <div class="entry-body">
+      <table class="found-table">
+        <thead><tr><th>Element</th><th>Definition</th><th>Effect of Its Loss</th></tr></thead>
+        <tbody>
+          <tr><td class="key-col">Consciousness</td><td>The impulse that initiates interference with reality. The starting point of all magic.</td><td>Cannot cast; perception tends toward shutdown</td></tr>
+          <tr><td class="key-col">Soul Structure</td><td>Stabilizes the casting process, preventing the interference of consciousness from spiraling out of control.</td><td>Spell outcomes become unpredictable, may harm the caster</td></tr>
+          <tr><td class="key-col">Cognitive Model</td><td>The caster's own framework for understanding "how a spell is supposed to work."</td><td>The spell may take effect in unexpected ways</td></tr>
+          <tr><td class="key-col">Mana Flow</td><td>The force of interference with reality generated by the soul's activity — the fuel of magic.</td><td>The spell's effect fades until it disappears entirely</td></tr>
+          <tr><td class="key-col">Channeling Method</td><td>The path by which reality is made to accept the consciousness's interference (language, ritual, faith, etc.).</td><td>The interference has nothing to land on, like shouting into a void</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="hr"><span>✦</span></div>
+
+  <div class="entry" data-tag="Key Definition">
+    <div class="entry-term">The True Nature of Mana</div>
+    <div class="entry-body">
+      Mana is not an external element, not something drawn up from the earth or sky. It is <strong>the force of reality-interference generated by the soul's own activity</strong> — closer to:
+      <br><br>
+      · Mental fuel · The flow of will · The soul's own heat
+      <br><br>
+      This means the true cost of casting is closer in nature to <strong>mental fatigue</strong> than to physical exertion. A caster after heavy spellcasting resembles someone whose nerves have been strained to exhaustion, rather than someone with sore muscles.
+    </div>
+    <div class="entry-sub">
+      Practical manifestations: heaviness in the head, sluggish thinking, difficulty concentrating, emotional numbness. High-level casters typically have extensive experience reading these signs and know when it's time to stop.
+    </div>
+  </div>
+
+  <p class="b">For this reason, when writing about magic in this world, always keep in mind: magic and a caster's mental state are inseparable. Someone in a state of extreme emotional instability will struggle to cast with precision; someone in a state of intense focus, even nearly out of mana, may still manage a delicate, minor spell.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 1.5 · UNCLASSIFIED PHENOMENA
+══════════════════════════════════════ -->
+<div class="section" id="s1-5">
+  <div class="sec-head">
+    <div class="sec-num" style="font-size:52px;letter-spacing:-1px;line-height:0.9;">1.5</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK ONE · ADDENDUM</div>
+      <div class="sec-title">Unclassified Phenomena</div>
+      <div class="sec-subtitle">Phenomena Beyond the Known Framework</div>
+    </div>
+  </div>
+
+  <p class="b">The following phenomena have been recorded by the casting community, but cannot be placed into any of the six known schools. They do not follow the established theoretical framework of magic, nor do they display any lasting regularity.</p>
+
+  <ul class="anomaly-list">
+    <li class="anomaly-item">
+      <span class="ai-num">01</span>
+      <span>A streetlamp on a certain street changes color on rainy days, the color linked somehow to the mood of the first passerby of the day. It reverts after three hours. Cannot be reproduced on demand.</span>
+    </li>
+    <li class="anomaly-item">
+      <span class="ai-num">02</span>
+      <span>A black cat that always appears under the same eave. Some believe it to be a sealed object, but no detection method has ever confirmed any magical residue on it.</span>
+    </li>
+    <li class="anomaly-item">
+      <span class="ai-num">03</span>
+      <span>Certain sealed objects, after being restored, will "revert" to their pre-restoration state after some indeterminate span of time, as if the restoration had never happened — down to the restorer's own marks reappearing exactly as before.</span>
+    </li>
+    <li class="anomaly-item">
+      <span class="ai-num">04</span>
+      <span>A very small number of people, in deep sleep, will speak a sentence in no known language. They remember nothing of it upon waking. These sentences have been recorded, but cannot be translated, and cannot be linked to any known instance of Corruption or any sealed object.</span>
+    </li>
+  </ul>
+
+  <div class="anomaly-note">
+    This volume does not attempt to explain these phenomena. They are recorded here only as a reminder: the magic system is a framework for human understanding of the world, not the whole of the world itself. There will always be things that fall outside the frame.
+    <span class="anomaly-note-attr">— Editorial Note</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 2 · THE COST SYSTEM
+══════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="sec-head">
+    <div class="sec-num">2</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK TWO · THE COST SYSTEM</div>
+      <div class="sec-title">The Cost System of Magic</div>
+      <div class="sec-subtitle">What It Takes to Shape Reality</div>
+    </div>
+  </div>
+
+  <p class="b">All magic carries a cost, but in this world, that cost isn't blood and pain — it's something more restrained, more mundane: attention, energy, mental clarity. This gives the cost itself a lived-in, everyday quality — after casting, one needs a good night's sleep, or a while sitting quietly doing nothing, rather than collapsing to the ground, bleeding.</p>
+
+  <div class="entry" data-tag="Primary Cost">
+    <div class="entry-term">Mental Drain</div>
+    <div class="entry-body">The primary form of casting cost in this world, functioning much like a "mana-bar" style of mental expenditure — it doesn't directly reduce physical stamina, but drains the clarity and stability of consciousness.</div>
+    <div class="entry-sub">
+      Common manifestations: fatigue, reduced attention, mild headache, emotional numbness, slight sensory overload, sluggish thinking.<br>
+      Ways to recover: sleep, rest, ordinary conversation with others, familiar surroundings, simple physical labor.
+    </div>
+  </div>
+
+  <div class="hr"><span>✦</span></div>
+
+  <p class="b">If a caster continues high-intensity spellcasting before mental drain has recovered, they enter an overload state. The following are recorded manifestations of overload:</p>
+
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="sc-label">Overload State · 01</div>
+      <div class="sc-name">Soul Fatigue</div>
+      <div class="sc-desc">Prolonged insomnia, difficulty entering deep rest. Casters describe it as "my mind won't stop," yet nothing in it comes into focus.</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">Overload State · 02</div>
+      <div class="sc-name">Sensory Distortion</div>
+      <div class="sc-desc">Hearing or vision develops a slight offset — sound as if heard underwater, colors slightly off, edges blurred. Usually resolves on its own within a few hours.</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">Overload State · 03</div>
+      <div class="sc-name">Reality Lag</div>
+      <div class="sc-desc">A sense that the outside world is running half a beat slow, and one's own reactions have slowed to match. Sometimes accompanied by a strange sense of "watching from outside," as if observing one's own body move.</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">Overload State · 04</div>
+      <div class="sc-name">Emotional Hollowness</div>
+      <div class="sc-desc">A temporary loss of the capacity for emotional fluctuation — no reaction to things that would normally stir feeling. Not calm, but a kind of blankness. Usually lasts a few hours to a day.</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">Overload State · 05</div>
+      <div class="sc-name">Mana Tremor</div>
+      <div class="sc-desc">Unconscious, random leakage of small-scale magical effects, beyond the caster's control. May cause nearby objects to shift slightly, temperature to fluctuate, or light to flicker.</div>
+    </div>
+    <div class="state-card">
+      <div class="sc-label">Overload State · 06 (Extremely Rare)</div>
+      <div class="sc-name">Soul Structure Instability</div>
+      <div class="sc-desc">Appears only in extremely high-level casters after prolonged overload. Cracks begin to form in the mental structure, and sensitivity to Corruption rises sharply. A boundary that demands particular attention.</div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">Sample Scene · The Everyday Face of Cost</div>
+    <div class="scene-text">
+      He'd spent four hours working on that sealed object. When he finished, Riku Yuni put his tools back and sat in the chair for a long while, doing nothing.<br>
+      Not thinking about anything in particular — just sitting.<br>
+      The other persona kept him quiet company, without a word. That kind of moment doesn't need words.<br>
+      The rain was still falling outside. The tea had gone cold, and no one bothered to reheat it.
+    </div>
+  </div>
+
+  <div class="entry" data-tag="Writing Note">
+    <div class="entry-term">Things to Avoid When Writing This</div>
+    <div class="entry-body">
+      · Mental breakdowns or personality splits at the drop of a hat<br>
+      · Overload immediately turning into a frenzied killing spree<br>
+      · Costs wildly out of proportion to the spell's intensity, played for melodrama
+    </div>
+    <div class="entry-sub">
+      This world's overall tone leans toward the everyday. Overload should feel more like "needs a good night's sleep" than "on the verge of a soul explosion." Please keep that temperature.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 3 · FAITH ARTS
+══════════════════════════════════════ -->
+<div class="section" id="s3" data-school="faith">
+  <div class="sec-head">
+    <div class="sec-num">3</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK THREE · FAITH ARTS</div>
+      <div class="sec-title">Faith Arts</div>
+      <div class="sec-subtitle">Magic Through Belief and Divine Resonance</div>
+    </div>
+    <div class="school-badge" style="background:var(--faith);">FAITH ARTS</div>
+  </div>
+
+  <div class="school-card">
+    <div class="school-card-head faith-head">
+      <div>
+        <div class="sch-name-zh">Faith Arts</div>
+        <div class="sch-name-en">Magic of belief, prayer and spiritual resonance</div>
+      </div>
+      <div class="sch-tag faith-tag">Most Stable · Safest</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--faith)">
+        <strong>Core Mechanism:</strong> through a stable state of faith and the act of prayer, the caster's consciousness is anchored within a highly stable cognitive framework, reducing uncertainty during casting and allowing the interference with reality to be smoother and longer-lasting. Whether the god itself actually exists has no bearing on whether the spell works — what matters is <em>the mental stability that faith itself provides</em>.
+      </div>
+      <div>
+        <div class="scb-section-title">Common Uses</div>
+        <div class="scb-item">Healing minor wounds and illness</div>
+        <div class="scb-item">Purifying low-level anomalous residue</div>
+        <div class="scb-item">Stabilizing another's emotional state</div>
+        <div class="scb-item">Dispelling low-level anomalous interference</div>
+        <div class="scb-item">Maintaining long-term seal stability</div>
+        <div class="scb-item">Comfort and soul-stabilization for the dying</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Limitations</div>
+        <div class="scb-item">Low ceiling on extreme power</div>
+        <div class="scb-item">Heavily dependent on the caster's own conviction</div>
+        <div class="scb-item">Effectiveness plummets when the caster harbors doubt</div>
+        <div class="scb-item">Weak interference at the level of the soul</div>
+        <div class="scb-item">Heavily ritualistic, ill-suited to emergency casting</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Typical Practitioners</div>
+        <div class="scb-item">Clergy and monastics</div>
+        <div class="scb-item">Folk believers (low level)</div>
+        <div class="scb-item">Church-certified healers</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Relationship to Other Schools</div>
+        <div class="scb-item">Combined with Word Arts: reinforces seal stability</div>
+        <div class="scb-item">Combined with Ritual Arts: the mainstream method for major Church ceremonies</div>
+        <div class="scb-item">In tension with Soul Arts: faith's closed nature limits soul perception</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phenom-box">
+    <div class="phenom-title">Typical Casting Phenomena · What You'd Observe</div>
+    <ul class="phenom-list">
+      <li>The environment gradually grows quiet</li>
+      <li>Light softens</li>
+      <li>Air temperature rises slightly</li>
+      <li>Emotions of those present are gently stabilized</li>
+      <li>A low murmur of prayer, or silence</li>
+    </ul>
+  </div>
+
+  <div class="entry" data-tag="Important Note">
+    <div class="entry-term">Faith Arts Are Not "Holy Light Explosions"</div>
+    <div class="entry-body">The hallmark of advanced Faith Arts isn't a dazzling light show, but a sense that "the whole environment has quietly become different." Holy light does exist, but it tends to manifest as a faint, gentle glow, like early morning sunlight — never a screen full of pyrotechnics.</div>
+    <div class="entry-sub">Reference imagery: candlelight suddenly holding perfectly steady · the rain seeming to pause for an instant · dust in the room ceasing to drift</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 4 · WORD ARTS
+══════════════════════════════════════ -->
+<div class="section" id="s4" data-school="word">
+  <div class="sec-head">
+    <div class="sec-num">4</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK FOUR · WORD ARTS</div>
+      <div class="sec-title">Word Arts</div>
+      <div class="sec-subtitle">Magic Through Language, Name, and Definition</div>
+    </div>
+    <div class="school-badge" style="background:var(--word);">WORD ARTS</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-text">A thing correctly described is more easily accepted by reality.</div>
+    <span class="pq-attr">— Word Arts · Foundational Belief</span>
+  </div>
+
+  <p class="b">Word Arts rests on a core belief: language is not merely a tool for describing reality — it is itself a means of affecting reality. When you name a thing, or define a state, with sufficiently precise language, you are, in some sense, reshaping reality's own "understanding" of that thing, making it easier to change.</p>
+
+  <div class="school-card">
+    <div class="school-card-head word-head">
+      <div>
+        <div class="sch-name-zh">Word Arts</div>
+        <div class="sch-name-en">Magic through precise language, inscription and naming</div>
+      </div>
+      <div class="sch-tag word-tag">Most Precise · Academic</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--word)">
+        <strong>Core Mechanism:</strong> through language, script, name, and definition, alters reality's own "cognitive framework" for the target object, allowing change to be exerted within that framework. The more precise the language, the finer the interference; the more complete the naming, the more stable the control.
+      </div>
+      <div>
+        <div class="scb-section-title">Common Uses</div>
+        <div class="scb-item">Sealing and unsealing</div>
+        <div class="scb-item">Repairing an object's structure</div>
+        <div class="scb-item">Precise record-keeping and archiving</div>
+        <div class="scb-item">Constructing magical arrays</div>
+        <div class="scb-item">Stabilizing a sealed object's resonance</div>
+        <div class="scb-item">Transmitting information across distance</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Limitations</div>
+        <div class="scb-item">Extremely long learning curve</div>
+        <div class="scb-item">Requires deep focus; ill-suited to casting under emotional strain</div>
+        <div class="scb-item">A misplaced word can cause the spell to go awry</div>
+        <div class="scb-item">Limited effect on things that "cannot be named"</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Typical Practitioners</div>
+        <div class="scb-item">Scholars and researchers</div>
+        <div class="scb-item">Scribes and archivists</div>
+        <div class="scb-item">Sealed-object restorers (one of their core schools)</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Relationship to Other Schools</div>
+        <div class="scb-item">Combined with Faith Arts: precision sealing</div>
+        <div class="scb-item">Combined with Soul Arts: advanced sealed-object restoration</div>
+        <div class="scb-item">Combined with Alchemy: fixing incantations into material</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phenom-box">
+    <div class="phenom-title">Typical Casting Phenomena · What You'd Observe</div>
+    <ul class="phenom-list">
+      <li>Text briefly flickers in the air as an afterimage</li>
+      <li>The caster murmurs a single word, repeatedly, under their breath</li>
+      <li>Paper automatically records content</li>
+      <li>A named object gives off a faint resonance</li>
+      <li>A regular pattern of lines appears along a sealed object's edge</li>
+    </ul>
+  </div>
+
+  <div class="mn">When Word Arts fails, it usually isn't an explosion — it's nothing happening at all, or a minor, mild mishap.</div>
+
+  <p class="b">Word Arts practitioners tend to be men and women of few words in daily life, but every word they use is extremely precise. They have a natural discomfort with vague expression — not merely a professional habit, but a sensitivity that runs down to the level of consciousness itself. They tend to "name a thing clearly" in their own minds before ever saying it aloud.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 5 · SOUL ARTS
+══════════════════════════════════════ -->
+<div class="section" id="s5" data-school="soul">
+  <div class="sec-head">
+    <div class="sec-num">5</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK FIVE · SOUL ARTS</div>
+      <div class="sec-title">Soul Arts</div>
+      <div class="sec-subtitle">Direct Contact with Consciousness and Memory</div>
+    </div>
+    <div class="school-badge" style="background:var(--soul);">SOUL ARTS</div>
+  </div>
+
+  <p class="b">Of all the casting traditions, Soul Arts sits closest to the true underlying principle of magic — it operates directly on consciousness and soul structure themselves, rather than through an intermediary such as language, faith, or ritual. This makes it both the most powerful and the most dangerous of all the schools.</p>
+
+  <div class="school-card">
+    <div class="school-card-head soul-head">
+      <div>
+        <div class="sch-name-zh">Soul Arts</div>
+        <div class="sch-name-en">Direct manipulation of consciousness, memory and soul structure</div>
+      </div>
+      <div class="sch-tag soul-tag">Most Sensitive · Extremely High Risk</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--soul)">
+        <strong>Core Mechanism:</strong> the caster makes direct contact, through their own consciousness, with the target's soul, establishing a direct channel of perception and interference between the two minds. The effect is precise, but the boundary is blurred — it's difficult for a caster to guarantee they won't be affected, in turn, by the target's own soul state during contact.
+      </div>
+      <div>
+        <div class="scb-section-title">Common Uses</div>
+        <div class="scb-item">Mental communication</div>
+        <div class="scb-item">Memory reading (within limits)</div>
+        <div class="scb-item">Emotional soothing and stabilization</div>
+        <div class="scb-item">Dream contact</div>
+        <div class="scb-item">Soul-structure repair</div>
+        <div class="scb-item">Entering another's mental world (advanced, extremely dangerous)</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Limitations</div>
+        <div class="scb-item">Extremely high mental load; highest overload risk of any school</div>
+        <div class="scb-item">Long-term use leads to emotional numbness</div>
+        <div class="scb-item">Practitioners have the highest sensitivity to Corruption of any school</div>
+        <div class="scb-item">Cannot effectively act on an "unconscious" existence</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Typical Practitioners</div>
+        <div class="scb-item">A small number of high-level soul healers</div>
+        <div class="scb-item">Some sealed-object restorers</div>
+        <div class="scb-item">Riku Yuni (naturally suited; the dual-persona structure provides a unique dimension of perception)</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Relationship to Corruption</div>
+        <div class="scb-item">Soul Arts operate on a mechanism closest to that of Corruption itself</div>
+        <div class="scb-item">Soul Arts practitioners are the type of host Corruption finds most interesting</div>
+        <div class="scb-item">Entering and rescuing someone from a mental world requires this school</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry" data-tag="Riku Yuni Profile">
+    <div class="entry-term">Riku Yuni's Special Relationship to Soul Arts</div>
+    <div class="entry-body">
+      Riku Yuni's parallel dual-persona structure grants him, at the level of Soul Arts, an exceedingly rare trait: he can perceive another's soul state from two conscious vantage points simultaneously, something like "dual-channel reception." This lets him read a sealed object's resonance with far more nuance than an ordinary restorer — but it also means he carries a heavier mental load.
+    </div>
+    <div class="entry-sub">
+      Note: this doesn't make him "the strongest Soul Arts practitioner." He simply perceives things in a way no one else can — and that perception is, at times, one he'd rather not have.
+    </div>
+  </div>
+
+  <div class="phenom-box">
+    <div class="phenom-title">Typical Casting Phenomena · What You'd Observe</div>
+    <ul class="phenom-list">
+      <li>The caster's eyes take on a look of "not being here"</li>
+      <li>The other party may slip into a light trance</li>
+      <li>The surrounding air cools slightly</li>
+      <li>The caster needs a long silence afterward</li>
+      <li>Sometimes cannot immediately articulate what they saw</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 6 · ELEMENT ARTS
+══════════════════════════════════════ -->
+<div class="section" id="s6" data-school="elem">
+  <div class="sec-head">
+    <div class="sec-num">6</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK SIX · ELEMENT ARTS</div>
+      <div class="sec-title">Element Arts</div>
+      <div class="sec-subtitle">Resonance With the Natural World</div>
+    </div>
+    <div class="school-badge" style="background:var(--elem);">ELEMENT ARTS</div>
+  </div>
+
+  <div class="pq">
+    <div class="pq-text">Element Arts is not "creating an element" — it's "establishing resonance with a natural phenomenon."</div>
+    <span class="pq-attr">— Element Arts · Correcting a Core Misconception</span>
+  </div>
+
+  <p class="b">Element Arts is the most widely practiced and lowest-threshold casting tradition in this world. Most of the basic magic ordinary people know comes from this school — not because it's simple, but because its channeling path is the most intuitive: you don't need to understand a complex soul structure, only to form a genuine, felt sense of resonance with a natural phenomenon.</p>
+
+  <div class="school-card">
+    <div class="school-card-head elem-head">
+      <div>
+        <div class="sch-name-zh">Element Arts</div>
+        <div class="sch-name-en">Resonance with natural phenomena — fire, water, wind, earth</div>
+      </div>
+      <div class="sch-tag elem-tag">Most Intuitive · Most Common</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--elem)">
+        <strong>Core Mechanism:</strong> the caster "personifies" a natural phenomenon (heat, flow, gravity, vibration, etc.) — that is, forms a relationship with it at the level of consciousness resembling communication — and then exerts influence on that phenomenon through the relationship. The deeper the resonance, the greater the range and precision of what can be affected.
+      </div>
+      <div>
+        <div class="scb-section-title">Common Uses</div>
+        <div class="scb-item">Igniting fire · controlling heat</div>
+        <div class="scb-item">Adjusting the direction of water flow</div>
+        <div class="scb-item">Warming food and surroundings</div>
+        <div class="scb-item">Windproofing and insulation</div>
+        <div class="scb-item">Aiding agricultural irrigation</div>
+        <div class="scb-item">Structural reinforcement</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Limitations</div>
+        <div class="scb-item">Extremely difficult to achieve fine control at high levels</div>
+        <div class="scb-item">Strongly dependent on current environmental conditions</div>
+        <div class="scb-item">No interference capability at the soul level</div>
+        <div class="scb-item">Prone to losing control under strong emotion</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Typical Practitioners</div>
+        <div class="scb-item">Farmers · fishermen · herders</div>
+        <div class="scb-item">Cooks (precise heat control)</div>
+        <div class="scb-item">Construction workers</div>
+        <div class="scb-item">Most ordinary citizens (low level)</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Typical Everyday Scenes</div>
+        <div class="scb-item">Lighting a hearth with a passing gesture</div>
+        <div class="scb-item">Keeping tea warm with a fingertip</div>
+        <div class="scb-item">Drying laundry on the line faster</div>
+        <div class="scb-item">Keeping a particular spot dry in the rain</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">Sample Scene · The Everyday Feel of Element Arts</div>
+    <div class="scene-text">
+      The baker at the market rested a hand by the oven and closed her eyes for a moment. The oven's temperature settled — not too high, not too low, just right.<br>
+      She said nothing special, struck no particular pose. She simply felt it, and adjusted.<br>
+      It's the first thing she does every morning, even before her prayers.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 7 · RITUAL ARTS
+══════════════════════════════════════ -->
+<div class="section" id="s7" data-school="ritual">
+  <div class="sec-head">
+    <div class="sec-num">7</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK SEVEN · RITUAL ARTS</div>
+      <div class="sec-title">Ritual Arts</div>
+      <div class="sec-subtitle">Amplification Through Process and Collective Will</div>
+    </div>
+    <div class="school-badge" style="background:var(--ritual);">RITUAL ARTS</div>
+  </div>
+
+  <p class="b">The core logic of Ritual Arts is "amplification," not "creation." A single caster's power of interference is limited, but through a carefully designed process, a system of symbols, and the convergence of collective will, that power can be multiplied many times over. This makes Ritual Arts the single most powerful form of casting, in terms of raw output per use.</p>
+
+  <div class="school-card">
+    <div class="school-card-head ritual-head">
+      <div>
+        <div class="sch-name-zh">Ritual Arts</div>
+        <div class="sch-name-en">Amplification through structured process and collective consciousness</div>
+      </div>
+      <div class="sch-tag ritual-tag">Most Powerful · Most Complex</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--ritual)">
+        <strong>Core Mechanism:</strong> through a pre-designed process (steps, timing, symbolic objects, formation) the consciousness of all participants is directed toward the same goal, forming a combined force. The process itself becomes a vessel for guiding consciousness, reducing the instability of individual casting.
+      </div>
+      <div>
+        <div class="scb-section-title">Common Uses</div>
+        <div class="scb-item">Constructing and maintaining large-scale seals</div>
+        <div class="scb-item">City-level protective works</div>
+        <div class="scb-item">Major Church ceremonies</div>
+        <div class="scb-item">Rebirth prayers and soul settlement</div>
+        <div class="scb-item">Seasonal agricultural rites</div>
+        <div class="scb-item">Magical witnessing of major vows</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Limitations</div>
+        <div class="scb-item">Time-consuming preparation; unsuited for emergencies</div>
+        <div class="scb-item">Usually requires multiple participants</div>
+        <div class="scb-item">Any single step disrupted causes the whole process to fail</div>
+        <div class="scb-item">The cost of failure often far exceeds that of ordinary casting</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Typical Practitioners</div>
+        <div class="scb-item">Professional ritual officiants</div>
+        <div class="scb-item">High-ranking Church clergy</div>
+        <div class="scb-item">Leaders of large-scale sealing projects</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Folk Forms</div>
+        <div class="scb-item">Collective prayer during festivals</div>
+        <div class="scb-item">Magical witnessing at weddings and funerals</div>
+        <div class="scb-item">Village seasonal rites (low-level, mild effects)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry" data-tag="Important Note">
+    <div class="entry-term">The "Weight" of Ritual Arts</div>
+    <div class="entry-body">When a true high-level ritual begins, there is no explosion, no light show at the scene. It's closer to this: <strong>the very nature of the space itself changes</strong>. Sound travels differently, the angle of light seems subtly off, and those present instinctively lower their voices, sometimes forgetting what they meant to say.</div>
+    <div class="entry-sub">If you ever write a scene where "everyone suddenly falls quiet, for no clear reason" — that's very likely a ritual underway.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 8 · ALCHEMY
+══════════════════════════════════════ -->
+<div class="section" id="s8" data-school="alch">
+  <div class="sec-head">
+    <div class="sec-num">8</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK EIGHT · ALCHEMY</div>
+      <div class="sec-title">Alchemy</div>
+      <div class="sec-subtitle">Magic Fixed in Matter and Craft</div>
+    </div>
+    <div class="school-badge" style="background:var(--alch);">ALCHEMY</div>
+  </div>
+
+  <p class="b">Alchemy is the casting tradition most deeply woven into everyday life — not because its effects are the mildest, but because its products remain in the world in physical form, becoming objects people encounter every day. That teapot that remembers a certain temperature, that mirror that clouds over on rainy days, that ring that always seems to be somewhere you didn't leave it — all of these might well be products of Alchemy.</p>
+
+  <div class="school-card">
+    <div class="school-card-head alch-head">
+      <div>
+        <div class="sch-name-zh">Alchemy</div>
+        <div class="sch-name-en">Inscription of magic into physical matter and craft objects</div>
+      </div>
+      <div class="sch-tag alch-tag">Most Durable · Most Artisanal</div>
+    </div>
+    <div class="school-card-body">
+      <div class="scb-core" style="--school-color: var(--alch)">
+        <strong>Core Mechanism:</strong> through a specific process, careful choice of materials, and the infusion of the caster's own consciousness, magical effects are fixed into a material structure. The object becomes a vessel for the magic, continuing to function long after the caster has left, or even died — sometimes developing a "personality" the original design never intended.
+      </div>
+      <div>
+        <div class="scb-section-title">Common Uses</div>
+        <div class="scb-item">Everyday magical tool-making</div>
+        <div class="scb-item">Constructing sealing containers</div>
+        <div class="scb-item">Preserving potions and preparations</div>
+        <div class="scb-item">Materials for sealed-object restoration</div>
+        <div class="scb-item">Communication devices</div>
+        <div class="scb-item">Building reinforcement and embedded magic</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Limitations</div>
+        <div class="scb-item">High cost, heavily material-dependent</div>
+        <div class="scb-item">Time-consuming to craft; unavailable for instant use</div>
+        <div class="scb-item">Final quality is highly dependent on the caster's state during creation</div>
+        <div class="scb-item">"Personality drift" from years of use is difficult to predict</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Typical Practitioners</div>
+        <div class="scb-item">Workshop artisans and craftsmen</div>
+        <div class="scb-item">Sealed-object restorers (a core skill)</div>
+        <div class="scb-item">Professional potion-makers</div>
+        <div class="scb-item">Some architects (structural magic embedding)</div>
+      </div>
+      <div>
+        <div class="scb-section-title">Sealed Objects & Alchemy</div>
+        <div class="scb-item">Most sealed objects contain some element of Alchemy</div>
+        <div class="scb-item">Restoring a sealed object requires understanding its alchemical structure</div>
+        <div class="scb-item">One of the two core schools underlying Riku Yuni's daily work</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-label">Sample Scene · The Workshop Feel of Alchemy</div>
+    <div class="scene-text">
+      Three kinds of material sat on the workbench, alongside a fine-tipped brush and a small vial of sealing fluid.<br>
+      Riku Yuni didn't rush to begin — he circled the object once first, as if listening to it speak.<br>
+      "This bit of incantation was added later," he said. "Whoever added it wasn't paying attention at the time."<br>
+      He picked up the brush and began stripping that section away. The motion was slow, and steady.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 9 · COMBINED APPLICATIONS
+══════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="sec-head">
+    <div class="sec-num">9</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK NINE · COMBINED APPLICATIONS</div>
+      <div class="sec-title">Combined Applications & Interactions</div>
+      <div class="sec-subtitle">What Happens When Schools Work Together</div>
+    </div>
+  </div>
+
+  <p class="b">Casters in this world almost never rely on a single school alone. Specializing in one tradition doesn't mean ignorance of the others — more often, a high-level caster will naturally shift between traditions according to need, or deliberately combine several to produce new effects. This "chemical reaction" is often the most interesting part.</p>
+
+  <div class="combo-grid">
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--faith)">Faith Arts</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--word)">Word Arts</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">Precision Seal Construction</div>
+        <div class="cr-desc">Faith provides a stable foundation; Word Arts provides precise structure. A seal made this way resists erosion better than pure Word Arts alone, and is more finely controllable than pure Faith Arts alone.</div>
+        <div class="cr-yuli">The Church's standard method for official sealing.</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--soul)">Soul Arts</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--alch)">Alchemy</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">Memory Vessel</div>
+        <div class="cr-desc">Seals a specific memory or emotional imprint into a physical container, allowing it to be read afterward by anyone with Soul Arts perception, even after the original caster is gone.</div>
+        <div class="cr-yuli">Existing memory vessels are extremely rare, mostly ancient. Riku Yuni occasionally comes across relics of this kind.</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--elem)">Element Arts</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--ritual)">Ritual Arts</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">City Heating System</div>
+        <div class="cr-desc">Amplifies elemental resonance through ritual, establishing an ongoing heat-distribution network across a city. Requires periodic maintenance rituals.</div>
+        <div class="cr-yuli">Some mid-sized towns rely on such a system through the winter; it's treated as part of the basic infrastructure.</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--word)">Word Arts</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--soul)">Soul Arts</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">Advanced Sealed-Object Restoration</div>
+        <div class="cr-desc">Word Arts provides the structural framework, Soul Arts provides direct communication with the object's resonance. Finer than restoration using either school alone, but the mental cost to the caster multiplies accordingly.</div>
+        <div class="cr-yuli">Riku Yuni's core working method — he uses this combination constantly.</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--faith)">Faith Arts</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--ritual)">Ritual Arts</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">Major Church Ceremonies</div>
+        <div class="cr-desc">The Church's most mainstream form of high-level casting. Collective faith, amplified through ritual structure, achieves a scale of effect no individual caster could ever reach alone.</div>
+        <div class="cr-yuli">City-level wards and historically significant seals are all achieved through this combination.</div>
+      </div>
+    </div>
+    <div class="combo-card">
+      <div class="combo-schools">
+        <div class="cs-tag" style="background:var(--alch)">Alchemy</div>
+        <div class="cs-plus">+</div>
+        <div class="cs-tag" style="background:var(--word)">Word Arts</div>
+      </div>
+      <div class="combo-result">
+        <div class="cr-name">Incantation-Fixed Material</div>
+        <div class="cr-desc">Writes a specific incantation structure directly into a material's physical structure, letting it maintain a given effect continuously, with no caster present.</div>
+        <div class="cr-yuli">The basis for sealing containers and magical tools of every kind — an essential skill for restorers.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 10 · PRACTITIONER TYPES
+══════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="sec-head">
+    <div class="sec-num">10</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK TEN · SOCIAL TAXONOMY</div>
+      <div class="sec-title">Social Classification of Practitioners</div>
+      <div class="sec-subtitle">How Mages Are Understood in the World</div>
+    </div>
+  </div>
+
+  <p class="b">This world has none of the stereotypes that come with the word "mage." A caster's place in society is closer to that of any other professional — first a monastic, scholar, artisan, healer, or researcher, and only secondarily a caster. Magic is a professional tool, not an identity label.</p>
+
+  <table class="prac-table">
+    <thead>
+      <tr>
+        <th>Social Type</th>
+        <th>Primary School(s)</th>
+        <th>Social Role</th>
+        <th>Typical Daily Work</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="type-col">Clergy</td>
+        <td>
+          <span class="prac-school-tag faith-tag">Faith Arts</span>
+          <span class="prac-school-tag ritual-tag">Ritual Arts</span>
+        </td>
+        <td>Within the Church hierarchy, responsible for preaching, healing, and officiating rituals. The most publicly trusted group of casters.</td>
+        <td>Morning prayers, healing, maintaining Church seals, assisting folk rituals</td>
+      </tr>
+      <tr>
+        <td class="type-col">Scholars</td>
+        <td>
+          <span class="prac-school-tag word-tag">Word Arts</span>
+          <span class="prac-school-tag" style="color:var(--soul);border-color:var(--violet-pale)">Soul Arts</span>
+        </td>
+        <td>Focused on researching magical mechanisms and anomalous phenomena. Often cooperate with the Church while maintaining a degree of independence.</td>
+        <td>Textual research, incantation analysis, building anomaly theory</td>
+      </tr>
+      <tr>
+        <td class="type-col">Soul Healers</td>
+        <td>
+          <span class="prac-school-tag" style="color:var(--soul);border-color:var(--violet-pale)">Soul Arts</span>
+          <span class="prac-school-tag faith-tag">Faith Arts</span>
+        </td>
+        <td>Extremely rare, specializing in mental trauma, soul damage, and cases of spiritual infection. Professional reputation is sharply divided.</td>
+        <td>Treating those with mental anomalies, dream therapy, soul-structure repair</td>
+      </tr>
+      <tr>
+        <td class="type-col">Workshop Artisans</td>
+        <td>
+          <span class="prac-school-tag alch-tag">Alchemy</span>
+          <span class="prac-school-tag" style="color:var(--elem);border-color:var(--sage-pale)">Element Arts</span>
+        </td>
+        <td>Makers of magical tools and everyday goods. Socially stable, in constant demand, but rarely receive much attention.</td>
+        <td>Crafting and repairing magical objects, taking custom commissions</td>
+      </tr>
+      <tr>
+        <td class="type-col">Sealed-Object Restorers</td>
+        <td>
+          <span class="prac-school-tag word-tag">Word Arts</span>
+          <span class="prac-school-tag" style="color:var(--soul);border-color:var(--violet-pale)">Soul Arts</span>
+          <span class="prac-school-tag alch-tag">Alchemy</span>
+          <span class="prac-school-tag faith-tag">Faith Arts (basic)</span>
+        </td>
+        <td>A high-risk, high-income independent profession, taken on a commission basis with no fixed employer. Low social need, high professional barrier to entry.<br><strong>Riku Yuni's profession.</strong></td>
+        <td>Seal restoration, appraisal of anomalous relics, resonance handling, structural research</td>
+      </tr>
+      <tr>
+        <td class="type-col">Ritual Officiants</td>
+        <td>
+          <span class="prac-school-tag ritual-tag">Ritual Arts</span>
+          <span class="prac-school-tag faith-tag">Faith Arts</span>
+        </td>
+        <td>Full-time specialists who take on large-scale rituals. Work infrequently, but each undertaking is large in scale, usually with a fixed team.</td>
+        <td>Ritual design and officiating, team coordination, site preparation</td>
+      </tr>
+      <tr>
+        <td class="type-col">Wandering Casters</td>
+        <td><span style="font-style:italic;color:var(--ink-faded);font-size:12px;">Mixed, varies by individual</span></td>
+        <td>Freelance casters with no fixed professional identity. Regarded as a destabilizing element, but also an important source of intelligence about anomalies.</td>
+        <td>No fixed routine — travels for work, occasionally brings back strange news</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="entry" data-tag="Important Note">
+    <div class="entry-term">Job Classes That Don't Exist Here</div>
+    <div class="entry-body">This world has no such thing as a "fire mage," "ice mage," "healer," or "spellblade" — no job defined by a single magical attribute. A caster's identity is determined by their social function, not by a position on a skill tree.</div>
+    <div class="entry-sub">Please avoid describing casters in this world using RPG-style job-class logic. They are, at heart, artisans, scholars, and healers of every stripe.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 11 · WRITING STYLE
+══════════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="sec-head">
+    <div class="sec-num">11</div>
+    <div class="sec-titles">
+      <div class="sec-label">BOOK ELEVEN · WRITING STYLE GUIDE</div>
+      <div class="sec-title">General Writing Style</div>
+      <div class="sec-subtitle">The Texture and Temperature of This World</div>
+    </div>
+  </div>
+
+  <p class="b">The rules of the magic system matter, but what matters more is making this world feel, to the reader, like it truly exists. A world's sense of reality rarely comes from grand designs — it comes from countless small details that make a reader think, "yes, that's exactly how it would be."</p>
+
+  <div class="pq">
+    <div class="pq-text">Magic isn't a superpower, and it isn't for becoming stronger.<br>It is "the way the soul speaks with the world."</div>
+    <span class="pq-attr">— <em>Corruption</em> Magic System · Final Summary</span>
+  </div>
+
+  <div class="entry" data-tag="Style Keywords">
+    <div class="entry-term">The World's Base Tone</div>
+    <div class="entry-body">
+      <div class="kw-row">
+        <span class="kw g">Quiet</span>
+        <span class="kw g">Lived-in</span>
+        <span class="kw g">Workshop Air</span>
+        <span class="kw g">Old Ward</span>
+        <span class="kw o">Gently Mysterious</span>
+        <span class="kw o">Soulful</span>
+        <span class="kw o">Faintly Strange</span>
+        <span class="kw">Medieval Everyday Life</span>
+        <span class="kw">Slow Pace</span>
+        <span class="kw">Rain and Lamplight</span>
+        <span class="kw r">Occasional Anomaly</span>
+        <span class="kw r">Grounded Identity</span>
+        <span class="kw">Emotion-Driven</span>
+        <span class="kw">Everyday Magic</span>
+      </div>
+    </div>
+    <div class="entry-sub">
+      Not a hot-blooded power fantasy · not bleak despair · not constant high-pressure horror · not a spectacle-driven showcase world.
+    </div>
+  </div>
+
+  <div class="entry" data-tag="Writing Checklist">
+    <div class="entry-term">Every Time You Write This World, Ask Yourself</div>
+    <div class="entry-body">
+      · Is the magic in this scene "background noise," rather than the main event?<br>
+      · Is there a small detail here that makes the world feel "alive" (a kettle that remembers a temperature / a streetlamp that glows on rainy nights / a broom that follows someone around)?<br>
+      · Is the level of horror right? Is the anomaly "a bit strange," or does it tip straight into meltdown?<br>
+      · Has Riku Yuni been written as "a protagonist perpetually suffering"? He's simply living quietly, in his own way, inside a strange world.<br>
+      · Is this scene's pacing slow enough?
+    </div>
+  </div>
+
+  <div class="entry" data-tag="A World That Has Run for a Long Time">
+    <div class="entry-term">How to Make the World Feel Like "It's Been Running for Centuries"</div>
+    <div class="entry-body">
+      · Every object has a history: the way that chair is worn down, the sound of that door's hinge, the grass growing up through the paving cracks on that street.<br>
+      · Every profession has its unspoken rules: restorers know certain things don't need saying, because those things have become the very air of the trade.<br>
+      · Every anomaly has a story: that mirror that hates rainy days must have a reason, even if no one remembers what it is anymore.<br>
+      · People's attitude toward magic is one of habit, not wonder: lighting a lamp with magic carries the same emotional weight as striking a match by hand.
+    </div>
+  </div>
+</div>
+
+
+<!-- FINAL -->
+<div class="final-block">
+  <div class="fb-label">FINAL SUMMARY · The Core Idea of the Magic System</div>
+  <div class="fb-quote">
+    In the world of <em>Corruption</em>, magic is not for becoming stronger,<br>
+    not for defeating anything, not for becoming anyone.<br>
+    <span class="fb-highlight">It is how people relate to the world around them.</span>
+  </div>
+  <div class="fb-tags">
+    <div class="fb-tag">BOOK ONE · Nature of Magic</div>
+    <div class="fb-tag">BOOK TWO · The Cost System</div>
+    <div class="fb-tag">BOOK THREE · Faith Arts</div>
+    <div class="fb-tag">BOOK FOUR · Word Arts</div>
+    <div class="fb-tag">BOOK FIVE · Soul Arts</div>
+    <div class="fb-tag">BOOK SIX · Element Arts</div>
+    <div class="fb-tag">BOOK SEVEN · Ritual Arts</div>
+    <div class="fb-tag">BOOK EIGHT · Alchemy</div>
+    <div class="fb-tag">BOOK NINE · Combined Applications</div>
+    <div class="fb-tag">BOOK TEN · Practitioner Classification</div>
+    <div class="fb-tag">BOOK ELEVEN · Writing Style</div>
+  </div>
+</div>
+
+</div><!-- book-inner -->
+</div><!-- book -->
+</div><!-- outer -->
+</body>
+</html>
